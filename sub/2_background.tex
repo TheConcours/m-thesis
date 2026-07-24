@@ -1,4 +1,4 @@
-\section{Preliminary results and overview of previous research: X gate}
+\section{Theoretical Foundations: Single-Qubit X Gate}
 
 % This chapter describes the physical properties of superconducting qubits, which are fundamental to quantum information
 % processing using superconducting circuits, and their control methods. First, we clarify how macroscopic quantum systems,
@@ -50,7 +50,7 @@ total Hamiltonian. In practice, $H(t)$ consists of a static drift term defining 
 time-dependent control term corresponding to external driving fields, such as shaped microwave pulses. The primary
 objective of quantum control is to engineer these time-dependent waveforms so that the resulting evolution operator
 accurately synthesizes a desired target unitary gate on the computational subspace.
-\subsection{Leakage and fidelity}
+\subsection{Gate Fidelity and Leakage}
 \label{subsec:leakageandfidelity}
 While the idealized model assumes a perfect two-level system, many physical implementations, notably transmon qubits,
 are not strictly confined to two states.
@@ -68,7 +68,7 @@ gates required for fault-tolerant quantum computing relies heavily on advanced w
 defined in $H(t)$ must be meticulously shaped to strike a delicate balance: driving the desired rotations on the Bloch
 sphere as rapidly as possible to avoid decoherence, while simultaneously suppressing the spectral components that cause
 leakage to higher energy levels.
-\subsection{Hamiltonian in the rotating frame for a qudit}
+\subsection{Qudit Hamiltonian in the Rotating Frame}
 As noted in \ref{subsec:leakageandfidelity},
 A transmon qubit is a widely used superconducting qubit. Because a transmon is inherently an anharmonic oscillator, it possesses higher excited states beyond
 $\ket{0}$ and $\ket{1}$.
@@ -190,7 +190,7 @@ $$
 For $\lambda_1$ is entirely aborbed into $\OmegaRF$, it is exactly (not approximately) $\lambda_1=1$.
 
 In simulations, we set the values of $\lambda$ accordiingly.
-\subsection{Schrieffer-Wolff transformation}
+\subsection{Schrieffer-Wolff Transformation}
 \label{subsec:swt}
 While the rotating frame tranformation in \eref{eq:rotatingframe} is computed exactly,
 such exact analytical transformations are not always achievable.
@@ -210,52 +210,41 @@ It is important to emphasize that this expansion is mathematically rigorous and 
 $S$ and Hamiltonian $H$, provided the system is defined within a finite-dimensional Hilbert space.
 While truncating the series early causes inaccuracies, adding more terms makes subsequent computations excessively
 complex.
+In \ref{sec:methods}, we develop a method to the approximation is
+valid.
 % exploring a
 % non-perturbative, strong-driving regime requires a more exacting approach.
 % In such strongly driven systems, premature truncation introduces significant inaccuracies.
 % In the DRAG scheme, this evaluation of higher order terms is called superlinear corrections.
 
 
-\subsection{DRAG}
+\subsection{Derivative Removal by Adiabatic Gate (DRAG)}
 \label{subsec:drag}
-DRAG is an extremely effective method to reduce leakage.
-Gambetta and Motzoi derived the DRAG Y correction formula
+The Derivative Removal by Adiabatic Gate (DRAG) technique is a highly effective method for suppressing leakage.
+It works by applying a secondary corrective pulse--proportional to the time derivative of the primary pulse
+envelope--along an orthogonal control axis, which actively cancels unwanted transitions to higher energy levels (such as
+the $\vert{}2\rangle$ state in transmon qubits) and corrects phase errors.
+Gambetta and Motzoi \cite{Gambetta2011} derived the DRAG Y correction formula
 \begin{equation}
-  \Omega_y = -\frac{1}{\Delta}\dot{\Omega}_x
+  \Omega_y = -\frac{1}{\Delta}\dot{\Omega}_x,
   \label{eq:ydrag}
 \end{equation}
-in \cite{Gambetta2011}.
-% This formula even holds in non-perturbative settings.
-% % Applying a frame change with $V=\exp(S)$, $S=-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}$ to the Hamiltonian \ref{eq:Hrwa} ,
-% % the new $\ket{1}\bra{2}$ component reads
-% Consider a frame change $V$
-% \begin{equation}
-%   V = \exp\left[-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}\right]
-%   = \cos(\phi) -i\hat{\sigma}^y_{1,2}\sin(\phi)
-%   \label{eq:first_frame_change}
-% \end{equation}
-% with $\phi = \lambda_2\dfrac{\Omegax}{2\Delta_2}$.
-% Then the resulting $\ket{1}\bra{2}$ component is
-% $$
-%   -\sin(2\phi)\dfrac{\delta(t)+\Delta}{2}+\cos(2\phi)\dfrac{\lambda \Omegax}{2}-i\dfrac{\lambda}{2}\left(\dfrac{\Omega_x^\prime(t)}{\Delta}+\Omega_y(t)\right).
-% $$
-% Setting $\Omegay$ as in \eref{eq:ydrag} still reduces this component.
-They have also showed that AC Stark shift can be compensated by phase ramping
+and demonstrated that that AC Stark shift can be compensated by way of phase ramping,
 \begin{equation}
   \delta(t) = \dfrac{4-\lambda^2}{4\Delta}\,\Omegax^2.
   \label{eq:zdrag}
 \end{equation}
-Collectively \eref{eq:ydrag} and \eref{eq:zdrag} are called DRAG conditions.
-If these two are applied in weak driving regime, the Hamiltonian becomes
+Collectively \eref{eq:ydrag} and \eref{eq:zdrag} are referred to as DRAG conditions.
+When these two conditions are applied within the weak driving regime, the Hamiltonian becomes
 \begin{equation}
-  \hat{\mathcal{H}}_1(t) \approx \frac{\Omega_x}{2}\hat{\sigma}_{0,1}^x + \frac{\lambda_2 \Omega_x^2}{8\Delta_2}\hat{\sigma}_{0,2}^x - \Omega_x^2 \left[ \frac{(2\Delta_2 - \Delta_3)}{8\Delta_2^2} \right] \lambda_2 \lambda_3 \hat{\sigma}_{1,3}^x
+  \hat{\mathcal{H}}_1(t) \approx \frac{\Omega_x}{2}\hat{\sigma}_{0,1}^x + \frac{\lambda_2 \Omega_x^2}{8\Delta_2}\hat{\sigma}_{0,2}^x - \Omega_x^2 \left[ \frac{(2\Delta_2 - \Delta_3)}{8\Delta_2^2} \right] \lambda_2 \lambda_3 \hat{\sigma}_{1,3}^x,
   \label{eq:Hdrag}
 \end{equation}
-with the following boundary conditions to satisfy
+subject to the following boundary conditions:
 $$
-  \Omega_x(t) = \dot{\Omega}_x(t)=0 \quad \text{at }t=0,\,T
+  \Omega_x(t) = \dot{\Omega}_x(t)=0 \quad \text{at }t=0,\,T.
 $$
-\subsubsection{DRAG-1}
+\subsubsection{The DRAG-1 Scheme}
 Hamiltonian \eref{eq:Hdrag} is remained with two photon transitions between $\ket{0}\leftrightarrow\ket{2}$ and
 $\ket{1}\leftrightarrow\ket{3}$.
 SWTs to further reduce these transitions is applicable.
@@ -301,14 +290,13 @@ Hamiltonian by applying static Givens rotations until the desired accuracy is ac
 While this method is only effective if the Hamiltonian has a rather simple form and only applicable to time-independent
 Hamiltonian, theoretically this is a generalization of recursive SWT in the perturbative regime.
 
-
-\subsection{Riccati engineering}
-Although widely known as a qunatum control method, Riccati engineering is not yet applied to time-dependent one qubit
-gate controls.
+\subsection{Block Diagonalization via Riccati Engineering}
+Although widely known as a qunatum control method, Riccati engineering is not yet applied to
+time-dependent one qubit gate controls. (Time-independent cases are investigated in \cite{Riccati2010,Gardas2010}.)
 Given a Hamiltonian
 $$H(t) = \begin{pmatrix} H_{11}(t) & H_{12}(t) \\ H_{21}(t) & H_{22}(t) \end{pmatrix},$$
-we consider block diagonalization of $H(t)$ into $2\times 2$ and $1\times 1$ partition according to the transformation
-\eref{eq:framechange}.
+we consider block diagonalization of $H(t)$ into $2\times 2$ and $1\times 1$ partitions
+according to the transformation \eref{eq:framechange}.
 
 The motivation is that if we could block diagonalize $H$ in this way, the dynamics starting with $\ket{0}$
 in this new frame will cause zero leakage into the non-computational subspace.
@@ -333,5 +321,5 @@ Under this frame change, the resulting $H_{11}^\prime(t)$ is given by
   - (I_2+X^\dagger X)^{1/2} \partial_t\left[(I_2+X^\dagger X)^{-1/2}\right]
 \end{equation}
 The form of this Hamiltonian is not very easy to analyze.
-The cases in which the Hamiltonian become time-dependent are investigated in \cite{Riccati2010,Gardas2010}.
 
+\subsection{Issues with the Current Research}

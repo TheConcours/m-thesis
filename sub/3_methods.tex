@@ -1,9 +1,10 @@
-\section{Methods}
-\label{sec:proposed}
+\section{Proposed Waveform Optimization Techniques}
+\label{sec:methods}
 In this section, we investigate methods to mitigate leakage errors in X and CZ gates, beginning with the X gate. Our
-approach builds on the DRAG-1 scheme. Conventionally, DRAG-1 relies on a seed function to generate a control pulse to
-minimizes leakage from $\vert{}0\rangle$ to $\vert{}2\rangle$. However, we demonstrate that bypassing the seed function
-to synthesize the pulse directly yields a superior pulse shape.
+approach builds on the DRAG-1 scheme which conventionally relies on a seed function to generate a control pulse to
+minimize leakage from $\vert{}0\rangle$ to $\vert{}2\rangle$. This conventional method, however, has a disadvantage that
+it's hard to control the resulting pulse shape. We establish a method to construct DRAG-1 pulse bypassing the seed function
+method and synthesize a pulse which can achieve a shorter gate duration.
 % \subsection{X gate}
 \subsection{Note on $Y$ DRAG correction}
 Aside from the $X$ control pulse, we utilize the DRAG pulses \ref{eq:ydrag} and \ref{eq:zdrag}.
@@ -296,6 +297,7 @@ Then
 $$\text{maximize } -\frac{h^T C h}{h^T h}$$
 is the problem to solve.
 \subsubsection{Sequential Quadratic Programming}
+FAST \cite{FAST}
 Given an ansatz and an evaluation point $\Delta$, the algorithm goes as follows:
 
 \begin{algorithm}
