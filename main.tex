@@ -1,0 +1,59 @@
+% Load plautopatch for (u)pLaTeX
+% \ifx\kanjiskip\undefined\else
+%   \RequirePackage{plautopatch}
+% \fi
+
+% \documentclass{kuisthesis}			% 特別研究報告書
+\documentclass[master,english]{kuisthesis}		% 修士論文(和文)
+%\documentclass[master,english]{kuisthesis}	% 修士論文(英文)
+
+\def\LATEX{{\rm (L\kern-.36em\raise.3ex\hbox{\sc a})\TeX}}
+\def\LATex{\iLATEX\small}
+\def\iLATEX#1{L\kern-.36em\raise.3ex\hbox{#1\bf A}\kern-.15em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}
+\def\LATEXe{\ifx\LaTeXe\undefined \LaTeX 2e\else\LaTeXe\fi}
+\def\LATExe{\ifx\LaTeXe\undefined \iLATEX\scriptsize 2e\else\LaTeXe\fi}
+\let\EM\bf
+% \def\|{\verb|}
+\def\<{\(\langle\)}
+\def\>{\(\rangle\)}
+\def\CS#1{{\tt\string#1}}
+
+% \jtitle{超伝導量子コンピュータのパルス波形最適化によるリーク低減}
+\etitle{Suppression of leakage via optimized pulse waveforms in superconducting quantum systems}
+% \jauthor{濱田　一樹}
+\eauthor{Kazuki Hamada}
+% \supervisor{佐藤 高史 教授}
+\supervisor{Professor Takashi Sato}
+%\course{通信情報システム}
+\course{Communications and Computer Engineering}
+\date{July 27th, 2026}
+
+\input{config/preamble}
+\input{config/macros}
+
+\usepackage[nomarkers,nolists]{endfloat}  % This pushes all figures to the end of the document.
+
+\begin{document}
+\maketitle
+\setcounter{page}{0}
+
+
+% \include{sub/0_abstract.tex}    % Title and copyright pages
+\tableofcontents
+\include{sub/1_introduction.tex}  % Introduction
+\include{sub/2_background.tex}    % Background
+\include{sub/3_methods.tex}    % Background
+\include{sub/4_results.tex}   % Methodology
+\include{sub/6_conclusion.tex}   % Methodology
+\include{sub/acknowledgements.tex}   % Methodology
+
+% 文献リストの出力設定
+\bibliographystyle{kuissort}
+\bibliography{references}
+
+%\appendix
+% \include{sub/A_RWA.tex}
+% \include{sub/B_SQP.tex}
+
+\end{document}

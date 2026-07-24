@@ -1,0 +1,40 @@
+%
+% Introduction
+%
+\section{Introduction}
+\label{sec:Introduction}
+
+\subsection{Background and Motivation}
+Quantum computing represents a paradigm shift in computational science, offering
+exponential speedups for specific classes of problems, including quantum chemistry simulation, cryptography, and
+large-scale optimization. At the heart of this physical realization are quantum bits (qubits). Among the various
+physical implementations, superconducting qubits-particularly the transmon architecture-have emerged as one of the
+most promising platforms. Their macroscopic nature allows for strong coupling to microwave control fields and flexible
+lithographic fabrication, making them highly scalable.However, realizing fault-tolerant quantum computation requires
+extremely high-fidelity quantum operations. Current Noisy Intermediate-Scale Quantum (NISQ) devices are fundamentally
+limited by decoherence and operational errors. For superconducting qubits, single- and two-qubit gate fidelities are
+highly sensitive to the precise shape of the microwave control pulses used to drive the transitions. Imperfect control
+pulses lead to phase errors, over-rotation, and leakage out of the computational subspace (e.g., transitions into the
+$\vert{}2\rangle$ state), severely degrading the overall performance of the quantum processor.1.2 Problem StatementThe
+transmon qubit is inherently a weakly anharmonic oscillator. Because the energy difference between the
+$\vert{}0\rangle \leftrightarrow \vert{}1\rangle$ transition and the $\vert{}1\rangle \leftrightarrow \vert{}2\rangle$
+transition is relatively small, applying fast, high-amplitude microwave pulses to minimize decoherence time inevitably
+results in spectral leakage into higher, non-computational energy states.While conventional approaches such as the
+Derivative Removal by Adiabatic Gate (DRAG) technique have successfully suppressed this leakage to a large extent, the
+demand for even higher fidelities necessitates more advanced waveform engineering. Standard Gaussian or square pulses
+are often spectrally broad or susceptible to noise. There is a critical need to explore mathematically optimal pulse
+shapes-such as Slepian pulses-that can strictly confine the energy spectrum while maintaining fast gate times, and to
+develop robust calibration frameworks to validate these pulses against realistic Hamiltonian dynamics.1.3 Objectives
+and ContributionsThe primary objective of this thesis is to investigate, optimize, and benchmark advanced gate pulse
+waveforms for superconducting transmon qubits. By applying numerical optimal control and advanced signal processing
+techniques, this work aims to minimize gate errors induced by spectral leakage and environmental noise.The specific
+contributions of this thesis are as follows:Pulse Waveform Engineering: Development and numerical evaluation of
+advanced pulse shapes, including DRAG-corrected Slepian pulses, to tightly bound the frequency spectrum of the control
+signals.System Simulation: Implementation of open quantum system dynamics to model a transmon qubit, utilizing
+time-dependent Hamiltonians to accurately capture the effects of the applied microwave waveforms.Gate Calibration:
+Establishment of a robust numerical calibration routine to optimize pulse parameters (e.g., amplitude, detuning, and
+duration) to maximize gate fidelity.
+\subsection{Thesis Organization}The remainder of this thesis is structured to guide the
+reader from the fundamental physics of the system through the mathematical modeling and finally to the numerical
+results of the optimized waveforms.
+

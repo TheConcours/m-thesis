@@ -1,0 +1,33 @@
+%\input{core/core}
+%\input{extra/math}
+%\input{macros}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs}
+\usepackage{braket} % ブラケット記法用 (\bra, \ket などを使用しない場合は適宜外してください)
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+  plainpages=true,
+  breaklinks=true,
+  hypertexnames=false,
+  pageanchor=true,
+  colorlinks=true,
+  linkcolor={blue},
+  citecolor={blue},
+  urlcolor={blue},
+  anchorcolor={black}
+}
+
+
+\usepackage[many]{tcolorbox}
+\newtcolorbox{boxA}{
+  boxrule = 1.pt,
+  colframe = black
+}
+
+
+\usepackage{amsthm}
+\newtheorem*{theorem}{Theorem}

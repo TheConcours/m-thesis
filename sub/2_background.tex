@@ -1,0 +1,477 @@
+\section{Preliminary results and overview of previous research}
+
+% This chapter describes the physical properties of superconducting qubits, which are fundamental to quantum information
+% processing using superconducting circuits, and their control methods. First, we clarify how macroscopic quantum systems,
+% specifically superconducting circuits, are quantized and behave as qubits through the derivation of the Hamiltonian.
+% Next, we explain the mechanisms of control electronics (Z-control and XY-control) for manipulating single-qubit states.
+% Furthermore, we detail the operational principles and adiabatic implementation of the CZ gate and
+% conclude with an overview of relevant prior work to clarify the position of this research.
+After we briefly overview the basics of quantum bits, this chapter introduces some fundamental theoretical frameworks and
+reviews prior methodologies essential for understanding the optimization of control pulses in superconducting quantum
+systems. The Derivative Removal by Adiabatic Gate (DRAG) formalism, Schrieffer-Wolff transformations, and Riccati
+engineering serve as the baseline for the advanced waveform optimizations proposed in this study. In exploring
+these control methodologies, we first consider the case of the one-qubit X gate before later extending our analysis to
+the two-qubit CZ gate architecture.
+
+\subsection{Introduction to the Quantum Bit}
+The transition from classical to quantum information processing represents a
+fundamental paradigm shift in computational theory. In classical computing, the foundational unit of information is
+bit which exists in a mutually exclusive, deterministic state of either 0 or 1. Quantum
+computing replaces this discrete entity with the quantum bit, or qubit, an entity governed by the principles of
+quantum mechanics. Rather than being confined to a single state, a qubit can exist in a coherent superposition of
+both states simultaneously, unlocking exponentially larger state spaces and enabling computational speedups for
+specific classes of problems, such as integer factorization and molecular simulation.
+
+Mathematically, the state of a single, isolated qubit is represented as a state vector in a two-dimensional
+complex Hilbert space. Using Dirac notation, the computational basis states are denoted as $\vert{}0\rangle$ and
+$\vert{}1\rangle$, corresponding to the classical 0 and 1. A pure qubit state $\vert{}\psi\rangle$ is expressed as a
+linear combination of these basis states:$$\vert{}\psi\rangle = \alpha\vert{}0\rangle + \beta\vert{}1\rangle$$Here,
+$\alpha$ and $\beta$ are complex probability amplitudes satisfying
+$\vert{}\alpha\vert{}^2 + \vert{}\beta\vert{}^2 = 1$.
+This constraint allows the pure state of a qubit to be mapped onto the surface of a unit sphere in three-dimensional
+space, known as the Bloch sphere. On the Bloch sphere, the poles represent the basis states $\vert{}0\rangle$ and
+$\vert{}1\rangle$, while points on the equator represent equal superpositions with varying relative phases. This
+geometric representation is indispensable for visualizing single-qubit quantum gates as rotations about the sphere's axes.
+
+As a quantum mechanical system, a qubit's dynamics are governed by the time-dependent Schrödinger equation.
+Consequently, any control applied to the system is mathematically represented by the Hamiltonian operator driving this
+evolution. In formula, \cite{sakurai2020modern}
+$$
+  \psi(t) = \mathcal{T}\left(\exp\left[\int_0^T\,iH(t)\,\dd t\right]\right)\psi(0).
+$$
+\subsection{Hamiltonian in the rotating frame for a qudit}
+A transmon qubit is a widely used superconducting qubit. Because a transmon is inherently an anharmonic oscillator, it possesses higher excited states beyond
+$\ket{0}$ and $\ket{1}$.
+Consequently, it acts as a qudit---a quantum system with $d$ levels---rather than an ideal qubit, which
+inevitably introduces leakage into unwanted noncomputational states.
+
+To model this leakage analytically, we review the derivation of the qudit Hamiltonian truncated at the first $\Nmax+1$
+levels of the transmon by following Ref.~\cite{99999}.
+In passing, we derive the Hamiltonian without the Rotating Wave Approximation (RWA)\cite{Fujii2017}.
+
+The Hamiltonian of a transmon qudit in the lab frame is \cite{wong2025hardware}
+\begin{equation}
+  \Hlab = 4E_c(\num - \num_g)^2 - E_J \cos(\hat{\varphi}), \label{eq:lab}
+\end{equation}
+where $\hat{n}_g$ denotes the offset charge, $\hat{n}$ the number operator, $E_C$ the charging energy, $E_J$ the Josephson
+energy, and $\varphi$ the phase operator.
+From the (non-degenerate) perturbation theory, we find that the eigenstates of this Hamiltonian are
+harmonics with non-uniform energy spacings.
+We denote the $k$-th excited state as $\ket{k}$ and its $\varphi$-representation $\psi_k(\varphi)$.
+Now we consider the expansion of $\num$ in $\ket{k}\bra{m}\, (k\geq 0,\, m\geq 0)$.
+Note that $k$'s parity coincides with $\psi_k$'s.
+Since $\num$ flips the sign, the coefficient
+\begin{equation}
+  \lambda_{k,m}=\bra{k}\num\ket{m}\,=\,\int_{-\pi}^\pi\,\psi_k^*(\varphi)\left(-i\right)
+\end{equation}
+is zero unless $k$ and $m$ are of opposite parity.
+Hence $\hat{n}$ can be expressed as
+\begin{eqnarray}\nonumber
+  \hat{n}&=&\sum_{k=0}^{N_{{\rm{max}}}-1}\bigg[\lambda_{k,k+1}\ketbra{k}{k+1}\\
+    &+&\sum_{j=1} \lambda_{k,k+2j+1}\ketbra{k}{k+2j+1}\bigg]+\rm{h.c}.
+\end{eqnarray}
+
+If we apply the change-of-basis $V$ on the Hilbert space, the Hamiltonian changes as
+\begin{equation}
+  H^\prime = VHV^\dagger + i\dot{V}V^\dagger,
+  \label{eq:framechange}
+\end{equation}
+where the last term is called a gauge term.
+Applying the diagonal frame transformation with
+\begin{equation}
+  R\updag = \exp\left(i\wdrive t\sumkk[\Nmax] k\ketbra{k}{k}\right)
+\end{equation}
+yields the rotating frame Hamiltonian
+\begin{align}
+  \Hrot= & \sum_{k=0}^{N_{{\rm{max}}}}{\Delta}_{k}\ket{k}\bra{k}+ \OmegaRF
+  \Biggr[\nonumber                                                                                         \\
+         & \sum_{k=0}^{N_{\rm{max}}-1}\sum_{j=1}\lambda_{k,k+2j+1}\ketbra{k}{k+2j+1}e^{-(2j+1)i\omega_d t}
+  \nonumber                                                                                                \\
+         & +
+    \sum_{k=0}^{N_{{\rm{max}}}-1}\lambda_{k,k+1}\ketbra{k}{k+1}e^{-i\omega_d t}
+    +\rm{h.c.}
+    \Biggr]
+  ,
+  \label{eq:rotatingframe}
+\end{align}
+where ${\Delta}_k = \omega_k - k\omega_d$, $\omega_d$ is the drive frequency and $\omega_k = E_k - E_0$.
+Henceforth, if we simply write $\Delta$, this means $\Delta_2$.
+
+If we apply RWA entirely, \eref{eq:rotatingframe} reduces to
+\begin{eqnarray}\nonumber
+  \Hrwa &=& \sum_{j=1}^{\Nmax} \left(\Delta_j+j\delta(t)\right)\ket{j}\bra{j}\\
+  &+&\sum_{j=1}^{\Nmax}\lambda_j\bigg[\frac{\Omega_x(t)}{2} \hat{\sigma}^x_{j-1, j}+\frac{\Omega_y(t)}{2} \hat{\sigma}^y_{j-1, j}\bigg],
+  \label{eq:Hrwa}
+\end{eqnarray}
+where $\lambda_j = \lambda_{j-1,j}$, $\hat{\sigma}^x_{j-1,j} = \ket{j-1}\bra{j} + \ket{j}\bra{j-1}$, and
+$\hat{\sigma}^y_{j-1,j} = -i\ket{j-1}\bra{j} + i\ket{j}\bra{j-1}$.
+
+The matricial form when $\Nmax=3$ is
+\begin{equation}
+  \footnotesize
+  \left(\begin{array}{cccc}
+      0                                                & \frac{1}{2} \lambda_1 (\Omegax(t)-i \Omegay(t)) & 0                                               & 0                                               \\
+      \frac{1}{2} \lambda_1  (\Omegax(t)+i \Omegay(t)) & \delta (t)+\Delta_1                             & \frac{1}{2} \lambda_2 (\Omegax(t)-i \Omegay(t)) & 0                                               \\
+      0                                                & \frac{1}{2} \lambda_2 (\Omegax(t)+i \Omegay(t)) & 2 \delta (t)+\Delta_2                           & \frac{1}{2} \lambda_3 (\Omegax(t)-i \Omegay(t)) \\
+      0                                                & 0                                               & \frac{1}{2} \lambda_3 (\Omegax(t)+i \Omegay(t)) & 3 \delta (t)+\Delta_3                           \\
+    \end{array}\right).
+  \normalsize
+  \label{eq:rwa_mat}
+\end{equation}
+Including the first order corrections of RWA, the Hamiltonian becomes
+\begin{align}
+  \Hrwa[1] = & \sum_{k=0}^{N_{{\rm{max}}}}\tilde{\Delta}_{k}\ket{k}\bra{k}+               %\OmegaRF
+  \frac{1}{2}\left(\Omega_x-i\Omega_y\right)
+  \Biggr[\nonumber                                                                        \\
+             & \sum_{k=0}^{N_{\rm{max}}-1}\lambda_{k,k+3}\ketbra{k}{k+3}e^{-2i\omega_d t}
+  \nonumber                                                                               \\
+             & +
+    \sum_{k=0}^{\Nmax-1}\lambda_{k,k+1}\ketbra{k}{k+1}
+    \Biggr]
+  +\rm{h.c.}
+  % .
+  \label{eq:rwa_first_order}
+\end{align}
+where, for brevity, the last \rm{h.c.} only refers off-diagonal components.
+
+In this study, we consider up to the second excited state in our analysis.
+% where $\Delta_{k}=\omega_{k}-k\omega_{d}$ is the detuning between the $k$-th level with the $k$-th driving frequency
+% harmonic. In this frame, all coupling terms, except for $\ket{k}\leftrightarrow\ket{k+1}$, and all the counter-rotating
+% components oscillate rapidly. Therefore, we can neglect those small contributions, leading to the Hamiltonian in
+% \eref{eq:rwa_first_order}.
+
+\subsection{Approximation of $\lambda$}
+In the QHO approximation, $\hat{n}$ is expressed in terms of the annihilation and creation operators:
+$$\hat{n} \approx in_{\text{zpf}}(\hat{a}^\dagger - \hat{a})$$
+Recall $\hat{a} = \sum_{k=0}^\infty\,\sqrt{k+1}\ket{k+1}\bra{k}$.
+$$
+  \bra{k+1}\hat{a}\ket{k} = \sqrt{k+1}\quad
+  \bra{k+1}\hat{a}^\dagger\ket{k} = 0
+$$
+Hence,
+$$
+  \lambda_{k,k+1} \approx \bra{k+1}\hat{n}\ket{k} = in_{\text{zpf}}\sqrt{k+1}
+$$
+The prefactor $in_{\text{zpf}}$  could be regarded as absorbed by the drive amplitude $\OmegaRF$.
+Hence we simply set
+$$
+  \lambda_{k,k+1} \approx \sqrt{k+1}.
+$$
+For $\lambda_1$ is entirely aborbed into $\OmegaRF$, it is exactly (not approximately) $\lambda_1=1$.
+
+In simulations, we set the values of $\lambda$ accordiingly.
+\subsection{Schrieffer-Wolff transformation}
+\label{subsec:swt}
+In \eref{eq:framechange}, $V$ is assumed to be a unitary operator.
+we now consider a scenario where the transformation operator $V$ is parameterized by an  anti-Hermitian operator $S$.
+Specifically, $V$ is defined exponentially as:
+$$
+  V = \exp(S),
+$$
+we can expand the Hamiltonian in a power series of $S$ as
+\begin{equation}
+  H^\prime = i\dot{S} + H + [S,H] + \frac{1}{2}[S,[S,H]] + \cdots. \quad(\text{Hadamard's lemma})
+  \label{eq:swt}
+\end{equation}
+It is important to emphasize that this expansion is mathematically rigorous and holds generally true for any generator
+$S$ and Hamiltonian $H$, provided the system is defined within a finite-dimensional Hilbert space.
+While standard perturbative techniques often approximate the dynamics by truncating this series early, exploring a
+non-perturbative, strong-driving regime requires a more exacting approach. In such strongly driven systems, premature
+truncation introduces significant inaccuracies.
+% In the DRAG scheme, this evaluation of higher order terms is called superlinear corrections.
+
+
+\subsection{DRAG}
+\label{subsec:drag}
+DRAG is an extremely effective method to reduce leakage.
+Gambetta and Motzoi derived the DRAG Y correction formula
+\begin{equation}
+  \Omega_y = -\frac{1}{\Delta}\dot{\Omega}_x
+  \label{eq:ydrag}
+\end{equation}
+in \cite{Gambetta2011}.
+% This formula even holds in non-perturbative settings.
+% % Applying a frame change with $V=\exp(S)$, $S=-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}$ to the Hamiltonian \ref{eq:Hrwa} ,
+% % the new $\ket{1}\bra{2}$ component reads
+% Consider a frame change $V$
+% \begin{equation}
+%   V = \exp\left[-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}\right]
+%   = \cos(\phi) -i\hat{\sigma}^y_{1,2}\sin(\phi)
+%   \label{eq:first_frame_change}
+% \end{equation}
+% with $\phi = \lambda_2\dfrac{\Omegax}{2\Delta_2}$.
+% Then the resulting $\ket{1}\bra{2}$ component is
+% $$
+%   -\sin(2\phi)\dfrac{\delta(t)+\Delta}{2}+\cos(2\phi)\dfrac{\lambda \Omegax}{2}-i\dfrac{\lambda}{2}\left(\dfrac{\Omega_x^\prime(t)}{\Delta}+\Omega_y(t)\right).
+% $$
+% Setting $\Omegay$ as in \eref{eq:ydrag} still reduces this component.
+They have also showed that AC Stark shift can be compensated by phase ramping
+\begin{equation}
+  \delta(t) = \dfrac{4-\lambda^2}{4\Delta}\,\Omegax^2.
+  \label{eq:zdrag}
+\end{equation}
+Collectively \eref{eq:ydrag} and \eref{eq:zdrag} are called DRAG conditions.
+If these two are applied in weak driving regime, the Hamiltonian becomes
+\begin{equation}
+  \hat{\mathcal{H}}_1(t) \approx \frac{\Omega_x}{2}\hat{\sigma}_{0,1}^x + \frac{\lambda_2 \Omega_x^2}{8\Delta_2}\hat{\sigma}_{0,2}^x - \Omega_x^2 \left[ \frac{(2\Delta_2 - \Delta_3)}{8\Delta_2^2} \right] \lambda_2 \lambda_3 \hat{\sigma}_{1,3}^x
+  \label{eq:Hdrag}
+\end{equation}
+with the following boundary conditions to satisfy
+$$
+  \Omega_x(t) = \dot{\Omega}_x(t)=0 \quad \text{at }t=0,\,T
+$$
+\subsubsection{DRAG-1}
+Hamiltonian \eref{eq:Hdrag} is remained with two photon transitions between $\ket{0}\leftrightarrow\ket{2}$ and
+$\ket{1}\leftrightarrow\ket{3}$.
+SWTs to further reduce these transitions is applicable.
+Now we introduce a recursive DRAG method called DRAG-1 \cite{Li2025} or R1D \cite{99999}:
+
+Applying Schrieffer-Wolff transformations with $S_2 = -i\lambda_2\Omega_1^2/(8\Delta_2^2)\hat{\sigma}^y_{0,2}$ and
+$S_3 = i\lambda_2\dot{\Omega}_1\Omega_1/(4\Delta_2^3)\hat{\sigma}^x_{0,2}$
+to
+\eref{eq:Hdrag} yields
+$$
+  \hat{\mathcal{H}}_\text{new}(t) = \frac{\Omega_x}{2}\hat{\sigma}_{0,1}^x + \frac{\lambda_2 \Omega_x^2}{8\Delta_2}\hat{\sigma}_{0,2}^x - \Omega_x^2 \left[ \frac{(2\Delta_2 - \Delta_3)}{8\Delta_2^2} \right] \lambda_2 \lambda_3 \hat{\sigma}_{1,3}^x
+  - \lambda_2\left[\right]\sigma^x_{0,2}
+$$
+Therefore,
+\begin{equation}
+  \Omega_x(t) = \sqrt{\Omega_1^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_1^2 + \ddot{\Omega}_1 \Omega_1)}
+  \label{eq:drag1}
+\end{equation}
+$\Omega_1$ has to satisfy the following boundary conditions
+$$
+  \Omega_1 = 0 \quad \text{at }t=0,\,T
+$$
+
+In case of $X$ gate, the $X$ gate condition
+\begin{equation}
+  \int_0^T\,\Omega_x(t)\,\dd t = \pi
+  \label{eq:xgate_condition}
+\end{equation}
+gets a slight modification if we consider up to the third degree in the frame transformation \eref{eq:first_frame_change}
+$$
+  \Omega_x^\prime(t) = \Omega_x(t) - \dfrac{(4-\lambda_2^2)\Omega_x^3(t)}{8\Delta^2}.
+$$
+(Corrections of this sort in the DRAG scheme are called superlinear corrections.)
+
+
+\subsection{NPAD}
+\label{subsec:npad}
+A lot of efforts for leakage reduction and fidelity improvements have been done in the perturbative regime (i.e.
+$\Omega/\Delta \ll 1$).
+One of the framework advocated for the non-perturbative strong driving regime is NPAD \cite{NPAD2022}.
+NPAD is an iterative method to diagonalize a nonperturbative
+Hamiltonian by applying static Givens rotations until the desired accuracy is achieved.
+While this method is only effective if the Hamiltonian has a rather simple form and only applicable to time-independent
+Hamiltonian, theoretically this is a generalization of recursive SWT in the perturbative regime.
+
+
+\subsection{Riccati engineering}
+Although widely known as a qunatum control method, Riccati engineering is not yet applied to time-dependent one qubit
+gate controls.
+Given a Hamiltonian
+$$H(t) = \begin{pmatrix} H_{11}(t) & H_{12}(t) \\ H_{21}(t) & H_{22}(t) \end{pmatrix},$$
+we consider block diagonalization of $H(t)$ into $2\times 2$ and $1\times 1$ partition according to the transformation
+\eref{eq:framechange}.
+
+The motivation is that if we could block diagonalize $H$ in this way, the dynamics starting with $\ket{0}$
+in this new frame will cause zero leakage into the non-computational subspace.
+As long as the off-diagonal terms are zero.
+% \begin{boxA}
+%   {\bf Probelm } \\
+%   Given a $3\times 3$ matrix $H$, block diagonalize $H$ into $2\times 2$ and $1\times 1$
+%   compartments. Namely, if we write
+%   apply a frame change transformation \eref{eq:framechange} with a unitary matrix $U(t)$ and
+%   make $H_{12}(t)$ and $H_{21}(t)$ $0$.
+%   % $$H'(t) = U(t)H(t)U^\dagger(t) + i\dot{U}(t)U^\dagger(t)$.
+% \end{boxA}
+The solution to this problem is given in \cite{Gardas2010},
+$$U(t) = \begin{pmatrix} (I_2 + X^\dagger X)^{-1/2} & X^\dagger (I_{n-2} + X X^\dagger)^{-1/2} \\ -X (I_2 + X^\dagger X)^{-1/2} & (I_{n-2} + X X^\dagger)^{-1/2} \end{pmatrix}$$
+with $X(t)=(x_1(t)\:\:\: x_2(t))$ satisfying
+\begin{equation}
+  i\dot{X} = H_{21} + H_{22}X - XH_{11} - XH_{12}X \label{eq:riccati}
+\end{equation}
+Under this frame change, the resulting $H_{11}^\prime(t)$ is given by
+\begin{equation}
+  H^\prime_{11}(t) = \left(I_2+X^\dagger X\right)^{1/2} (H_{11}+H_{12}X)(I_2+X^\dagger X)^{-1/2}
+  - (I_2+X^\dagger X)^{1/2} \partial_t\left[(I_2+X^\dagger X)^{-1/2}\right]
+\end{equation}
+The form of this Hamiltonian is not very easy to analyze.
+The cases in which the Hamiltonian become time-dependent are investigated in \cite{Riccati2010,Gardas2010}.
+
+\subsection {CZ gate}
+From now, we start dealing with the two qubit CZ gate.
+Note that we use different notations for X and CZ gates.
+\subsubsection{Basics}
+CZ gate is a two-qubit gate that applies a phase flip to the target qubit if the control qubit is in the state
+$\ket{1}$. In the computational basis $\{\vert{}00\rangle, \vert{}01\rangle, \vert{}10\rangle, \vert{}11\rangle\}$, the
+ideal unitary evolution is represented by a diagonal matrix:
+\begin{equation}
+  U_{\mathrm{CZ}}=\begin{pmatrix}
+    1 & 0 & 0 & 0  \\
+    0 & 1 & 0 & 0  \\
+    0 & 0 & 1 & 0  \\
+    0 & 0 & 0 & -1
+  \end{pmatrix}
+\end{equation}
+\subsubsection{SQUID loop and Z-control}
+In superconducting quantum architectures, the ability to dynamically tune the transition frequency of a qubit is
+essential for realizing the adiabatic CZ gate.
+This tunability is achieved by replacing the single Josephson junction of a standard
+transmon with a superconducting quantum interference device (SQUID) loop, which is then threaded by a localized magnetic
+flux controlled via a dedicated microwave transmission line known as the Z-control line (or flux line).
+\subsubsection{Qubit Architecture}
+Consider a system of two capacitively coupled transmon qubits, one fixed-frequency (QB2) and the other frequency tunable (QB1).
+The simplified dispersive Jaynes-Cummings Hamiltonian for this system can be modeled as:
+$$H = \sum_{i=1,2} \left( \omega_i a_i^\dagger a_i + \frac{\alpha_i}{2} a_i^\dagger a_i^\dagger a_i a_i \right) + g(a_1^\dagger + a_1)(a_2^\dagger + a_2) ,$$
+where $g$ denotes the coupling strength between the two qubits, $a_i$ creation operator for qubit $i$, and $\alpha_i$
+the anharmonicity of qubit $i$.
+\subsubsection{Adiabatic Implementation}
+% The adiabatic CZ gate is realized as syncing the QB1's frequency to QB2's, thereby creating an avoided crossing.
+% By doing so, the energy of $\ket{11}$ and $\ket{20}$ become comparable.
+To implement the gate, the frequency of Qubit 1 is swept along a
+prescribed trajectory $\omega_1(t)$ toward the avoided crossing, held or continuously varied for a duration $\tau_d$,
+and then returned to its idle parking frequency.
+In this process, $\ket{11}$ obtains/loses more phases than the other computational states, due to its stronger coupling
+to $\ket{02}$.
+
+By following \cite{Ding2025,Martinis2014} we review the theory behind the adiabatic implementaion of CZ gate and the
+derivation of leakage formula \eref{eq:leakage}.
+\begin{theorem}[Adiabatic Theorem]
+  If a quantum system is initially prepared in a non-degenerate energy eigenstate of a time-dependent Hamiltonian, and
+  if that Hamiltonian is varied sufficiently slowly, the system will evolve continuously to remain in the corresponding
+  instantaneous eigenstate of the evolving Hamiltonian up to an accumulated phase factor, given that there is a gap
+  between the eigenvalue and the rest of the Hamiltonian's spectrum.
+\end{theorem}
+Consider a two level system with the following Hamiltonian
+$$
+  H(t)=\eps(t)\sigma_z + \Delta\sigma_x.
+$$
+According to the adiabatic theorem, if we prepare the state $\ket{0}$ and slowly vary the Hamiltonian and then retrace the
+change back, the resulting state is $\ket{0}$ with phase accumulation.
+The instantaneous eigenstates are
+\begin{equation}
+  \vert{}\psi_-\rangle = \begin{bmatrix} -\sin(\theta(t)/2) \\ \cos(\theta(t)/2) \end{bmatrix} \quad \text{and} \quad \vert{}\psi_+\rangle = \begin{bmatrix} \cos(\theta(t)/2) \\ \sin(\theta(t)/2) \end{bmatrix},
+\end{equation}
+with eigenenergies
+\begin{equation}
+  E_- = -\frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2} \quad \text{and} \quad E_+ = \frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2}
+\end{equation}
+where
+\begin{equation}
+  \theta(t) = \arctan\frac{\Delta}{\eps(t)}.
+  \label{eq:theta}
+\end{equation}
+We denote the energy difference of these two instantaneous eigenstates as
+\begin{equation}
+  \omega(t) = \sqrt{\varepsilon(t)^2 + \Delta^2}
+  \label{eq:omega}
+\end{equation}
+
+\subsubsection{Calculation of leakage error} \label{subsec:leakage}
+Consider a state
+$$
+  \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1}.,
+$$
+with rotational change of coefficients
+\begin{align*}
+  \alpha & = \alpha_0\cos\dfrac{\theta}{2} + \beta_0\sin\dfrac{\theta}{2}  \\
+  \beta  & =  \beta_0\cos\dfrac{\theta}{2} - \alpha_0\sin\dfrac{\theta}{2}
+\end{align*}
+Differentiating, we have
+\begin{align*}
+  \dot{\alpha} & = \dfrac{-i\omega \alpha+\beta \dot{\theta}}{2} \\
+  \dot{\beta}  & = \dfrac{i\omega \beta-\alpha \dot{\theta}}{2}  \\
+\end{align*}
+Write $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, they form the "angle":
+$$
+  \alpha^* \beta = \dfrac{\sin\Theta e^{i\phi}}{2}
+$$
+Calculating the time derivative of $\alpha^*\beta$ finds us
+$$
+  \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
+$$
+Plugging $\phi=\phi_{\text{initial}} + \int_0^t\,\omega(t^\prime)\,\dd t^\prime$ and a bit of tinkering yields
+\begin{equation}
+  % \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
+  P_e \approx \dfrac{1}{4}\, \left\lvert\, \int \,\dfrac{\dd\theta}{\dd t} e^{-i\int\omega(t^\prime)\,\dd t^\prime}\right\rvert^2
+  \label{eq:leakage}
+\end{equation}
+% If we assume that the time derivative of $\ket{\psi_-}$ and $\ket{\psi_+}$ are small enough, $\ket{\psi}$ evolves accordingly to \begin{align*}
+%   \dot{\alpha} & = -iE_- \alpha, \\
+%   \dot{\beta}  & = -iE_+\beta,
+% \end{align*}
+% in other words,
+% \begin{align*}
+%   \dot{\alpha} & = \dot{\alpha_0}\cos\dfrac{\theta}{2} + \dot{\beta_0}\sin\dfrac{\theta}{2},  \\
+%   \dot{\beta}  & =  \dot{\beta_0}\cos\dfrac{\theta}{2} - \dot{\alpha_0}\sin\dfrac{\theta}{2},
+% \end{align*}
+
+
+\subsubsection{Phase accumulation}
+According to the adiabatic theorem, if the sweep rate is sufficiently slow compared to the energy gap at the avoided crossing,
+the system will remain in its instantaneous eigenstate. The dynamic frequency excursion imparts a continuous deformation
+on the $\vert{}11\rangle$ state, causing it to hybridize temporarily with $\vert{}02\rangle$ and acquire a dynamical phase.
+The total accumulated phase $\Phi_{11}$ on the $\vert{}11\rangle$ state is the time integral of its instantaneous eigenenergy
+$E_{11}(t)$:$$\Phi_{11} = -\frac{1}{\hbar} \int_{0}^{\tau} E_{11}(t) dt$$
+Simultaneously, single-qubit dynamical phases $\Phi_{01}$ and
+$\Phi_{10}$ are acquired. The conditional phase $\phi_{\text{cond}}$ accumulated over the gate duration is calculated
+by isolating the two-qubit interaction phase from the single-qubit contributions:$$\phi_{\text{cond}} = \Phi_{11} -
+  \Phi_{01} - \Phi_{10} + \Phi_{00}$$The gate is successful when the pulse amplitude and duration are calibrated such
+that $\phi_{\text{cond}} = \pi \pmod{2\pi}$.
+
+\subsubsection{Nonlinear time transformation}
+By applying a time transformation, we can simplify the leakage formula \eref{eq:leakage}.
+Let the time variable of this new frame be $\tau$. Set
+$$
+  \Delta \dd \tau = \omega(t) \dd t.
+$$
+then
+\begin{equation}
+  \dd t = \dfrac{\Delta}{\omega(t)}\dd \tau = \sin \theta(t) \dd \tau.
+  \label{eq:nonlinear_time_transform_differential}
+\end{equation}
+In integral form,
+\begin{equation}
+  t(\tau) = \int_0^\tau\,\sin\tilde{\theta}(\tau^\prime)\,\dd\tau^\prime
+  \label{eq:nonliniear_time_transform}
+\end{equation}
+The virtue of this transformation is clear if we plug \eref{eq:nonlinear_time_transform_differential} into \eref{eq:leakage}
+\begin{equation}
+  P_e = \dfrac{1}{4}\, \left\lvert\, \int_0^\tau\,\dfrac{\dd\tilde{\theta}}{\dd\tau}\, e^{-i\Delta \tau}\,\dd \tau \right\rvert^2
+  \label{eq:leakage_tau}
+\end{equation}
+
+\subsubsection{Slepian pulses}
+
+In the context of pulse waveform optimization, the Slepian pulses, frequently referred to as discrete prolate spheroidal
+sequences (DPSSs), represent a family of orthogonal pulses specifically formulated to solve the problem of maximal
+energy concentration in both the time and frequency domains. Because Heisenberg's uncertainty principle dictates that a
+pulse cannot be strictly bounded in both time and frequency simultaneously, Slepian, Landau, and Pollack developed these
+sequences to answer a fundamental optimization question: how to optimally concentrate energy in one domain when the
+pulse is strictly confined in the opposing domain.
+
+To define this optimization rigorously, consider a discrete-time pulse of finite length, denoted as $x[n]$ for $n = 0,
+  1, \dots, N-1$. This pulse is constrained to possess finite energy $E$, defined as:$$E = \sum_{n=0}^{N-1}
+  \vert{}x[n]\vert{}^2 < \infty$$The frequency characteristics of the pulse are analyzed using its discrete-time Fourier
+transform:$$X(e^{i\omega}) = \sum_{n=0}^{N-1} x[n]e^{-i\omega n}$$The objective is to maximize the fraction of the total
+pulse energy that is contained within a specific frequency band $[-W, W]$, where $0 < W < \pi$. This fractional energy
+concentration is represented by the ratio $\lambda \in [0, 1]$:$$\lambda = \frac{\int_{-W}^{W}
+    \vert{}X(e^{i\omega})\vert{}^2 d\omega}{\int_{-\pi}^{\pi} \vert{}X(e^{i\omega})\vert{}^2 d\omega}$$Therefore, the core
+optimization problem is to identify the specific sequence $x[n]$ of length $N$ that maximizes this eigenvalue
+$\lambda$.3. The Eigenvalue SolutionThe sequences that solve this optimization problem, denoted as $v_n^{(k)}(N, W)$
+where $k = 0, 1, \dots, N-1$ represents the pulse order, are the Slepian pulses. Here, $N$ is the pulse length and $W$
+parameterizes the mainlobe width.These pulses are derived as the real solutions to the following system of
+equations:$$\sum_{m=0}^{N-1} \frac{\sin 2\pi W(n - m)}{\pi(n - m)} v_m^{(k)}(N, W) = \lambda_k(N, W)v_n^{(k)}(N, W)$$For
+the singularity condition where $n = m$, the fraction simplifies to $2W$.This system can be elegantly expressed as the
+matrix eigenvalue problem $\mathbf{A}\mathbf{v}^{(k)} = \lambda_k \mathbf{v}^{(k)}$.The matrix elements are defined as
+$A_{n,m} = \frac{\sin 2\pi W(n - m)}{\pi(n - m)}$.The eigenvector is $\mathbf{v}^{(k)} = [v_0^{(k)}(N, W), v_1^{(k)}(N,
+  W), \dots, v_{N-1}^{(k)}(N, W)]^T$.4. Characteristics and Practical AdvantagesSolving the matrix equation yields $N$
+distinct eigenvalues, which are conventionally ranked in descending order: $1 > \lambda_0 > \lambda_1 > \dots >
+  \lambda_{N-1} > 0$.The sequence $v_n^{(0)}(N, W)$, associated with the strictly largest eigenvalue $\lambda_0$, is
+designated as the first Slepian pulse.Each subsequent higher-order pulse maximizes the energy ratio $\lambda$ while
+maintaining strict orthogonality to all preceding Slepian pulses.When evaluating their performance against simpler
+shapes like rectangular or raised cosine pulses, Slepian pulses are distinguished by possessing both a relatively small
+mainlobe width and low sidelobe amplitude.This dual efficiency makes them an exceptionally strong candidate for control
+applications where a precise compromise between mainlobe width and sidelobe suppression is required.

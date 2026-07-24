@@ -1,0 +1,62 @@
+\ProvideDocumentCommand{\ann}{ o }{%
+  \IfNoValueTF{#1}
+  {\ensuremath{\hat{a}}}
+  {\ensuremath{\hat{a}_{#1}}}%
+}
+\ProvideDocumentCommand{\cre}{ o }{%
+  \IfNoValueTF{#1}
+  {\ensuremath{\hat{a}^{\dagger}}}
+  {\ensuremath{\hat{a}^{\dagger}_{#1}}}%
+}
+\ProvideDocumentCommand{\Hrwa}{ o }{%
+  \IfNoValueTF{#1}
+  {\ensuremath{\hat{H}_{\text{RWA}}}}
+  {\ensuremath{\hat{H}_{\text{RWA},#1}}}%
+}
+\ProvideDocumentCommand{\num}{  }{%
+  {\ensuremath{\hat{n}}}
+}
+
+\ProvideDocumentCommand{\sumkk}{ o }{%
+  \ensuremath{%
+    \sum_{k=0}%
+    \IfValueT{#1}{^{#1}}%
+  }%
+}
+
+\ProvideDocumentCommand{\wdrive}{}{%
+  {\ensuremath{\omega_d}}
+}
+
+\ProvideDocumentCommand{\wk}{}{%
+  \ensuremath{\omega_k}%
+}
+
+\ProvideDocumentCommand{\updag}{}{%
+  \ensuremath{^\dagger}%
+}
+
+\ProvideDocumentCommand{\Hrot}{}{%
+  \ensuremath{\hat{H}_{\text{rot}}}%
+}
+\ProvideDocumentCommand{\Hlab}{}{%
+  \ensuremath{\hat{H}_{\text{lab}}}%
+}
+\ProvideDocumentCommand{\Nmax}{}{\ensuremath{N_{\mathrm{max}}}}
+\ProvideDocumentCommand{\OmegaRF}{}{\ensuremath{\Omega_{\mathrm{RF}}(t)}}
+\ProvideDocumentCommand{\Omegax}{}{\ensuremath{\Omega_{x}}}
+\ProvideDocumentCommand{\Omegay}{}{\ensuremath{\Omega_{y}}}
+\ProvideDocumentCommand{\RR}{}{\ensuremath{\mathbb{R}}}
+\ProvideDocumentCommand{\CC}{}{\ensuremath{\mathbb{C}}}
+
+\ProvideDocumentCommand{\wrt}{}{%
+  w.r.t.
+}
+
+\newcommand{\ketbra}[2]{\vert #1 \rangle \langle #2 \vert}
+\newcommand{\eref}[1]{Eq.~(\ref{#1})}
+\newcommand{\tref}[1]{Table.~\ref{#1}}
+\newcommand{\fref}[1]{Fig.~\ref{#1}}
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\eps}{\varepsilon}
+\DeclareMathOperator{\sinc}{sinc}

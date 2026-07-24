@@ -1,0 +1,318 @@
+\section{Methods}
+\label{sec:proposed}
+In this section, we investigate methods to mitigate leakage errors in X and CZ gates, beginning with the X gate. Our
+approach builds on the DRAG-1 scheme. Conventionally, DRAG-1 relies on a seed function to generate a control pulse to
+minimizes leakage from $\vert{}0\rangle$ to $\vert{}2\rangle$. However, we demonstrate that bypassing the seed function
+to synthesize the pulse directly yields a superior pulse shape.
+% \subsection{X gate}
+\subsection{Note on $Y$ DRAG correction}
+Aside from the $X$ control pulse, we utilize the DRAG pulses \ref{eq:ydrag} and \ref{eq:zdrag}.
+We demonstrate that the analytical expression for the $Y$ control pulse remains valid even in the non-perturbative
+regime---a derivation that, to the best of our knowledge, has not been previously reported in the literature. To
+illustrate this, we recalculate the system Hamiltonian without relying on perturbative assumptions. We introduce a
+unitary frame transformation $V$, defined as:
+% We can show that the formula for the $Y$ control pulse is still valid in non-perturbative regime.
+% (Within the knowledge of the author, this computation has not been done/shown elsewhere.)
+% Now we recalculate the Hamiltonian without the assumption of perturbation.
+% % Applying a frame change with $V=\exp(S)$, $S=-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}$ to the Hamiltonian \ref{eq:Hrwa} ,
+% % the new $\ket{1}\bra{2}$ component reads
+% Consider a frame change $V$
+\begin{equation}
+  V = \exp\left[-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}\right]
+  = \cos(\phi) -i\hat{\sigma}^y_{1,2}\sin(\phi)
+  \label{eq:first_frame_change}
+\end{equation}
+where $\phi = \lambda_2\dfrac{\Omegax}{2\Delta_2}$, and apply it to our qudit Hamiltonian in \eref{eq:Hrwa}.
+The $\ket{1}\bra{2}$ component of the resulting Hamiltonian is
+$$
+  -\sin(2\phi)\dfrac{\delta(t)+\Delta}{2}+\cos(2\phi)\dfrac{\lambda \Omegax}{2}-i\dfrac{\lambda}{2}\left(\dfrac{\Omega_x^\prime(t)}{\Delta}+\Omega_y(t)\right).
+$$
+% Setting $\Omegay$ as in \eref{eq:ydrag} still reduces this component.
+% Hence, we just use the standard DRAG correction \eref{eq:ydrag} for the $Y$ control.
+Substituting $\Omega_y$ as defined in \eref{eq:ydrag} demonstrates that this off-diagonal component is still effectively
+suppressed. Consequently, we retain the standard DRAG correction  for the $Y$ control pulse.
+% \subsection{RWA}
+
+
+
+% \subsubsection{Antidiagonalization of $2\times 2$ matrix}
+%
+% \begin{boxA}
+%   {\bf Probelm } \\
+%   Given a Hermitian matrix $H\in M_2(\CC)$, antidiagonalize $H$ so that its diagonal elements be minimized according to transformation~(\ref{eq:framechange}).
+% \end{boxA}
+% Suppose $H$ is a $2\times2$ Hermitian matrix.
+% Consider a problem of anti-diagonlizing $H$ according to the transformation~\ref{eq:framechange}.
+% Here we mean by anti-diagonalization making the diagonal components as small as possible in the sense of $l_1$ or $l_2$ sum.
+%
+% $$
+%   H    = H_d + H_a, \qquad
+%   H_d  = \begin{pmatrix} a(t) & 0 \\ 0 & d(t) \end{pmatrix},\qquad
+%   H_a  = \begin{pmatrix} a(t) & 0 \\ 0 & d(t) \end{pmatrix}
+% $$
+% Consider the following transformation:
+% \begin{equation}
+%   U(t) = \exp\left(i\int_0^t\,H_d(t^\prime)\mathrm{d}t^\prime\right) = \begin{pmatrix}\exp\left(i\int_0^t\,a(t^\prime)\mathrm{d}t^\prime\right) &0\\0&\exp\left(i\int_0^t\,d(t^\prime)\mathrm{d}t^\prime\right) \end{pmatrix}
+%   \label{eq:antidiagonalization}
+% \end{equation}
+% Since $i\dot{U}U^\dagger=-H_d(t)$, this yields a complete anti-diagonalization
+% $$
+%   H^\prime(t) =
+%   \begin{pmatrix}
+%     0                 & b(t)e^{i\phi(t)} \\
+%     c(t)e^{-i\phi(t)} & 0                \\
+%   \end{pmatrix}
+% $$
+% where $\phi(t) = \int_0^t\,[a(\tau)-d(\tau)]\mathrm{d}\tau$.
+%
+% To make this method effective, we need to ensure that $\ket{0}$ and $\ket{1}$ has not changed at the ends of the
+% operation by the transformation~\ref{eq:antidiagonalization}. In formula,
+% $$
+%   \phi(T) \in \RR_{>0}
+% $$
+
+\subsection{DRAG-1}
+Although in \ref{subsec:drag}, the DRAG-1 pulse is created from the seed pulse waveform $\Omega_1$
+through \eref{eq:drag1}, now we reverse this process.
+First we solve \eref{eq:drag1} for $\Omega_1(t)$.
+We can rewrite  \eref{eq:drag1} as a second-order linear oridnary differential equation (ODE):
+\begin{equation}
+  \Omega^2_x(t)=\left(1+\frac{D^2}{\Delta_2^2}\right)\Omega_1^2(t).
+  \label{eq:drag1_ode}
+\end{equation}
+Recognizing this as a driven harmonic oscillator equation, the general solution is
+\begin{equation}
+  \Omega_1^2(t) = \int_0^t\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(t-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau
+  + A\cos(\Delta_2t+\phi).
+  \label{eq:drag1_sol}
+\end{equation}
+The first term represents the particular solution to the ODE in \eref{eq:drag1_ode}.
+The verification can be done with
+the Leibniz rule \cite{apostol}, which governs the differentiation under the integral sign:
+\begin{equation}
+  \frac{d}{dt} \int_{a(t)}^{b(t)} F(x,t) dx = F(b(t), t) \cdot b'(t) - F(a(t), t) \cdot a'(t) + \int_{a(t)}^{b(t)} \frac{\partial}{\partial t} F(x,t) dx.
+  \label{eq:leibniz}
+\end{equation}
+Recall we have three boundary conditions on our debt:
+\begin{enumerate}
+  \item $\Omega_x = 0$ at both ends ($t=0$, $T$): This ensures compatibility with the SWT and enforces boundary continuity for the X-pulse, mitigating spectral leakage.
+  \item $\dot{\Omega}_x = 0$ at both ends ($t=0$, $T$): This guarantees a smooth envelope derivative, maintaining essential boundary continuity for the corresponding Y-pulse.
+  \item $\Omega_1 = 0$ at both ends ($t=0$, $T$): This further enforces strict SWT compatibility at the start and completion of the gate.
+\end{enumerate}
+
+Applying the third boundary condition at the initial time $t = 0$  immediately eliminates the homogeneous component, yielding $A = 0$ in \eref{eq:drag1_sol}
+The constraint at $t=T$ translates to
+$$
+  \left(\Omega_1^2(T)\right) = 0 = \int_0^T\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau,
+$$
+differentiating both sides we get
+$$
+  \left(\Omega_1(T)\dot{\Omega}_1(T)\right) = 0 = \int_0^T\,\left[\cos(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau.
+$$
+These two constraints combined implies
+$$
+  \int_{-\infty}^{\infty}[\Delta_2^2\Omega_x(\tau)^2]e^{-i\Delta\tau}\,\dd \tau.
+$$
+Hence, The boundary condition at $t=T$ for smoothness translates to the null fourier transform condition,
+\begin{equation}
+  \int_0^T \Omega_x(\tau)^2 e^{-i\Delta_2\tau} d\tau = 0.
+  \label{eq:drag1_fourier}
+\end{equation}
+\subsubsection{Pulse Design}
+Although Jesus et al. \cite{99999} proposed a pulse design method for $\Omega_x$ by way of $\Omega_1$, and investigated
+an optimal pulse waveform therein, we can
+directly design a DRAG-1 pulse through \eref{eq:drag1_fourier}.
+Now we consider pushing the gate time limit for maintaining the perturbative approximation of Schrieffer-Wolff transformation.
+In it,
+The problem of early truncation will be somewhat relieved by keeping $\max |\Omega_x|$ small.
+We combine delayed leakage reduction technique described in \cite{Polat2026} and function design techniques to obtain
+such pulses.
+
+Let $t_d=\pi/\Delta$. Then $f(t)+f(t-t_d)$'s Fourier transform is computed as
+$$
+  \mathcal{F}[f(t)+f(t-t_d)](\Delta) = \mathcal{F}[f](\Delta)+e^{i\Delta t_d}\mathcal{F}[f](\Delta) = 0.
+$$
+This suggests that we find a function $g(t)$ on $[-1,1]$ that satisfies the following property:
+\begin{enumerate}
+  \item \label{itm:g1} $g$ is anti-symmetric
+  \item \label{itm:g2} $g$ is monotonically increasing
+  \item \label{itm:g3} $g(1)=1/2$
+  \item  \label{itm:g4} $g$'s first and second derivative vanishes at $g(-1)$.
+\end{enumerate}
+$g$ represents the function on $[0,t_r]$.
+On obtaining such a $g$, we construct $\Omega_x^2$ as
+$$
+  \Omega_x^2(t) =
+  \begin{cases}
+    A \left(g(2t/t_r-1)-g(-1)\right) \quad                     & (0<t<t_r)       \\
+    A                         \quad                            & (t_r<t<t_d)     \\
+    A\left( g(2(t_r+t_d-t)/t_r-1)-g(-1)\right)           \quad & (t_d<t<t_d+t_r) \\
+  \end{cases}
+$$
+where $A$ is the amplitude determined by integrating $\Omega_x^2$ according to \eref{eq:xgate_condition}.
+
+There are mutliple choices for such $g$.
+\begin{enumerate}
+  \item $\dfrac{1}{2} x+\dfrac{1}{2\pi}\sin( \pi x)$
+  \item $3\pi x+4\sin(\pi x)+\dfrac{1}{2} \sin(2\pi x)$
+\end{enumerate}
+\subsubsection{$g$ design}
+Let $h$ be a positive symmetric function on $[-1,1]$ that vanishes at both ends.
+Put $g^\prime = h^2$. This ensures that the condition \ref{itm:g4} holds as $g^{\prime\prime}=2hh^\prime=0$
+and it is easy to check that the other condtions \ref{itm:g1}-\ref{itm:g3} are also satisfied.
+
+\subsection{Optimization by Riccati engineering}
+As we've seen in \ref{subsec:npad}, NPAD has an obvious issue that the Hamiltonian is assumed to be
+time-independent, and in Ref.~\cite{NPAD2022}, the author only applies this method to perturbative cases, in which the
+method reduces to recursive Schrieffer-Wolff transformations.
+
+We outline the newly proposed procedure to handle non-perturbative cases.
+% Although well known as a qunatum control method, Ricatti engineering is not widely applied to one qubit gate control.
+% In this subsection, we see how Riccati engineering described in \cite{Riccati2010} reduces to in the case of
+% dimension $3$.
+% Given a $3\times 3$ matrix $H$, we consider the problem of block diagonalizing it into $2\times 2$ and $1\times 1$
+% compartments.
+% Write
+% $$H(t) = \begin{pmatrix} H_11(t) & H_{12}(t) \\ H_{21}(t) & H_{22}(t) \end{pmatrix}$$
+% $H'(t) = U(t)H(t)U^\dagger(t) + i\dot{U}(t)U^\dagger(t)$.
+% $$U(t) = \begin{pmatrix} (I_2 + X^\dagger X)^{-1/2} & X^\dagger (I_{n-2} + X X^\dagger)^{-1/2} \\ -X (I_2 + X^\dagger X)^{-1/2} & (I_{n-2} + X X^\dagger)^{-1/2} \end{pmatrix}$$
+% where $X(t)=(x_1(t)\:\:\: x_2(t))$
+% \begin{equation}
+%   i\dot{X} = H_{21} + H_{22}X - XH_{11} - XH_{12}X \label{eq:riccati}
+% \end{equation}
+% First we see how the results in \ref{subsec:ricatti} apply to the Hamiltonian
+Applying to the qudit Hamiltonian \ref{eq:rotatingframe} with $N_{\rm{max}}=2$,
+the Riccati equation becomes
+$$i\dot{x}_1 = (2\delta+\Delta) x_1 - \frac{1}{2}(\Omega_x + i\Omega_y)x_2 - \frac{\lambda}{2}(\Omega_x - i\Omega_y)x_1 x_2,$$
+$$i\dot{x}_2 = \frac{\lambda}{2}(\Omega_x + i\Omega_y) + (2\delta+\Delta) x_2 - \frac{1}{2}(\Omega_x - i\Omega_y)x_1 - \frac{\lambda}{2}(\Omega_x - i\Omega_y)x_2^2.$$
+If we define
+\begin{equation}
+  A = -\frac{1}{2}(x_2^2+\lambda x_1)\label{eq:A}
+\end{equation}
+\begin{equation}
+  B = \frac{1}{2}x_1^2 \label{eq:B}
+\end{equation}
+\begin{equation}
+  C = i(\dot{x_1}x_2-x_1\dot{x_2}) \label{eq:C}
+\end{equation}
+Then $\Omega_x$, $\Omega_y$, and $\delta(t)$ can be expressed
+\begin{equation}
+  \tilde{\Omega} = \Omega_x+i\Omega_y = \dfrac{A^\star C - B C^\star}{|A|^2-|B|^2}, \label{eq:riccati_Omega}
+\end{equation}
+
+\begin{equation}
+  \delta(t) = \frac{1}{2} \left( \frac{i\dot{x}_1 + \frac{1}{2} x_2 \tilde{\Omega} + \frac{1}{2}\lambda x_1 x_2 \tilde{\Omega}^*}{x_1} - \Delta_2 \right) \label{eq:riccati_delta}.
+\end{equation}
+
+
+
+\subsubsection{Variational method}
+One way to utilize \eref{eq:riccati_Omega} and \eref{eq:riccati_delta} is to determine $x_1$ and $x_2$ first and
+solve numerically for $\tilde{\Omega}$ and $\delta$.
+There's multiple difficulties with this approach. Since the Riccati equation \eref{riccati} is not linear, adjust the
+pulse area of $\Omega_x$ is difficult. To overcome this issue, we first derive the and then
+In this study, Riccati engineering method is utilized as an optimization method,
+To preserve the X gate condition \eref{eq:xgate},
+\begin{equation}
+  \delta \Theta = \int_0^T \sum_{k=1}^2 \left( \frac{\partial \Omega_x}{\partial x_k} \delta x_k + \frac{\partial \Omega_x}{\partial \dot{x}_k} \delta \dot{x}_k + \text{c.c.} \right) dt
+\end{equation}
+must vanish. ($\dfrac{\partial}{\partial x_i}$ denotes Wirtinger derivatives.)
+Integral by parts transforms the above equation into
+
+\begin{equation}
+  \delta \Theta = \left[ \sum_{k=1}^2 \left( P_k(T) \delta x_k(T) + P_k^*(T) \delta x_k^*(T) \right) \right] + \int_0^T \sum_{k=1}^2 \left( G_k(t) \delta x_k(t) + G_k^*(t) \delta x_k^*(t) \right) dt.
+\end{equation}
+Note that $\delta x_k(0) = 0$.
+
+
+$$G_k(t) = \frac{\partial \Omega_x}{\partial x_k} - \frac{d}{dt} \left( \frac{\partial \Omega_x}{\partial \dot{x}_k} \right)$$
+
+$$P_1(t) = \frac{\partial \Omega_x}{\partial \dot{x}_1} = i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_2$$
+
+$$P_2(t) = \frac{\partial \Omega_x}{\partial \dot{x}_2} = -i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_1$$
+
+
+\subsection{CZ gate}
+In this section, for brevity, the length of pulses are assumed to be $N$, an odd number.
+As seen in \ref{subsec:leakage}, the leakage error is approximately expressed as $\dfrac{1}{4}|G(\Delta)|^2$.
+In the following we propose several methods to mitigate this error.
+\subsubsection{anti-symmetric Chebyshev pulse}
+Maintaining a specified sidelobe level, Chebyshev pulse is the signal that minimizes the mainlobe width
+
+Mathematically, a chebyshev pulse $g_{ch}$ is a discrete time pulse defined as
+$$
+  g_{\text{ch}}[n] = \frac{1}{N} \Bigg[ 1 + 2r \sum_{k=0}^{(N-1)/2} (-1)^k T_{N-1}\left(x_0 \cos \frac{\pi k}{N}\right)  \cos \left( \frac{2\pi k}{L} \left(n + \frac{1}{2}\right) \right) \Bigg], $$
+where $r = \frac{1}{T_{N-1}(x_0)}$ corresponds to the suppressed sidelobe level.
+We call its anti-symmetrization
+$$
+  g_{ach}[n] = \begin{cases}
+    g_{ch}[n]  \quad     & n< (N+1)/2  \\
+    0             \quad  & n = (N+1)/2 \\
+    -g_{ch}[N-n]   \quad & n > (N+1)/2 \\
+  \end{cases}
+$$
+anti-symmetric Chebyshev pulse $g_{ach}$.
+\subsubsection{Correctional Derivative pulse}
+To reduce the fourier transform at $\Delta$, recall that
+$$
+  \mathcal{F}[f^\prime](\Delta) = i\omega \mathcal{F}[f](\Delta).
+$$
+Hence, by adding the second derivative to $f$, we can reduce the fourier transform to $0$,
+$$
+  \mathcal{F}[(1+D^2/\Delta^2)f](\Delta) = 0.
+$$
+This method is only applicable to pulses whose second derivative is anyti-symmetric, such as anti-symmetric Chebyshev,
+to maintain the anti-symmetric property after adding the second derivative.
+
+
+\subsubsection{Combining two pulses}
+Combining two pulses of different origins
+\subsubsection{Redefining the Slepian eigenvalue problem}
+The (second) Slepian pulse is the solution of the second largest eigenvalue to the following problem
+\begin{equation}
+  \dfrac{\int_{-W}^{W}\,|G_{\text{DTFT}}(\omega)|^2 d\omega}
+  {\int_{-\pi}^{\pi}\,|G_{\text{DTFT}}(\omega)|^2 d\omega} = \dfrac{g^TA_{m,n}g}{g^Tg} \label{eq:slepproblem}
+\end{equation}
+where $A_{m,n} = \sinc(\pi(m-n)W) = \dfrac{\sin(\pi(m-n)W)}{\pi(m-n)W}$.
+(\ref{eq:slepproblem}) is the eigenvalue problem of the matrix $A_{m,n}$. It was Slepian who found a commuting
+matrix for $A_{m,n}$ and solev teh problem analyitcally.
+
+Close investigation of the \eref{eq:leakageerror}
+
+
+
+For the targetted range of $W_1\leq \dfrac{T}{N}  \Delta \leq W_2$
+$$\text{minimize } \frac{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega}{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega} = \frac{\tilde{g}^T (A_{\text{rect}}(W_2) - A_{\text{rect}}(W_1)) \tilde{g}}{\tilde{g}[0]^2 + \dots + \tilde{g}[N]^2}$$
+To not elongate gate time we impose the following condition,
+$\tilde{g}$ should be anti-symmetric and non-negative on the first half.
+\begin{itemize}
+  \item $\tilde{g}[s] = \tilde{g}[N-1-s]$
+  \item $\tilde{g}[s] \geq 0 \quad \text{for }0\leq s\leq L-1$
+\end{itemize}
+Put
+$$B = \begin{pmatrix} 1 & & \\ & \ddots & \\  &  & 1\\0 & \cdots & 0 \\  &  & -1 \\& \mathinner{\mkern2mu\raise1pt\hbox{.}\mkern2mu\raise4pt\hbox{.}\mkern2mu\raise7pt\hbox{.}\mkern1mu} & \\ -1 & &  \end{pmatrix}, \quad C = B^T A B$$
+$$\begin{pmatrix} \tilde{g}[0] \\ \vdots \\ \tilde{g}[N] \end{pmatrix} = B \begin{pmatrix} h[0] \\ \vdots \\ h[L-1] \end{pmatrix}$$
+Then
+$$\text{maximize } -\frac{h^T C h}{h^T h}$$
+is the problem to solve.
+\subsubsection{Sequential Quadratic Programming}
+Given an ansatz and an evaluation point $\Delta$, the algorithm goes as follows:
+
+\begin{algorithm}
+  \caption{Variational Quantum Circuit Optimization}\label{alg:vqa_opt}
+  \begin{algorithmic}[1] % The [1] enables line numbering
+    \Require Target unitary $U$, Error tolerance $\epsilon$
+    \Ensure Optimized parameters $\boldsymbol{\theta}$
+    \State Initialize $\boldsymbol{\theta} \gets \text{random values in } [0, 2\pi]$
+    \State Set learning rate $\alpha \gets 0.01$
+    \While{cost function $\mathcal{L}(\boldsymbol{\theta}) > \epsilon$}
+    \State Compute gradient $\nabla \mathcal{L}(\boldsymbol{\theta})$ using parameter-shift rule
+    \If{$\|\nabla \mathcal{L}(\boldsymbol{\theta})\| < \text{threshold}$}
+    \State \textbf{break} \Comment{Early stopping criteria}
+    \EndIf
+    \State $\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha \nabla \mathcal{L}(\boldsymbol{\theta})$
+    \EndWhile
+    \State \Return $\boldsymbol{\theta}$
+  \end{algorithmic}
+\end{algorithm}
+

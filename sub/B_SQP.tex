@@ -1,0 +1,39 @@
+\section{逐次二次計画法 (SQP) の基礎}
+\label{app:sqp}
+
+逐次二次計画法（Sequential Quadratic Programming: SQP）は、非線形な目的関数と制約条件を持つ最適化問題を解くための強力かつ標準的な反復解法の一つである \cite{nocedal2006numerical}。本付録では、SQPアルゴリズムの基本原理と理論的背景について概説する。
+
+\subsection{問題の定式化}
+以下のような一般的な非線形最適化問題を考える。
+\begin{align}
+    \min_{x \in \mathbb{R}^n} \quad & f(x) \label{eq:sqp_obj} \\
+    \text{subject to} \quad & c_i(x) = 0 \quad (i \in \mathcal{E}), \label{eq:sqp_eq} \\
+    & c_i(x) \le 0 \quad (i \in \mathcal{I}), \label{eq:sqp_ineq}
+\end{align}
+ここで、$f: \mathbb{R}^n \to \mathbb{R}$ は目的関数、$c_i: \mathbb{R}^n \to \mathbb{R}$ は制約関数であり、$\mathcal{E}$ および $\mathcal{I}$ はそれぞれ等式制約と不等式制約のインデックス集合を表す。また、これらの関数は十分に滑らかである（二階連続微分可能）と仮定する。
+
+この問題に対するラグランジュ関数（Lagrangian）$L(x, \lambda)$ は、次のように定義される。
+\begin{equation}
+    L(x, \lambda) = f(x) - \sum_{i \in \mathcal{E} \cup \mathcal{I}} \lambda_i c_i(x)
+\end{equation}
+ここで、$\lambda = (\lambda_i)_{i \in \mathcal{E} \cup \mathcal{I}}$ はラグランジュ乗数ベクトルである。最適解においては、カルーシュ・クーン・タッカー（KKT: Karush-Kuhn-Tucker）条件が成立することが知られている。
+
+\subsection{二次計画部分問題の導出}
+SQPは、ニュートン法を最適化問題のKKT条件に適用した手法と解釈できる。現在の反復点 $x_k$ において、探索方向 $d$ を求めるために、目的関数を二階テイラー展開により二次関数として近似し、制約条件を一階テイラー展開により線形近似する。これにより、次の二次計画（QP: Quadratic Programming）部分問題が得られる \cite{powell1978fast}。
+
+\begin{align}
+    \min_{d \in \mathbb{R}^n} \quad & \nabla f(x_k)^\top d + \frac{1}{2} d^\top \nabla_{xx}^2 L(x_k, \lambda_k) d \label{eq:qp_obj} \\
+    \text{subject to} \quad & c_i(x_k) + \nabla c_i(x_k)^\top d = 0 \quad (i \in \mathcal{E}), \label{eq:qp_eq} \\
+    & c_i(x_k) + \nabla c_i(x_k)^\top d \le 0 \quad (i \in \mathcal{I}) \label{eq:qp_ineq}
+\end{align}
+
+ここで、$\nabla_{xx}^2 L(x_k, \lambda_k)$ はラグランジュ関数のヘッセ行列（Hessian）である。
+
+\subsection{アルゴリズムの概要}
+各反復においてQP部分問題 \eqref{eq:qp_obj}--\eqref{eq:qp_ineq} を解くことで、探索方向 $d_k$ および新しいラグランジュ乗数 $\lambda_{k+1}$ が得られる。これを用いて、次のように変数を更新する。
+\begin{equation}
+    x_{k+1} = x_k + \alpha_k d_k
+\end{equation}
+ここで、$\alpha_k \in (0, 1]$ はステップ長であり、メリット関数（Merit function）を用いた直線探索（Line search）により、大域的収束性を保証するように決定される。
+
+なお、実際の計算においては、ヘッセ行列 $\nabla_{xx}^2 L(x_k, \lambda_k)$ の厳密な計算が困難な場合が多い。そのため、準ニュートン法（例えばBFGS更新公式など）を用いて、ヘッセ行列の近似行列 $B_k$ を逐次更新する手法が一般的に用いられる。

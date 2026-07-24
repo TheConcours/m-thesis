@@ -1,0 +1,39 @@
+\usepackage{amsmath,amsthm,amsfonts,amssymb}
+\usepackage{mathtools}
+\usepackage{mathrsfs}
+% \usepackage{bbold}
+\usepackage{dsfont}
+\usepackage[margin=15mm]{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{paracol}
+\usepackage[svgnames]{xcolor}
+\usepackage{fancyhdr}
+\usepackage{xpatch}
+\usepackage{tikz}
+%\usepackage{tikz-cd}
+\usetikzlibrary{cd,automata,arrows.meta,positioning,calc}
+\usepackage{siunitx}
+%\usepackage{kpfonts}
+\usepackage{stackengine,scalerel}
+\usepackage{calc}
+\usepackage{esvect}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{pgffor}
+\usepackage{stmaryrd}
+\usepackage{listings}
+\usepackage{alltt}
+\usepackage{mdframed}
+\usepackage{hyperref}
+\usepackage{xstring}
+
+\usepackage{ragged2e}
+
+% \qty commandは、physics packagteと干渉する。
+% \qtyはsiunitx側を採用する。
+% physics pacakge の\qty を使いたければ、\pqtyを使うこと！
+\usepackage{physics}
+\usepackage{siunitx}
+\AtBeginDocument{\RenewCommandCopy\qty\SI}
+

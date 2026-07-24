@@ -1,0 +1,9 @@
+build/
+.tex_intermediates/
+examples/
+main.synctex.gz
+main.dvi
+main.ttt
+guide.tex
+eguide.tex
+README.md
