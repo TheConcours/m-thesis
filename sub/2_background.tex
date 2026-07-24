@@ -1,4 +1,4 @@
-\section{Preliminary results and overview of previous research}
+\section{Preliminary results and overview of previous research: X gate}
 
 % This chapter describes the physical properties of superconducting qubits, which are fundamental to quantum information
 % processing using superconducting circuits, and their control methods. First, we clarify how macroscopic quantum systems,
@@ -28,6 +28,12 @@ $\vert{}1\rangle$, corresponding to the classical 0 and 1. A pure qubit state $\
 linear combination of these basis states:$$\vert{}\psi\rangle = \alpha\vert{}0\rangle + \beta\vert{}1\rangle$$Here,
 $\alpha$ and $\beta$ are complex probability amplitudes satisfying
 $\vert{}\alpha\vert{}^2 + \vert{}\beta\vert{}^2 = 1$.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.5\textwidth]{fig/fig_bloch.pdf}
+  \caption{$\alpha \beta$}
+  \label{fig:my_label}
+\end{figure}
 This constraint allows the pure state of a qubit to be mapped onto the surface of a unit sphere in three-dimensional
 space, known as the Bloch sphere. On the Bloch sphere, the poles represent the basis states $\vert{}0\rangle$ and
 $\vert{}1\rangle$, while points on the equator represent equal superpositions with varying relative phases. This
@@ -39,7 +45,31 @@ evolution. In formula, \cite{sakurai2020modern}
 $$
   \psi(t) = \mathcal{T}\left(\exp\left[\int_0^T\,iH(t)\,\dd t\right]\right)\psi(0).
 $$
+Here, $\mathcal{T}$ denotes the Dyson time-ordering operator, $T$ is the total gate duration, and $H(t)$ is the system's
+total Hamiltonian. In practice, $H(t)$ consists of a static drift term defining the unperturbed system and a
+time-dependent control term corresponding to external driving fields, such as shaped microwave pulses. The primary
+objective of quantum control is to engineer these time-dependent waveforms so that the resulting evolution operator
+accurately synthesizes a desired target unitary gate on the computational subspace.
+\subsection{Leakage and fidelity}
+\label{subsec:leakageandfidelity}
+While the idealized model assumes a perfect two-level system, many physical implementations, notably transmon qubits,
+are not strictly confined to two states.
+For instance, weakly anharmonic oscillators possess a ladder of energy levels where the computational
+subspace consisting of $\vert{}0\rangle$ and $\vert{}1\rangle$ is not entirely isolated from higher-excited states, most
+notably the $\vert{}2\rangle$ state.When applying short, high-bandwidth microwave pulses to execute fast quantum
+operations, the broad frequency spectrum of the control signal can inadvertently drive transitions into these
+non-computational states. The phenomenon where population escapes the $\{\vert{}0\rangle, \vert{}1\rangle\}$ subspace is
+known as leakage. Because standard quantum error correction codes are primarily designed to handle errors within the
+computational basis, leakage represents a particularly damaging source of information loss.To mathematically quantify
+the success of a control pulse, we evaluate the gate fidelity, which measures the closeness of the actual physical
+evolution to the ideal target unitary operation. Leakage fundamentally limits this metric; any population that leaves
+the computational subspace immediately degrades the fidelity of the operation.Consequently, achieving the high-fidelity
+gates required for fault-tolerant quantum computing relies heavily on advanced waveform optimization. The control fields
+defined in $H(t)$ must be meticulously shaped to strike a delicate balance: driving the desired rotations on the Bloch
+sphere as rapidly as possible to avoid decoherence, while simultaneously suppressing the spectral components that cause
+leakage to higher energy levels.
 \subsection{Hamiltonian in the rotating frame for a qudit}
+As noted in \ref{subsec:leakageandfidelity},
 A transmon qubit is a widely used superconducting qubit. Because a transmon is inherently an anharmonic oscillator, it possesses higher excited states beyond
 $\ket{0}$ and $\ket{1}$.
 Consequently, it acts as a qudit---a quantum system with $d$ levels---rather than an ideal qubit, which
@@ -162,6 +192,9 @@ For $\lambda_1$ is entirely aborbed into $\OmegaRF$, it is exactly (not approxim
 In simulations, we set the values of $\lambda$ accordiingly.
 \subsection{Schrieffer-Wolff transformation}
 \label{subsec:swt}
+While the rotating frame tranformation in \eref{eq:rotatingframe} is computed exactly,
+such exact analytical transformations are not always achievable.
+In general, the generator $S$ is chosen so that $i\dot{S}$ cancels the error term in the Hamiltonian.
 In \eref{eq:framechange}, $V$ is assumed to be a unitary operator.
 we now consider a scenario where the transformation operator $V$ is parameterized by an  anti-Hermitian operator $S$.
 Specifically, $V$ is defined exponentially as:
@@ -175,9 +208,11 @@ we can expand the Hamiltonian in a power series of $S$ as
 \end{equation}
 It is important to emphasize that this expansion is mathematically rigorous and holds generally true for any generator
 $S$ and Hamiltonian $H$, provided the system is defined within a finite-dimensional Hilbert space.
-While standard perturbative techniques often approximate the dynamics by truncating this series early, exploring a
-non-perturbative, strong-driving regime requires a more exacting approach. In such strongly driven systems, premature
-truncation introduces significant inaccuracies.
+While truncating the series early causes inaccuracies, adding more terms makes subsequent computations excessively
+complex.
+% exploring a
+% non-perturbative, strong-driving regime requires a more exacting approach.
+% In such strongly driven systems, premature truncation introduces significant inaccuracies.
 % In the DRAG scheme, this evaluation of higher order terms is called superlinear corrections.
 
 
@@ -300,178 +335,3 @@ Under this frame change, the resulting $H_{11}^\prime(t)$ is given by
 The form of this Hamiltonian is not very easy to analyze.
 The cases in which the Hamiltonian become time-dependent are investigated in \cite{Riccati2010,Gardas2010}.
 
-\subsection {CZ gate}
-From now, we start dealing with the two qubit CZ gate.
-Note that we use different notations for X and CZ gates.
-\subsubsection{Basics}
-CZ gate is a two-qubit gate that applies a phase flip to the target qubit if the control qubit is in the state
-$\ket{1}$. In the computational basis $\{\vert{}00\rangle, \vert{}01\rangle, \vert{}10\rangle, \vert{}11\rangle\}$, the
-ideal unitary evolution is represented by a diagonal matrix:
-\begin{equation}
-  U_{\mathrm{CZ}}=\begin{pmatrix}
-    1 & 0 & 0 & 0  \\
-    0 & 1 & 0 & 0  \\
-    0 & 0 & 1 & 0  \\
-    0 & 0 & 0 & -1
-  \end{pmatrix}
-\end{equation}
-\subsubsection{SQUID loop and Z-control}
-In superconducting quantum architectures, the ability to dynamically tune the transition frequency of a qubit is
-essential for realizing the adiabatic CZ gate.
-This tunability is achieved by replacing the single Josephson junction of a standard
-transmon with a superconducting quantum interference device (SQUID) loop, which is then threaded by a localized magnetic
-flux controlled via a dedicated microwave transmission line known as the Z-control line (or flux line).
-\subsubsection{Qubit Architecture}
-Consider a system of two capacitively coupled transmon qubits, one fixed-frequency (QB2) and the other frequency tunable (QB1).
-The simplified dispersive Jaynes-Cummings Hamiltonian for this system can be modeled as:
-$$H = \sum_{i=1,2} \left( \omega_i a_i^\dagger a_i + \frac{\alpha_i}{2} a_i^\dagger a_i^\dagger a_i a_i \right) + g(a_1^\dagger + a_1)(a_2^\dagger + a_2) ,$$
-where $g$ denotes the coupling strength between the two qubits, $a_i$ creation operator for qubit $i$, and $\alpha_i$
-the anharmonicity of qubit $i$.
-\subsubsection{Adiabatic Implementation}
-% The adiabatic CZ gate is realized as syncing the QB1's frequency to QB2's, thereby creating an avoided crossing.
-% By doing so, the energy of $\ket{11}$ and $\ket{20}$ become comparable.
-To implement the gate, the frequency of Qubit 1 is swept along a
-prescribed trajectory $\omega_1(t)$ toward the avoided crossing, held or continuously varied for a duration $\tau_d$,
-and then returned to its idle parking frequency.
-In this process, $\ket{11}$ obtains/loses more phases than the other computational states, due to its stronger coupling
-to $\ket{02}$.
-
-By following \cite{Ding2025,Martinis2014} we review the theory behind the adiabatic implementaion of CZ gate and the
-derivation of leakage formula \eref{eq:leakage}.
-\begin{theorem}[Adiabatic Theorem]
-  If a quantum system is initially prepared in a non-degenerate energy eigenstate of a time-dependent Hamiltonian, and
-  if that Hamiltonian is varied sufficiently slowly, the system will evolve continuously to remain in the corresponding
-  instantaneous eigenstate of the evolving Hamiltonian up to an accumulated phase factor, given that there is a gap
-  between the eigenvalue and the rest of the Hamiltonian's spectrum.
-\end{theorem}
-Consider a two level system with the following Hamiltonian
-$$
-  H(t)=\eps(t)\sigma_z + \Delta\sigma_x.
-$$
-According to the adiabatic theorem, if we prepare the state $\ket{0}$ and slowly vary the Hamiltonian and then retrace the
-change back, the resulting state is $\ket{0}$ with phase accumulation.
-The instantaneous eigenstates are
-\begin{equation}
-  \vert{}\psi_-\rangle = \begin{bmatrix} -\sin(\theta(t)/2) \\ \cos(\theta(t)/2) \end{bmatrix} \quad \text{and} \quad \vert{}\psi_+\rangle = \begin{bmatrix} \cos(\theta(t)/2) \\ \sin(\theta(t)/2) \end{bmatrix},
-\end{equation}
-with eigenenergies
-\begin{equation}
-  E_- = -\frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2} \quad \text{and} \quad E_+ = \frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2}
-\end{equation}
-where
-\begin{equation}
-  \theta(t) = \arctan\frac{\Delta}{\eps(t)}.
-  \label{eq:theta}
-\end{equation}
-We denote the energy difference of these two instantaneous eigenstates as
-\begin{equation}
-  \omega(t) = \sqrt{\varepsilon(t)^2 + \Delta^2}
-  \label{eq:omega}
-\end{equation}
-
-\subsubsection{Calculation of leakage error} \label{subsec:leakage}
-Consider a state
-$$
-  \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1}.,
-$$
-with rotational change of coefficients
-\begin{align*}
-  \alpha & = \alpha_0\cos\dfrac{\theta}{2} + \beta_0\sin\dfrac{\theta}{2}  \\
-  \beta  & =  \beta_0\cos\dfrac{\theta}{2} - \alpha_0\sin\dfrac{\theta}{2}
-\end{align*}
-Differentiating, we have
-\begin{align*}
-  \dot{\alpha} & = \dfrac{-i\omega \alpha+\beta \dot{\theta}}{2} \\
-  \dot{\beta}  & = \dfrac{i\omega \beta-\alpha \dot{\theta}}{2}  \\
-\end{align*}
-Write $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, they form the "angle":
-$$
-  \alpha^* \beta = \dfrac{\sin\Theta e^{i\phi}}{2}
-$$
-Calculating the time derivative of $\alpha^*\beta$ finds us
-$$
-  \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
-$$
-Plugging $\phi=\phi_{\text{initial}} + \int_0^t\,\omega(t^\prime)\,\dd t^\prime$ and a bit of tinkering yields
-\begin{equation}
-  % \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
-  P_e \approx \dfrac{1}{4}\, \left\lvert\, \int \,\dfrac{\dd\theta}{\dd t} e^{-i\int\omega(t^\prime)\,\dd t^\prime}\right\rvert^2
-  \label{eq:leakage}
-\end{equation}
-% If we assume that the time derivative of $\ket{\psi_-}$ and $\ket{\psi_+}$ are small enough, $\ket{\psi}$ evolves accordingly to \begin{align*}
-%   \dot{\alpha} & = -iE_- \alpha, \\
-%   \dot{\beta}  & = -iE_+\beta,
-% \end{align*}
-% in other words,
-% \begin{align*}
-%   \dot{\alpha} & = \dot{\alpha_0}\cos\dfrac{\theta}{2} + \dot{\beta_0}\sin\dfrac{\theta}{2},  \\
-%   \dot{\beta}  & =  \dot{\beta_0}\cos\dfrac{\theta}{2} - \dot{\alpha_0}\sin\dfrac{\theta}{2},
-% \end{align*}
-
-
-\subsubsection{Phase accumulation}
-According to the adiabatic theorem, if the sweep rate is sufficiently slow compared to the energy gap at the avoided crossing,
-the system will remain in its instantaneous eigenstate. The dynamic frequency excursion imparts a continuous deformation
-on the $\vert{}11\rangle$ state, causing it to hybridize temporarily with $\vert{}02\rangle$ and acquire a dynamical phase.
-The total accumulated phase $\Phi_{11}$ on the $\vert{}11\rangle$ state is the time integral of its instantaneous eigenenergy
-$E_{11}(t)$:$$\Phi_{11} = -\frac{1}{\hbar} \int_{0}^{\tau} E_{11}(t) dt$$
-Simultaneously, single-qubit dynamical phases $\Phi_{01}$ and
-$\Phi_{10}$ are acquired. The conditional phase $\phi_{\text{cond}}$ accumulated over the gate duration is calculated
-by isolating the two-qubit interaction phase from the single-qubit contributions:$$\phi_{\text{cond}} = \Phi_{11} -
-  \Phi_{01} - \Phi_{10} + \Phi_{00}$$The gate is successful when the pulse amplitude and duration are calibrated such
-that $\phi_{\text{cond}} = \pi \pmod{2\pi}$.
-
-\subsubsection{Nonlinear time transformation}
-By applying a time transformation, we can simplify the leakage formula \eref{eq:leakage}.
-Let the time variable of this new frame be $\tau$. Set
-$$
-  \Delta \dd \tau = \omega(t) \dd t.
-$$
-then
-\begin{equation}
-  \dd t = \dfrac{\Delta}{\omega(t)}\dd \tau = \sin \theta(t) \dd \tau.
-  \label{eq:nonlinear_time_transform_differential}
-\end{equation}
-In integral form,
-\begin{equation}
-  t(\tau) = \int_0^\tau\,\sin\tilde{\theta}(\tau^\prime)\,\dd\tau^\prime
-  \label{eq:nonliniear_time_transform}
-\end{equation}
-The virtue of this transformation is clear if we plug \eref{eq:nonlinear_time_transform_differential} into \eref{eq:leakage}
-\begin{equation}
-  P_e = \dfrac{1}{4}\, \left\lvert\, \int_0^\tau\,\dfrac{\dd\tilde{\theta}}{\dd\tau}\, e^{-i\Delta \tau}\,\dd \tau \right\rvert^2
-  \label{eq:leakage_tau}
-\end{equation}
-
-\subsubsection{Slepian pulses}
-
-In the context of pulse waveform optimization, the Slepian pulses, frequently referred to as discrete prolate spheroidal
-sequences (DPSSs), represent a family of orthogonal pulses specifically formulated to solve the problem of maximal
-energy concentration in both the time and frequency domains. Because Heisenberg's uncertainty principle dictates that a
-pulse cannot be strictly bounded in both time and frequency simultaneously, Slepian, Landau, and Pollack developed these
-sequences to answer a fundamental optimization question: how to optimally concentrate energy in one domain when the
-pulse is strictly confined in the opposing domain.
-
-To define this optimization rigorously, consider a discrete-time pulse of finite length, denoted as $x[n]$ for $n = 0,
-  1, \dots, N-1$. This pulse is constrained to possess finite energy $E$, defined as:$$E = \sum_{n=0}^{N-1}
-  \vert{}x[n]\vert{}^2 < \infty$$The frequency characteristics of the pulse are analyzed using its discrete-time Fourier
-transform:$$X(e^{i\omega}) = \sum_{n=0}^{N-1} x[n]e^{-i\omega n}$$The objective is to maximize the fraction of the total
-pulse energy that is contained within a specific frequency band $[-W, W]$, where $0 < W < \pi$. This fractional energy
-concentration is represented by the ratio $\lambda \in [0, 1]$:$$\lambda = \frac{\int_{-W}^{W}
-    \vert{}X(e^{i\omega})\vert{}^2 d\omega}{\int_{-\pi}^{\pi} \vert{}X(e^{i\omega})\vert{}^2 d\omega}$$Therefore, the core
-optimization problem is to identify the specific sequence $x[n]$ of length $N$ that maximizes this eigenvalue
-$\lambda$.3. The Eigenvalue SolutionThe sequences that solve this optimization problem, denoted as $v_n^{(k)}(N, W)$
-where $k = 0, 1, \dots, N-1$ represents the pulse order, are the Slepian pulses. Here, $N$ is the pulse length and $W$
-parameterizes the mainlobe width.These pulses are derived as the real solutions to the following system of
-equations:$$\sum_{m=0}^{N-1} \frac{\sin 2\pi W(n - m)}{\pi(n - m)} v_m^{(k)}(N, W) = \lambda_k(N, W)v_n^{(k)}(N, W)$$For
-the singularity condition where $n = m$, the fraction simplifies to $2W$.This system can be elegantly expressed as the
-matrix eigenvalue problem $\mathbf{A}\mathbf{v}^{(k)} = \lambda_k \mathbf{v}^{(k)}$.The matrix elements are defined as
-$A_{n,m} = \frac{\sin 2\pi W(n - m)}{\pi(n - m)}$.The eigenvector is $\mathbf{v}^{(k)} = [v_0^{(k)}(N, W), v_1^{(k)}(N,
-  W), \dots, v_{N-1}^{(k)}(N, W)]^T$.4. Characteristics and Practical AdvantagesSolving the matrix equation yields $N$
-distinct eigenvalues, which are conventionally ranked in descending order: $1 > \lambda_0 > \lambda_1 > \dots >
-  \lambda_{N-1} > 0$.The sequence $v_n^{(0)}(N, W)$, associated with the strictly largest eigenvalue $\lambda_0$, is
-designated as the first Slepian pulse.Each subsequent higher-order pulse maximizes the energy ratio $\lambda$ while
-maintaining strict orthogonality to all preceding Slepian pulses.When evaluating their performance against simpler
-shapes like rectangular or raised cosine pulses, Slepian pulses are distinguished by possessing both a relatively small
-mainlobe width and low sidelobe amplitude.This dual efficiency makes them an exceptionally strong candidate for control
-applications where a precise compromise between mainlobe width and sidelobe suppression is required.
