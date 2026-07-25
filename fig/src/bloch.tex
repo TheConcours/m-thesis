@@ -1,0 +1,81 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+
+\begin{document}
+% Define Bloch Sphere radius
+\def\R{3}
+
+% Define view angles (standard oblique perspective)
+\tdplotsetmaincoords{70}{110}
+
+\begin{tikzpicture}[scale=1.5, tdplot_main_coords, line cap=round, line join=round]
+
+  % Axis length beyond radius
+  \def\alength{1.3}
+
+  % --- Draw sphere outline using screen coordinates for a perfect circle ---
+  \begin{scope}[tdplot_screen_coords]
+    \draw[thin] (0,0) circle (\R);
+  \end{scope}
+
+  % --- Drawing coordinate axes ---
+  \draw[->] (0, 0, 0) -- (\alength*\R, 0, 0) node[anchor=north east] {$x$};
+  \draw[->] (0, 0, 0) -- (0, \alength*\R, 0) node[anchor=north west] {$y$};
+  \draw[->] (0, 0, -1.2*\R) -- (0, 0, \alength*\R) node[anchor=south] {$z$};
+
+  % --- Draw equator ---
+  \tdplotdrawarc[dashed, thin]{(0,0,0)}{\R}{0}{360}{}{}
+
+  % --- Draw basis states at the poles ---
+  \fill (0, 0, \R) circle (2pt) node[anchor=south west, font=\Large] {$|0\rangle$};
+  \fill (0, 0, -\R) circle (2pt) node[anchor=north west, font=\Large] {$|1\rangle$};
+
+  % --- Define state vector parameters ---
+  \def\mytheta{40}
+  \def\myphi{60}
+
+  % --- Calculate point coordinates for vector P ---
+  % This automatically generates the point (P) and its projections (Pxy), (Px), (Py)
+  \tdplotsetcoord{P}{\R}{\mytheta}{\myphi}
+  \tdplotsetcoord{Q}{\R}{30}{50}
+  \tdplotsetcoord{RHO}{0.8*\R}{40}{50}
+
+  % --- Draw the state vector arrow ---
+  \draw[thick, ->] (0, 0, 0) -- (P) node[anchor=south west] {$|\psi\rangle$};
+  \fill (P) circle (2pt); % Dot at tip
+
+  \draw[thick, ->] (0, 0, 0) -- (Q) node[anchor=south west] {$|\varphi\rangle$};
+  \fill (Q) circle (1.2pt); % Dot at tip
+  \node[anchor=south east, inner sep=2pt, font=\Large] at (RHO) {$\rho$};
+  \fill (RHO) circle (1.2pt); % Dot at tip
+
+  \draw[ color=green, thick, ->] (P) -- (RHO);
+  \draw[ color=red, thick, ->] (P) -- (Q);
+
+  % --- Draw projection lines and rectangle on xy-plane ---
+  \draw[dashed, color=gray] (P) -- (Pxy); % Vertical to plane
+  \draw[dashed, color=gray] (0, 0, 0) -- (Pxy); % Radial line on plane
+
+  % Use the auto-generated axis projections
+  % \draw[dashed, color=gray] (Px) -- (Pxy);
+  % \draw[dashed, color=gray] (Py) -- (Pxy);
+  \draw[dashed, color=gray] (0, 0, 0) -- (Px);
+  \draw[dashed, color=gray] (0, 0, 0) -- (Py);
+
+  % --- Draw angle arcs ---
+  % 1. Azimuthal angle \varphi arc in xy plane
+  \tdplotdrawarc[color=black]{(0,0,0)}{0.3*\R}{0}{\myphi}{}{}
+
+  % 2. Polar angle \theta arc on a vertical plane
+  \tdplotsetrotatedcoords{90}{90}{0}
+  \tdplotdrawarc[color=black, tdplot_rotated_coords]{(0,0,0)}{0.3*\R}{95}{180}{}{}
+  % \tdplotdrawarc[color=black, tdplot_rotated_coords]{(0,0,0)}{0.3*\R}{90}{90-\mytheta}{}{}
+
+  % --- Place final angle labels ---
+  \tdplotsetmaincoords{70}{110}
+  \node[anchor=south west, inner sep=1pt] at (0.6, 0.3, 1.3) {$\theta$};
+  \node[anchor=north, inner sep=1pt] at (1.1, 0.5, 0) {$\phi$};
+
+\end{tikzpicture}
+\end{document}

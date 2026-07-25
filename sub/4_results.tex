@@ -25,6 +25,24 @@ In the case of dynamics without dissipative effects, the gate infidelity is defi
   \mathcal{F}[\hat{U}_Q] = \frac{\text{Tr}[\hat{U}_Q\hat{U}_Q^\dagger]}{d(d+1)} +
   \frac{\left\vert{}\text{Tr}[\hat{U}_Q\hat{U}_I^\dagger]\right\vert{}^2}{d(d+1)},
 \end{equation}
+\subsection{$Y$ Control and Phase Ramping $\delta$}
+Aside from the $X$ control pulse, we utilize the DRAG pulses \ref{eq:ydrag} and \ref{eq:zdrag}.
+We demonstrate that the analytical expression for the $Y$ control pulse remains valid even in the non-perturbative
+regime---a derivation that, to the best of our knowledge, has not been previously reported in the literature. To
+illustrate this, we recalculate the system Hamiltonian without relying on perturbative assumptions. We introduce a
+unitary frame transformation $V$, defined as:
+\begin{equation}
+  V = \exp\left[-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}\right]
+  = \cos(\phi) -i\hat{\sigma}^y_{1,2}\sin(\phi)
+  \label{eq:first_frame_change}
+\end{equation}
+where $\phi = \lambda_2\dfrac{\Omegax}{2\Delta_2}$, and apply it to our qudit Hamiltonian in \eref{eq:Hrwa}.
+The $\ket{1}\bra{2}$ component of the resulting Hamiltonian is
+$$
+  -\sin(2\phi)\dfrac{\delta(t)+\Delta}{2}+\cos(2\phi)\dfrac{\lambda \Omegax}{2}-i\dfrac{\lambda}{2}\left(\dfrac{\Omega_x^\prime(t)}{\Delta}+\Omega_y(t)\right).
+$$
+Substituting $\Omega_y$ as defined in \eref{eq:ydrag} demonstrates that this off-diagonal component is still effectively
+suppressed. Consequently, we retain the standard DRAG correction  for the $Y$ control pulse.
 \subsection{CZ gate}
 \subsubsection{Simulation}
 As in the previous research \cite{Ding2025},

@@ -1,0 +1,68 @@
+\documentclass[tikz,border=10mm]{standalone}
+\begin{document}
+\begin{tikzpicture}[scale=1.2, thick]
+
+  % ==========================================
+  % Top Figure: f(t)
+  % ==========================================
+
+  % Axes
+  \draw[->, thin] (0,0) -- (7,0);
+  \draw[->, thin] (0,0) -- (0,3);
+
+  % Curve f(t)
+  \draw (0,0) to[out=0,in=180] (1.5,2) -- (4.5,2) to[out=0,in=180] (6,0) -- (6.5,0);
+
+  % Labels
+  \node at (5.5, 2.4) {$f(t)$};
+
+  % Horizontal arrow labeled T (drawn across the middle)
+  \draw[<->, thin] (0,1) -- (6.5,1) node[right] {$T$};
+
+  % t_r arrow below the first rise
+  \draw[<->, thin] (0,-0.5) -- (1.5,-0.5) node[midway, below] {$t_r$};
+
+  % Connecting vertical line drawn by hand in the original image
+  \draw[dashed, thin, gray] (4.5, 2.2) -- (4.5, -4.5);
+  \draw[dashed, thin, gray] (1.5, 2.2) -- (1.5, -4.5);
+
+  % ==========================================
+  % Bottom Figure: h(t) and -h(t)
+  % ==========================================
+  \begin{scope}[yshift=-4cm]
+    % Axis
+    \draw[->, thin] (0,0) -- (7,0);
+
+    % Curve h(t) (Positive pulse) - Modified for zero derivative at endpoints
+    \draw (0,0) to[out=0,in=180] (0.75, 1.5) to[out=0,in=180] (1.5,0);
+
+    % Curve -h(t) (Negative pulse) - Modified for zero derivative at endpoints
+    \draw (4.5,0) to[out=0,in=180] (5.25, -1.5) to[out=0,in=180] (6,0);
+
+    % Dots on h(t)
+    \fill (0,0) circle (1.5pt);
+    \fill (0.75,1.5) circle (1.5pt);
+    \fill (1.5,0) circle (1.5pt);
+
+    % Dots on -h(t)
+    \fill (4.5,0) circle (1.5pt);
+    \fill (5.25,-1.5) circle (1.5pt);
+    \fill (6,0) circle (1.5pt);
+
+    % Labels
+    \node at (1.2, 1.5) {$h(t)$};
+    \node at (6.5, -1.2) {$-h(t)$};
+
+    % t_r arrow for h(t)
+    \draw[<->, thin] (0,-0.5) -- (1.5,-0.5) node[midway, below] {$t_r$};
+
+    % T - t_r gap arrow (from start of first pulse to start of second pulse)
+    \draw[<->, thin] (0,0.8) -- (4.5,0.8) node[midway, above] {$T - t_r$};
+
+    % t_r arrow for -h(t)
+    \draw[<->, thin] (4.5,0.8) -- (6,0.8) node[midway, above] {$t_r$};
+
+  \end{scope}
+
+\end{tikzpicture}
+\end{document}

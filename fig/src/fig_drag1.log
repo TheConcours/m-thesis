@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.6.1)  25 JUL 2026 14:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.6.1)  25 JUL 2026 14:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**drag_xsinx.tex
-(./drag_xsinx.tex
+**fig_drag1.tex
+(./fig_drag1.tex
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
 (/usr/share/texmf-dist/tex/latex/standalone/standalone.cls
@@ -342,8 +342,8 @@ File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count307
 )
-(./drag_xsinx.aux)
-\openout1 = `drag_xsinx.aux'.
+(./fig_drag1.aux)
+\openout1 = `fig_drag1.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 4.
 LaTeX Font Info:    ... okay on input line 4.
@@ -382,34 +382,40 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <14.4> on input line 26.
+LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 26.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 26.
+(Font)              <12> on input line 42.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 42.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 42.
  [1
 
 
 Non-PDF special ignored!
-<special> papersize=430.51971pt,216.32057pt
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./drag_xsinx.aux)
+<special> papersize=430.91971pt,218.52055pt
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}] (./fig_drag1.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 12392 strings out of 467525
- 256998 string characters out of 5425862
- 635425 words of memory out of 5000000
- 41112 multiletter control sequences out of 15000+600000
- 627721 words of font info for 40 fonts, out of 8000000 for 9000
+ 12415 strings out of 467525
+ 257247 string characters out of 5425862
+ 635423 words of memory out of 5000000
+ 41127 multiletter control sequences out of 15000+600000
+ 631370 words of font info for 52 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 102i,7n,107p,391b,588s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 102i,7n,107p,390b,588s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texmf-dist/font
-s/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
-10.pfb>
-Output written on drag_xsinx.pdf (1 page, 42621 bytes).
+texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+sy10.pfb>
+Output written on fig_drag1.pdf (1 page, 42959 bytes).
 PDF statistics:
  36 PDF objects out of 1000 (max. 8388607)
  22 compressed objects within 1 object stream

@@ -55,22 +55,16 @@ objective of quantum control is to engineer these time-dependent waveforms so th
 accurately synthesizes a desired target unitary gate on the computational subspace.
 \subsection{Gate Fidelity and Leakage}
 \label{subsec:leakageandfidelity}
-While the idealized model assumes a perfect two-level system, many physical implementations, notably transmon qubits,
-are not strictly confined to two states.
-For instance, weakly anharmonic oscillators possess a ladder of energy levels where the computational
-subspace consisting of $\vert{}0\rangle$ and $\vert{}1\rangle$ is not entirely isolated from higher-excited states, most
-notably the $\vert{}2\rangle$ state.When applying short, high-bandwidth microwave pulses to execute fast quantum
-operations, the broad frequency spectrum of the control signal can inadvertently drive transitions into these
-non-computational states. The phenomenon where population escapes the $\{\vert{}0\rangle, \vert{}1\rangle\}$ subspace is
-known as leakage. Because standard quantum error correction codes are primarily designed to handle errors within the
-computational basis, leakage represents a particularly damaging source of information loss.To mathematically quantify
-the success of a control pulse, we evaluate the gate fidelity, which measures the closeness of the actual physical
-evolution to the ideal target unitary operation. Leakage fundamentally limits this metric; any population that leaves
-the computational subspace immediately degrades the fidelity of the operation.Consequently, achieving the high-fidelity
-gates required for fault-tolerant quantum computing relies heavily on advanced waveform optimization. The control fields
-defined in $H(t)$ must be meticulously shaped to strike a delicate balance: driving the desired rotations on the Bloch
-sphere as rapidly as possible to avoid decoherence, while simultaneously suppressing the spectral components that cause
-leakage to higher energy levels.
+Physical transmons are weakly anharmonic oscillators, meaning their $\{\vert{}0\rangle, \vert{}1\rangle\}$ computational
+subspace is not entirely isolated from higher energy levels, most notably the $\vert{}2\rangle$ state. While fast
+quantum operations require short, high-bandwidth microwave pulses, their broad frequency spectra can inadvertently drive
+transitions into these non-computational states. This population loss, termed leakage, severely degrades gate fidelity
+and evades standard quantum error correction.
+
+Therefore, achieving the high-fidelity gates required for fault tolerance
+demands advanced waveform optimization. The control fields defined in $H(t)$ must be precisely shaped to balance two
+competing physical constraints: executing operations as rapidly as possible to minimize decoherence, while strictly
+suppressing the spectral components that induce leakage.
 \subsection{Qudit Hamiltonian in the Rotating Frame}
 As noted in \ref{subsec:leakageandfidelity},
 A transmon qubit is a widely used superconducting qubit. Because a transmon is inherently an anharmonic oscillator, it possesses higher excited states beyond
@@ -284,6 +278,9 @@ $$
 
 
 \subsubsection{The DRAG-2 Scheme}
+The DRAG-2 scheme further removes the errors from the transformed Hamiltonian obtained in the previous subsection.
+In the same spirit, applying the following SWTs
+
 \subsection{Non-perturbative Methods}
 \subsubsection{NPAD}
 \label{subsec:npad}

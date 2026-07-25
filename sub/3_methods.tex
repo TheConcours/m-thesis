@@ -6,73 +6,8 @@ minimize leakage from $\vert{}0\rangle$ to $\vert{}2\rangle$. This conventional 
 it's hard to control the resulting pulse shape. We establish a method to construct DRAG-1 pulse bypassing the seed function
 method and synthesize a pulse which can achieve a shorter gate duration.
 % \subsection{X gate}
-\subsection{Note on $Y$ DRAG Correction}
-Aside from the $X$ control pulse, we utilize the DRAG pulses \ref{eq:ydrag} and \ref{eq:zdrag}.
-We demonstrate that the analytical expression for the $Y$ control pulse remains valid even in the non-perturbative
-regime---a derivation that, to the best of our knowledge, has not been previously reported in the literature. To
-illustrate this, we recalculate the system Hamiltonian without relying on perturbative assumptions. We introduce a
-unitary frame transformation $V$, defined as:
-% We can show that the formula for the $Y$ control pulse is still valid in non-perturbative regime.
-% (Within the knowledge of the author, this computation has not been done/shown elsewhere.)
-% Now we recalculate the Hamiltonian without the assumption of perturbation.
-% % Applying a frame change with $V=\exp(S)$, $S=-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}$ to the Hamiltonian \ref{eq:Hrwa} ,
-% % the new $\ket{1}\bra{2}$ component reads
-% Consider a frame change $V$
-\begin{equation}
-  V = \exp\left[-i\lambda_2\dfrac{\Omegax}{2\Delta_2}\hat{\sigma}^y_{1,2}\right]
-  = \cos(\phi) -i\hat{\sigma}^y_{1,2}\sin(\phi)
-  \label{eq:first_frame_change}
-\end{equation}
-where $\phi = \lambda_2\dfrac{\Omegax}{2\Delta_2}$, and apply it to our qudit Hamiltonian in \eref{eq:Hrwa}.
-The $\ket{1}\bra{2}$ component of the resulting Hamiltonian is
-$$
-  -\sin(2\phi)\dfrac{\delta(t)+\Delta}{2}+\cos(2\phi)\dfrac{\lambda \Omegax}{2}-i\dfrac{\lambda}{2}\left(\dfrac{\Omega_x^\prime(t)}{\Delta}+\Omega_y(t)\right).
-$$
-% Setting $\Omegay$ as in \eref{eq:ydrag} still reduces this component.
-% Hence, we just use the standard DRAG correction \eref{eq:ydrag} for the $Y$ control.
-Substituting $\Omega_y$ as defined in \eref{eq:ydrag} demonstrates that this off-diagonal component is still effectively
-suppressed. Consequently, we retain the standard DRAG correction  for the $Y$ control pulse.
-% \subsection{RWA}
 
-
-
-% \subsubsection{Antidiagonalization of $2\times 2$ matrix}
-%
-% \begin{boxA}
-%   {\bf Probelm } \\
-%   Given a Hermitian matrix $H\in M_2(\CC)$, antidiagonalize $H$ so that its diagonal elements be minimized according to transformation~(\ref{eq:framechange}).
-% \end{boxA}
-% Suppose $H$ is a $2\times2$ Hermitian matrix.
-% Consider a problem of anti-diagonlizing $H$ according to the transformation~\ref{eq:framechange}.
-% Here we mean by anti-diagonalization making the diagonal components as small as possible in the sense of $l_1$ or $l_2$ sum.
-%
-% $$
-%   H    = H_d + H_a, \qquad
-%   H_d  = \begin{pmatrix} a(t) & 0 \\ 0 & d(t) \end{pmatrix},\qquad
-%   H_a  = \begin{pmatrix} a(t) & 0 \\ 0 & d(t) \end{pmatrix}
-% $$
-% Consider the following transformation:
-% \begin{equation}
-%   U(t) = \exp\left(i\int_0^t\,H_d(t^\prime)\mathrm{d}t^\prime\right) = \begin{pmatrix}\exp\left(i\int_0^t\,a(t^\prime)\mathrm{d}t^\prime\right) &0\\0&\exp\left(i\int_0^t\,d(t^\prime)\mathrm{d}t^\prime\right) \end{pmatrix}
-%   \label{eq:antidiagonalization}
-% \end{equation}
-% Since $i\dot{U}U^\dagger=-H_d(t)$, this yields a complete anti-diagonalization
-% $$
-%   H^\prime(t) =
-%   \begin{pmatrix}
-%     0                 & b(t)e^{i\phi(t)} \\
-%     c(t)e^{-i\phi(t)} & 0                \\
-%   \end{pmatrix}
-% $$
-% where $\phi(t) = \int_0^t\,[a(\tau)-d(\tau)]\mathrm{d}\tau$.
-%
-% To make this method effective, we need to ensure that $\ket{0}$ and $\ket{1}$ has not changed at the ends of the
-% operation by the transformation~\ref{eq:antidiagonalization}. In formula,
-% $$
-%   \phi(T) \in \RR_{>0}
-% $$
-
-\subsection{DRAG-1}
+\subsection{Reformulating DRAG-1}
 Although in \ref{subsec:drag}, the DRAG-1 pulse is created from the seed pulse waveform $\Omega_1$
 through \eref{eq:drag1}, now we reverse this process.
 First we solve \eref{eq:drag1} for $\Omega_1(t)$.
@@ -101,7 +36,12 @@ Recall we have three boundary conditions on our debt:
   \item $\Omega_1 = 0$ at both ends ($t=0$, $T$): This further enforces strict SWT compatibility at the start and completion of the gate.
 \end{enumerate}
 
-Applying the third boundary condition at the initial time $t = 0$  immediately eliminates the homogeneous component, yielding $A = 0$ in \eref{eq:drag1_sol}
+Applying the third boundary condition at the initial time $t = 0$  immediately eliminates the homogeneous component, yielding $A = 0$ in \eref{eq:drag1_sol}.
+We call
+$$
+  \Omega_1^2(t) = \int_0^t\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau
+$$
+the DRAG-1 formula in integral form. In the same parlance, we call \eref{eq:drag1} differential DRAG-1 formula.
 The constraint at $t=T$ translates to
 $$
   \left(\Omega_1^2(T)\right) = 0 = \int_0^T\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau,
@@ -120,7 +60,37 @@ Hence, The boundary condition at $t=T$ for smoothness translates to the null fou
   \label{eq:drag1_fourier}
 \end{equation}
 \cite{freeman,hoult1979,vold1968,warren1984}
+\subsection{Reformulating DRAG-2}
+Recall that the DRAG-2 pulse in \eref{eq:drag2} has exactly the same form as the DRAG-1 in \eref{eq:drag1}.
+Since the boundary conditions coming from the SWTs also have the same form ($ \Omega_2(t) = 0 \text{ at } t=0,\,T. $),
+we find that the existence of such a $\Omega_2$ in \eref{eq:drag2} is guaranteed by
+\begin{equation}
+  \int_0^T \Omega_1(\tau)^2 e^{-i\Delta_3\tau} d\tau = 0,
+  \label{eq:drag2_fourier}
+\end{equation}
+which is equivocal to $\mathcal{F}[\Omega_1](\Delta_3)=0$.
+The differential DRAG-1 formula \eref{eq:drag1} implies
+$$
+  \mathcal{F}[\Omega_x^2](z) = (1-\dfrac{z^2}{\Delta_2^2})\mathcal{F}[\Omega_1^2](z).
+$$
+Hence, \eref{eq:drag2_fourier} is equivalent to $\mathcal{F}[\Omega_x](\Delta_3)=0$.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{fig/fig_drag1.pdf}
+  \caption{Creating a flat-top pulse using echo method}
+  \label{fig:drag1}
+\end{figure}
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{fig/fig_drag2.pdf}
+  \caption{DRAG-2 method}
+  \label{fig:drag2}
+\end{figure}
 \subsubsection{Pulse Design}
+Having established that DRAG-1 and DRAG-2 formula are a differential way to
+create pulses which has zero Fourier transform at $\Delta$ and $\Delta_3$ respectively,
+we now utilize echo method to create pulses in signal processing, NMR, and laser physics.
 Although Jesus et al. \cite{99999} proposed a pulse design method for $\Omega_x$ by way of $\Omega_1$, and investigated
 an optimal pulse waveform therein, we can
 directly design a DRAG-1 pulse through \eref{eq:drag1_fourier}.
@@ -232,6 +202,7 @@ $$G_k(t) = \frac{\partial \Omega_x}{\partial x_k} - \frac{d}{dt} \left( \frac{\p
 $$P_1(t) = \frac{\partial \Omega_x}{\partial \dot{x}_1} = i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_2$$
 
 $$P_2(t) = \frac{\partial \Omega_x}{\partial \dot{x}_2} = -i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_1$$
+
 
 
 \subsection{CZ gate}
