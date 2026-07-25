@@ -12,7 +12,7 @@ ideal unitary evolution is represented by a diagonal matrix:
     0 & 1 & 0 & 0  \\
     0 & 0 & 1 & 0  \\
     0 & 0 & 0 & -1
-  \end{pmatrix}
+  \end{pmatrix}.
 \end{equation}
 \subsection{SQUID loop and Z-control}
 In superconducting quantum architectures, the ability to dynamically tune the transition frequency of a qubit is
@@ -55,7 +55,7 @@ The instantaneous eigenstates are
 \end{equation}
 with eigenenergies
 \begin{equation}
-  E_- = -\frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2} \quad \text{and} \quad E_+ = \frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2}
+  E_- = -\frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2} \quad \text{and} \quad E_+ = \frac{1}{2}\sqrt{\varepsilon(t)^2 + \Delta^2},
 \end{equation}
 where
 \begin{equation}
@@ -64,28 +64,28 @@ where
 \end{equation}
 We denote the energy difference of these two instantaneous eigenstates as
 \begin{equation}
-  \omega(t) = \sqrt{\varepsilon(t)^2 + \Delta^2}
+  \omega(t) = \sqrt{\varepsilon(t)^2 + \Delta^2}.
   \label{eq:omega}
 \end{equation}
 
 \subsubsection{Calculation of leakage error} \label{subsec:leakage}
 Consider a state
 $$
-  \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1}.,
+  \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1},
 $$
 with rotational change of coefficients
 \begin{align*}
-  \alpha & = \alpha_0\cos\dfrac{\theta}{2} + \beta_0\sin\dfrac{\theta}{2}  \\
-  \beta  & =  \beta_0\cos\dfrac{\theta}{2} - \alpha_0\sin\dfrac{\theta}{2}
+  \alpha & = \alpha_0\cos\dfrac{\theta}{2} + \beta_0\sin\dfrac{\theta}{2},  \\
+  \beta  & =  \beta_0\cos\dfrac{\theta}{2} - \alpha_0\sin\dfrac{\theta}{2},
 \end{align*}
 Differentiating, we have
 \begin{align*}
   \dot{\alpha} & = \dfrac{-i\omega \alpha+\beta \dot{\theta}}{2} \\
   \dot{\beta}  & = \dfrac{i\omega \beta-\alpha \dot{\theta}}{2}  \\
 \end{align*}
-Write $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, they form the "angle":
+Write $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, they form the ``angle'':
 $$
-  \alpha^* \beta = \dfrac{\sin\Theta e^{i\phi}}{2}
+  \alpha^* \beta = \dfrac{\sin\Theta e^{i\phi}}{2}.
 $$
 Calculating the time derivative of $\alpha^*\beta$ finds us
 $$
@@ -174,3 +174,5 @@ maintaining strict orthogonality to all preceding Slepian pulses.When evaluating
 shapes like rectangular or raised cosine pulses, Slepian pulses are distinguished by possessing both a relatively small
 mainlobe width and low sidelobe amplitude.This dual efficiency makes them an exceptionally strong candidate for control
 applications where a precise compromise between mainlobe width and sidelobe suppression is required.
+
+\subsection{Issues with the Prior Research}
