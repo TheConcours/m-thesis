@@ -3,8 +3,12 @@ build/
 examples/
 main.synctex.gz
 main.dvi
+main.pdf
 main.ttt
 guide.tex
 eguide.tex
 README.md
 *.ris
+*.log
+*.dvi
+fig/src/

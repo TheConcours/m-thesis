@@ -71,30 +71,32 @@ We denote the energy difference of these two instantaneous eigenstates as
 \subsubsection{Calculation of leakage error} \label{subsec:leakage}
 Consider a state
 $$
-  \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1},
+  \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1}
 $$
 with rotational change of coefficients
 \begin{align*}
   \alpha & = \alpha_0\cos\dfrac{\theta}{2} + \beta_0\sin\dfrac{\theta}{2},  \\
-  \beta  & =  \beta_0\cos\dfrac{\theta}{2} - \alpha_0\sin\dfrac{\theta}{2},
+  \beta  & =  \beta_0\cos\dfrac{\theta}{2} - \alpha_0\sin\dfrac{\theta}{2}.
 \end{align*}
-Differentiating, we have
+Differentiating with respect to time, we obtain
 \begin{align*}
-  \dot{\alpha} & = \dfrac{-i\omega \alpha+\beta \dot{\theta}}{2} \\
-  \dot{\beta}  & = \dfrac{i\omega \beta-\alpha \dot{\theta}}{2}  \\
+  \dot{\alpha} & = \dfrac{-i\omega \alpha+\beta \dot{\theta}}{2}, \\
+  \dot{\beta}  & = \dfrac{i\omega \beta-\alpha \dot{\theta}}{2}.  \\
 \end{align*}
-Write $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, they form the ``angle'':
+By expressing the coefficients in terms of the angles $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, we can
+define
 $$
   \alpha^* \beta = \dfrac{\sin\Theta e^{i\phi}}{2}.
 $$
-Calculating the time derivative of $\alpha^*\beta$ finds us
+Calculating the time derivative of $\alpha^*\beta$ yields
 $$
-  \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
+  \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta.
 $$
-Plugging $\phi=\phi_{\text{initial}} + \int_0^t\,\omega(t^\prime)\,\dd t^\prime$ and a bit of tinkering yields
+Plugging $\phi=\phi_{\text{initial}} + \int_0^t\,\omega(t^\prime)\,\dd t^\prime$ and
+symplifying the expression gives the approximate leakage probability
 \begin{equation}
   % \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
-  P_e \approx \dfrac{1}{4}\, \left\lvert\, \int \,\dfrac{\dd\theta}{\dd t} e^{-i\int\omega(t^\prime)\,\dd t^\prime}\right\rvert^2
+  P_e \approx \dfrac{1}{4}\, \left\lvert\, \int \,\dfrac{\dd\theta}{\dd t} e^{-i\int\omega(t^\prime)\,\dd t^\prime}\right\rvert^2.
   \label{eq:leakage}
 \end{equation}
 % If we assume that the time derivative of $\ket{\psi_-}$ and $\ket{\psi_+}$ are small enough, $\ket{\psi}$ evolves accordingly to \begin{align*}

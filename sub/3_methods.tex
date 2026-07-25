@@ -1,13 +1,13 @@
 \section{Proposed Waveform Design Techniques}
 \label{sec:methods}
-In this section, we investigate methods to mitigate leakage errors in $X$ and $CZ$ gates, beginning with the $X$ gate. Our
-approach builds on the DRAG-1 scheme which conventionally relies on a seed function to generate a control pulse to
-minimize leakage from $\vert{}0\rangle$ to $\vert{}2\rangle$. This conventional method, however, has a disadvantage that
-it's hard to control the resulting pulse shape. We establish a method to construct DRAG-1 pulse bypassing the seed function
-method and synthesize a pulse which can achieve a shorter gate duration.
+In this section, we propose methods to mitigate leakage errors in $X$ and $CZ$ gates, beginning with the $X$ gate. Our
+approach builds upon the recursive DRAG schemes which conventionally rely on seed functions to generate a control pulse to
+minimize leakage caused by two photon transitions. However, this conventional method suffers from limited control over
+the resulting pulse shape. To address this, we establish a novel method to construct DRAG-1 pulses without relying on
+a seed function, thereby enabling shorter gate durations.
 % \subsection{X gate}
 
-\subsection{Reformulating DRAG-1}
+\subsection{Inverse Design of the DRAG-1 Pulse}
 Although in \ref{subsec:drag}, the DRAG-1 pulse is created from the seed pulse waveform $\Omega_1$
 through \eref{eq:drag1}, now we reverse this process.
 First we solve \eref{eq:drag1} for $\Omega_1(t)$.
@@ -24,7 +24,7 @@ Recognizing this as a driven harmonic oscillator equation, the general solution 
 \end{equation}
 The first term represents the particular solution to the ODE in \eref{eq:drag1_ode}.
 The verification can be done with
-the Leibniz rule \cite{apostol}, which governs the differentiation under the integral sign:
+the Leibniz rule \cite{apostol}, which dictates the differentiation under the integral sign:
 \begin{equation}
   \frac{d}{dt} \int_{a(t)}^{b(t)} F(x,t) dx = F(b(t), t) \cdot b'(t) - F(a(t), t) \cdot a'(t) + \int_{a(t)}^{b(t)} \frac{\partial}{\partial t} F(x,t) dx.
   \label{eq:leibniz}
@@ -41,7 +41,7 @@ We call
 $$
   \Omega_1^2(t) = \int_0^t\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau
 $$
-the DRAG-1 formula in integral form. In the same parlance, we call \eref{eq:drag1} differential DRAG-1 formula.
+the DRAG-1 formula in integral form. In the same parlance, we call \eref{eq:drag1} the differential DRAG-1 formula.
 The constraint at $t=T$ translates to
 $$
   \left(\Omega_1^2(T)\right) = 0 = \int_0^T\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau,
@@ -59,8 +59,7 @@ Hence, The boundary condition at $t=T$ for smoothness translates to the null fou
   \int_0^T \Omega_x(\tau)^2 e^{-i\Delta_2\tau} d\tau = 0.
   \label{eq:drag1_fourier}
 \end{equation}
-\cite{freeman,hoult1979,vold1968,warren1984}
-\subsection{Reformulating DRAG-2}
+\subsection{Inverse Design of the DRAG-2 Pulse}
 Recall that the DRAG-2 pulse in \eref{eq:drag2} has exactly the same form as the DRAG-1 in \eref{eq:drag1}.
 Since the boundary conditions coming from the SWTs also have the same form ($ \Omega_2(t) = 0 \text{ at } t=0,\,T. $),
 we find that the existence of such a $\Omega_2$ in \eref{eq:drag2} is guaranteed by
@@ -74,7 +73,11 @@ $$
   \mathcal{F}[\Omega_x^2](z) = (1-\dfrac{z^2}{\Delta_2^2})\mathcal{F}[\Omega_1^2](z).
 $$
 Hence, \eref{eq:drag2_fourier} is equivalent to $\mathcal{F}[\Omega_x](\Delta_3)=0$.
+These results have deep physical intuition.
+\cite{freeman,hoult1979,vold1968,warren1984}
 
+
+\subsection{Pulse Design}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.8\columnwidth]{fig/fig_drag1.pdf}
@@ -87,10 +90,14 @@ Hence, \eref{eq:drag2_fourier} is equivalent to $\mathcal{F}[\Omega_x](\Delta_3)
   \caption{DRAG-2 method}
   \label{fig:drag2}
 \end{figure}
-\subsubsection{Pulse Design}
-Having established that DRAG-1 and DRAG-2 formula are a differential way to
-create pulses which has zero Fourier transform at $\Delta$ and $\Delta_3$ respectively,
-we now utilize echo method to create pulses in signal processing, NMR, and laser physics.
+Having established that DRAG-1 and DRAG-2 formula are equivalent to
+zero Fourier transform at $\Delta$ and $\Delta_3$ respectively,
+we now utilize echo method to create pulses.
+\subsubsection{DRAG-1 pulse}
+\label{subsubsec:drag1_method}
+We propose a method to create a flat-top DRAG-1 pulse.
+We utilize the echo method which crops up in every corner of science and technology fields, including signal processing, NMR\cite{Jenkins}, acoustics\cite{Pal2018}, and laser physics\cite{Ma2021}.
+
 Although Jesus et al. \cite{99999} proposed a pulse design method for $\Omega_x$ by way of $\Omega_1$, and investigated
 an optimal pulse waveform therein, we can
 directly design a DRAG-1 pulse through \eref{eq:drag1_fourier}.
@@ -100,40 +107,53 @@ The problem of early truncation will be somewhat relieved by keeping $\max |\Ome
 We combine delayed leakage reduction technique described in \cite{Polat2026} and function design techniques to obtain
 such pulses.
 
-Let $t_d=\pi/\Delta$. Then $f(t)+f(t-t_d)$'s Fourier transform is computed as
+Let $t_d=\pi/\Delta$. For a given function, the superposition $f(t)$, $f(t)+f(t-t_d)$'s Fourier transform evaluated at $\Delta$ is
 $$
   \mathcal{F}[f(t)+f(t-t_d)](\Delta) = \mathcal{F}[f](\Delta)+e^{i\Delta t_d}\mathcal{F}[f](\Delta) = 0.
 $$
-This suggests that we find a function $g(t)$ on $[-1,1]$ that satisfies the following property:
+We aim to design a pulse such that this sum results in a flat-top profile, as illustrated in \fref{fig:drag1}.
+If we impose that $f(t)$ be also a flat-top pulse, then the pulse design problem boils down to designing a function
+on $[0,t_r]$, where $t_r$ denotes the rise time.
+
+By normalizing this rising function, the problem can be stated that we find a function $g(t)$ on $[-1,1]$ that satisfies
+the following property:
 \begin{enumerate}
-  \item \label{itm:g1} $g$ is anti-symmetric
-  \item \label{itm:g2} $g$ is monotonically increasing
-  \item \label{itm:g3} $g(1)=1/2$
-  \item  \label{itm:g4} $g$'s first and second derivative vanishes at $g(-1)$.
+  \item \label{itm:g1} $g$ is anti-symmetric.
+  \item \label{itm:g2} $g$ is monotonically increasing.
+  \item \label{itm:g3} $g(1)=1/2$.
+  \item  \label{itm:g4} The first and second derivative of $g$vanish at $t=-1$.
 \end{enumerate}
-$g$ represents the function on $[0,t_r]$.
-On obtaining such a $g$, we construct $\Omega_x^2$ as
-$$
+The fourth condition ensures that $\Omega_x=\dot{\Omega}=0$ are satisfied at $t=0,\,T$.
+% $g$ represents the function on $[0,t_r]$.
+Once obtaining such a $g$, we reconstruct $\Omega_x^2$ as
+\begin{equation}
   \Omega_x^2(t) =
   \begin{cases}
     A \left(g(2t/t_r-1)-g(-1)\right) \quad                     & (0<t<t_r)       \\
     A                         \quad                            & (t_r<t<t_d)     \\
     A\left( g(2(t_r+t_d-t)/t_r-1)-g(-1)\right)           \quad & (t_d<t<t_d+t_r) \\
   \end{cases}
-$$
-where $A$ is the amplitude determined by integrating $\Omega_x^2$ according to \eref{eq:xgate_condition}.
+  \label{eq:drag1_flattop}
+\end{equation}
+where $A$ is the peak amplitude, determined by integrating $\Omega_x^2$ according to \eref{eq:xgate_condition}.
+One example for such $g$ is $\dfrac{1}{2} x+\dfrac{1}{2\pi}\sin( \pi x)$.
+% \begin{enumerate}
+% \item $3\pi x+4\sin(\pi x)+\dfrac{1}{2} \sin(2\pi x)$
+% \end{enumerate}
+% \subsection{$g$ design}
+% Let $h$ be a positive symmetric function on $[-1,1]$ that vanishes at both ends.
+% Put $g^\prime = h^2$. This ensures that the condition \ref{itm:g4} holds as $g^{\prime\prime}=2hh^\prime=0$
+% and it is easy to check that the other condtions \ref{itm:g1}-\ref{itm:g3} are also satisfied.
+\subsubsection{DRAG-2 pulse}
+We now extend the method described above and gain a pulse which also satisfies the DRAG-2 formula.
+Note that for a function $f(t)$, $iz\mathcal{F}[f](z) = \mathcal{F}[f^\prime](z)$.
+This implies that the requirement that $\Omega_x^2$ have a zero Fourier transform at $\Delta_3$
+is equivalent to its derivate have a zero Fourier transform at $\Delta_3$.
+The derivative of the flat-top pulse in \ref{subsubsec:drag1_method} consists of two
+symmetric functions $h(t)$ and $-h(t-T+t_r)$ as depicted in \fref{fig:drag2}.
+$g^\prime(t)=h(t)$. $h(t)$ is a symmetric function since it is a derivative of a anti-symmetric function.
 
-There are mutliple choices for such $g$.
-\begin{enumerate}
-  \item $\dfrac{1}{2} x+\dfrac{1}{2\pi}\sin( \pi x)$
-  \item $3\pi x+4\sin(\pi x)+\dfrac{1}{2} \sin(2\pi x)$
-\end{enumerate}
-\subsubsection{$g$ design}
-Let $h$ be a positive symmetric function on $[-1,1]$ that vanishes at both ends.
-Put $g^\prime = h^2$. This ensures that the condition \ref{itm:g4} holds as $g^{\prime\prime}=2hh^\prime=0$
-and it is easy to check that the other condtions \ref{itm:g1}-\ref{itm:g3} are also satisfied.
-
-\subsection{Optimization by Riccati engineering}
+\subsection{Optimization via Riccati Engineering}
 As we've seen in \ref{subsec:npad}, NPAD has an obvious issue that the Hamiltonian is assumed to be
 time-independent, and in Ref.~\cite{NPAD2022}, the author only applies this method to perturbative cases, in which the
 method reduces to recursive Schrieffer-Wolff transformations.
@@ -153,21 +173,23 @@ We outline the newly proposed procedure to handle non-perturbative cases.
 %   i\dot{X} = H_{21} + H_{22}X - XH_{11} - XH_{12}X \label{eq:riccati}
 % \end{equation}
 % First we see how the results in \ref{subsec:ricatti} apply to the Hamiltonian
-Applying to the qudit Hamiltonian \ref{eq:rotatingframe} with $N_{\rm{max}}=2$,
+Applying to the qudit Hamiltonian in \eref{eq:rotatingframe} with $N_{\rm{max}}=2$,
 the Riccati equation becomes
-$$i\dot{x}_1 = (2\delta+\Delta) x_1 - \frac{1}{2}(\Omega_x + i\Omega_y)x_2 - \frac{\lambda}{2}(\Omega_x - i\Omega_y)x_1 x_2,$$
-$$i\dot{x}_2 = \frac{\lambda}{2}(\Omega_x + i\Omega_y) + (2\delta+\Delta) x_2 - \frac{1}{2}(\Omega_x - i\Omega_y)x_1 - \frac{\lambda}{2}(\Omega_x - i\Omega_y)x_2^2.$$
+\begin{equation}
+  \begin{aligned}
+    i\dot{x}_1 & = (2\delta+\Delta) x_1 - \frac{1}{2}(\Omega_x + i\Omega_y)x_2 - \frac{\lambda}{2}(\Omega_x - i\Omega_y)x_1 x_2,                                         \\
+    i\dot{x}_2 & = \frac{\lambda}{2}(\Omega_x + i\Omega_y) + (2\delta+\Delta) x_2 - \frac{1}{2}(\Omega_x - i\Omega_y)x_1 - \frac{\lambda}{2}(\Omega_x - i\Omega_y)x_2^2.
+  \end{aligned}
+\end{equation}
 If we define
 \begin{equation}
-  A = -\frac{1}{2}(x_2^2+\lambda x_1)\label{eq:A}
+  \begin{aligned}
+    A & = -\frac{1}{2}(x_2^2+\lambda x_1) \\
+    B & = \frac{1}{2}x_1^2                \\
+    C & = i(\dot{x_1}x_2-x_1\dot{x_2})
+  \end{aligned}
 \end{equation}
-\begin{equation}
-  B = \frac{1}{2}x_1^2 \label{eq:B}
-\end{equation}
-\begin{equation}
-  C = i(\dot{x_1}x_2-x_1\dot{x_2}) \label{eq:C}
-\end{equation}
-Then $\Omega_x$, $\Omega_y$, and $\delta(t)$ can be expressed
+Then $\Omega_x$, $\Omega_y$, and $\delta$ can be expressed
 \begin{equation}
   \tilde{\Omega} = \Omega_x+i\Omega_y = \dfrac{A^\star C - B C^\star}{|A|^2-|B|^2}, \label{eq:riccati_Omega}
 \end{equation}
@@ -178,7 +200,7 @@ Then $\Omega_x$, $\Omega_y$, and $\delta(t)$ can be expressed
 
 
 
-\subsubsection{Variational method}
+\subsubsection{Variational Pulse Adjustment}
 One way to utilize \eref{eq:riccati_Omega} and \eref{eq:riccati_delta} is to determine $x_1$ and $x_2$ first and
 solve numerically for $\tilde{\Omega}$ and $\delta$.
 There's multiple difficulties with this approach. Since the Riccati equation \eref{riccati} is not linear, adjust the
