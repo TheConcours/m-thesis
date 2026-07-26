@@ -47,11 +47,11 @@ The gate infidelity was computed as $\mathcal{E}(\hat{U}_Q) = 1 -
 
 \begin{figure}[htpb]
   \centering
-  \includegraphics[width=0.8\columnwidth]{fig/fig_r2dvsxsinx.pdf}
+  \includegraphics[width=0.8\columnwidth]{fig/fig1d.pdf}
   \label{fig:r2dvsxsinx}
-  \caption{Population distirbution of $X$ gate for $T=4.8~\text{ns}$ implemented by R2D and our DRAG-1 puse.
-    The main error comes from the leakage to $\ket{2}$ for both of them.
-    If we numerically calculate $\Omega_1$ for our xsinx-based DRAG-1 pulse,
+  \caption{Population distirbution of $X$ gate for $T=4.8~\text{ns}$ implemented by R2D and our DRAG-1 pulse.
+    The main error comes from the leakage to $\ket{2}$ in both cases.
+    If we numerically calculate $\Omega_1$ for our  DRAG-1 pulse,
     there's a possibility of overtaking the best-performing R2D.
   }
 \end{figure}
@@ -67,7 +67,7 @@ referred to as our DRAG-1.
 % R1D, and the latter one as our DRAG-1.
 
 \noindent\textbf{DRAG-2 Pulse}\\
-With the function $h(t)$ being a raised cosine function, we created our
+With the function $h(t)$ being a raised cosine function, we curated our DRAG-2 pulse.
 In \cite{universalpulse}, they find
 $$
   \dfrac{1}{16}\cos(6\pi )-\dfrac{9}{16}\cos(\pi\dfrac{2t}{t_f})+\dfrac{1}{2}.
@@ -99,6 +99,18 @@ $$
 $$
   T = 2t_d+t_r > 5/2t_d\quad\text{Theoretical limit}
 $$
+\subsubsection{Limitations on DRAG-2 Coming from the Echo Method}
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{fig/fig_r2d_xy.pdf}
+  \label{fig:r2d_xy}
+  \caption{
+    % Limitation of the proposed method for DRAG-2
+    $t_r<\dfrac{2}{3}t_d$ degrades the gate performance
+  }
+\end{figure}
+As illustrated in \fref{fig:r2d_xy},
+Although desinged as a DRAG-2 pulse, and inherently performs better than DRAG-1,
 \subsubsection{Simulation settings}
 % \begin{figure}
 %   \includegraphics[scale=.3]{fig/fig_drag1.pdf}
@@ -218,20 +230,20 @@ where $\tilde{\theta}^n$ is the normalized $\tilde{\theta}$ that reaches $\epsil
 During this flux trajectory, the states $\vert{}00\rangle$, $\vert{}01\rangle$, and $\vert{}10\rangle$ remain largely
 isolated from any crossings. Therefore, the phases they accumulate are purely their standard, uncoupled dynamical
 phases:$\phi_{00} = \phi_{00}^{\text{uncoupled}}$$\phi_{01} = \phi_{01}^{\text{uncoupled}}$$\phi_{10} = \phi_{10}^{\text{uncoupled}}$
-Therefore, gate duration in the lab frame is $t_d = \tau_d \int_0^1 \sin \left[A(\tau_d) \tilde{\theta}^n(\tau') \right]\, \dd\tau'$.
-$t_d$ is decided upon the amplitude $A(\tau_d)$ and the initial pulse shape.
-There are two types of phases: Berry phases and dynamical phases.
-Since the trajectory that the instantaneous $\ket{11}$ traces through the operation is a 1D path,
-thus enclosing zero area, it produces zero Berry phase.
-In formula,
-\begin{equation}
-  \phi = \int \Delta E \,\dd t = -\int \frac{\Delta}{2} \tan \frac{\theta(t)}{2} \, \dd t
-\end{equation}
+    Therefore, gate duration in the lab frame is $t_d = \tau_d \int_0^1 \sin \left[A(\tau_d) \tilde{\theta}^n(\tau') \right]\, \dd\tau'$.
+  $t_d$ is decided upon the amplitude $A(\tau_d)$ and the initial pulse shape.
+    There are two types of phases: Berry phases and dynamical phases.
+    Since the trajectory that the instantaneous $\ket{11}$ traces through the operation is a 1D path,
+    thus enclosing zero area, it produces zero Berry phase.
+    In formula,
+    \begin{equation}
+      \phi = \int \Delta E \,\dd t = -\int \frac{\Delta}{2} \tan \frac{\theta(t)}{2} \, \dd t
+    \end{equation}
 
-Since $\tan(\theta/2) = \dfrac{\tan(\theta)}{1+\sqrt{1+\tan(\theta)^2}}$
+    Since $\tan(\theta/2) = \dfrac{\tan(\theta)}{1+\sqrt{1+\tan(\theta)^2}}$
 
-As you see in the graph of $\epsilon(t)$
-Since $0\leq\tan\dfrac{\theta(t)}{2}\leq 1$, the gate duration $T$ satisfies $T\geq \dfrac{2\pi}{\Delta}.$
+    As you see in the graph of $\epsilon(t)$
+    Since $0\leq\tan\dfrac{\theta(t)}{2}\leq 1$, the gate duration $T$ satisfies $T\geq \dfrac{2\pi}{\Delta}.$
 
 is connected through
 
