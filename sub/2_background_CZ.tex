@@ -1,9 +1,47 @@
-\section{Theoretical Foundations: Two-Qubit CZ gate}
+\section{Theoretical Foundations: Two-Qubit $CZ$ gate}
 
-In this section,  we overview start dealing with the two qubit CZ gate.
-Note that we use different notations for X and CZ gates.
-\subsection{Basics}
-CZ gate is a two-qubit gate that applies a phase flip to the target qubit if the control qubit is in the state
+This section establishes the theoretical framework and physical architecture necessary for understanding and
+implementing the two-qubit CZ gate. We examine the operational principles of the adiabatic CZ gate and discuss why the
+Slepian pulse shape has traditionally been favored for control pulses.
+% In this section, we establish the theoretical framework and physical architecture necessary for understanding and
+% implementing the two-qubit $CZ$ gate.
+% We see how the adiabatic $CZ$ gate operates and why Slepian pulse shape has long been used for the control pulse.
+We use some symbols for different purposes in the $X$ and $CZ$ gates. When confusion arises, consult the notation table
+in \tref{tab:notation} located immediately following the abstract.
+\subsection{SQUID loop and $Z$-control}
+\begin{figure}[bthp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{fig/fig_z-ctrl.pdf}
+  \caption{Target qubit architecture in our work. A tunable-frequency QB1 and a fixed-frequency QB2 are capacitively
+    coupled with factor $g$.}
+  \label{fig:z-ctrl}
+\end{figure}
+In superconducting quantum architectures, the ability to dynamically tune the transition frequency of a qubit is
+essential for realizing the adiabatic $CZ$ gate.
+This tunability is achieved by replacing the single Josephson junction of a standard
+transmon with a superconducting quantum interference device (SQUID) loop as depicted in \fref{fig:z-ctrl},
+which is then threaded by a localized magnetic
+flux $\Phi_\text{ext}$ controlled via a dedicated microwave transmission line known as the $Z$-control line (or flux line).
+% In \fref{fig:z-ctrl},
+% \begin{equation}
+%   % \begin{align}
+%   \omega_1(\Phi_{\text{ext}})   = \frac{1}{\hbar} \left( \sqrt{8E_JE_C} \sqrt[4]{d^2 + (1 - d^2)
+%       \cos^2(\pi \frac{\Phi_{\text{ext}}}{\Phi_0})} - E_C \right),
+%   % \end{align}
+%   \label{eq:flux}
+
+\subsection{Qubit Architecture}
+The system we consider is illustred in \fref{fig:z-ctrl}.
+It is a system of two capacitively coupled transmon qubits, one fixed-frequency (QB2) and the other frequency tunable (QB1).
+The simplified dispersive Jaynes-Cummings Hamiltonian for this system can be modeled as:
+$$H = \sum_{i=1,2} \left( \omega_i \hat{a}_i^\dagger \hat{a}_i + \frac{\alpha_i}{2} \hat{a}_i^\dagger \hat{a}_i^\dagger \hat{a}_i \hat{a}_i \right) + g(\hat{a}_1^\dagger + \hat{a}_1)(\hat{a}_2^\dagger + \hat{a}_2) ,$$
+where $g$ denotes the capacitive coupling strength between the two qubits, $\hat{a}_i^\dagger$ and $\hat{a}_i$ represent the
+creation and annihilation operators for qubit $i$, respectively, and $\alpha_i$ defines the anharmonicity of qubit $i$.
+Note that we use $\alpha$ for anharmonicity in discusion of the $CZ$ gates.
+We use $\Delta$ and $\omega_i$ to denote different things. ($\Delta$ instead denotes the effective coupling strength
+$2\sqrt{2}g$)
+\subsection{Adiabatic Implementation}
+CZ gate is a two-qubit gate that applies a phase flip to the target qubit if the control qubit resides in the state
 $\ket{1}$. In the computational basis $\{\vert{}00\rangle, \vert{}01\rangle, \vert{}10\rangle, \vert{}11\rangle\}$, the
 ideal unitary evolution is represented by a diagonal matrix:
 \begin{equation}
@@ -14,29 +52,16 @@ ideal unitary evolution is represented by a diagonal matrix:
     0 & 0 & 0 & -1
   \end{pmatrix}.
 \end{equation}
-\subsection{SQUID loop and Z-control}
-In superconducting quantum architectures, the ability to dynamically tune the transition frequency of a qubit is
-essential for realizing the adiabatic CZ gate.
-This tunability is achieved by replacing the single Josephson junction of a standard
-transmon with a superconducting quantum interference device (SQUID) loop, which is then threaded by a localized magnetic
-flux controlled via a dedicated microwave transmission line known as the Z-control line (or flux line).
-\subsection{Qubit Architecture}
-Consider a system of two capacitively coupled transmon qubits, one fixed-frequency (QB2) and the other frequency tunable (QB1).
-The simplified dispersive Jaynes-Cummings Hamiltonian for this system can be modeled as:
-$$H = \sum_{i=1,2} \left( \omega_i a_i^\dagger a_i + \frac{\alpha_i}{2} a_i^\dagger a_i^\dagger a_i a_i \right) + g(a_1^\dagger + a_1)(a_2^\dagger + a_2) ,$$
-where $g$ denotes the coupling strength between the two qubits, $a_i$ creation operator for qubit $i$, and $\alpha_i$
-the anharmonicity of qubit $i$.
-\subsection{Adiabatic Implementation}
 % The adiabatic CZ gate is realized as syncing the QB1's frequency to QB2's, thereby creating an avoided crossing.
 % By doing so, the energy of $\ket{11}$ and $\ket{20}$ become comparable.
-To implement the gate, the frequency of Qubit 1 is swept along a
+To implement this gate, the frequency of QB1 is swept along a
 prescribed trajectory $\omega_1(t)$ toward the avoided crossing, held or continuously varied for a duration $\tau_d$,
 and then returned to its idle parking frequency.
 In this process, $\ket{11}$ obtains/loses more phases than the other computational states, due to its stronger coupling
 to $\ket{02}$.
 
-By following \cite{Ding2025,Martinis2014} we review the theory behind the adiabatic implementaion of CZ gate and the
-derivation of leakage formula \eref{eq:leakage}.
+By following Refs.~\cite{Ding2025,Martinis2014}, we review the theory behind the adiabatic implementaion of the $CZ$ gate and
+the derivation of the leakage formula \eref{eq:leakage}.
 \begin{theorem}[Adiabatic Theorem]
   If a quantum system is initially prepared in a non-degenerate energy eigenstate of a time-dependent Hamiltonian, and
   if that Hamiltonian is varied sufficiently slowly, the system will evolve continuously to remain in the corresponding
@@ -68,7 +93,7 @@ We denote the energy difference of these two instantaneous eigenstates as
   \label{eq:omega}
 \end{equation}
 
-\subsubsection{Calculation of leakage error} \label{subsec:leakage}
+\subsubsection{Calculation of Leakage Error} \label{subsec:leakage}
 Consider a state
 $$
   \ket{\psi} = \alpha \ket{\psi_{-}}+\beta\ket{\psi_+} = \alpha_0\ket{0}+\beta_0\ket{1}
@@ -83,22 +108,23 @@ Differentiating with respect to time, we obtain
   \dot{\alpha} & = \dfrac{-i\omega \alpha+\beta \dot{\theta}}{2}, \\
   \dot{\beta}  & = \dfrac{i\omega \beta-\alpha \dot{\theta}}{2}.  \\
 \end{align*}
-By expressing the coefficients in terms of the angles $\alpha = \cos \Theta/2$ and $\beta=e^{i\phi}\sin\Theta/2$, we can
+By expressing the coefficients in terms of the angles $\alpha = \cos (\Theta/2)$ and $\beta=e^{i\phi}\sin(\Theta/2)$, we can
 define
 $$
   \alpha^* \beta = \dfrac{\sin\Theta e^{i\phi}}{2}.
 $$
-Calculating the time derivative of $\alpha^*\beta$ yields
+Calculating the time derivative of this quantity yields
 $$
   \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta.
 $$
 Plugging $\phi=\phi_{\text{initial}} + \int_0^t\,\omega(t^\prime)\,\dd t^\prime$ and
-symplifying the expression gives the approximate leakage probability
+symplifying the expression gives the approximate leakage probability $P_e=|\sin(\Theta(T)/2)|^2$,
 \begin{equation}
   % \frac{d}{dt}(\sin\Theta e^{i\phi}) = i\omega \sin\Theta e^{i\phi}  \pm  \dot{\theta}\cos\Theta
-  P_e \approx \dfrac{1}{4}\, \left\lvert\, \int \,\dfrac{\dd\theta}{\dd t} e^{-i\int\omega(t^\prime)\,\dd t^\prime}\right\rvert^2.
+  P_e \approx \dfrac{1}{4}\, \left\lvert\, \int_0^T \,\dfrac{\dd\theta}{\dd t} e^{-i\int\omega(t^\prime)\,\dd t^\prime}\right\rvert^2,
   \label{eq:leakage}
 \end{equation}
+with $T$ being a gate duration.
 % If we assume that the time derivative of $\ket{\psi_-}$ and $\ket{\psi_+}$ are small enough, $\ket{\psi}$ evolves accordingly to \begin{align*}
 %   \dot{\alpha} & = -iE_- \alpha, \\
 %   \dot{\beta}  & = -iE_+\beta,
@@ -111,22 +137,33 @@ symplifying the expression gives the approximate leakage probability
 
 
 \subsubsection{Dynamical and Conditional Phase Accumulation}
-According to the adiabatic theorem, if the sweep rate is sufficiently slow compared to the energy gap at the avoided crossing,
-the system will remain in its instantaneous eigenstate. The dynamic frequency excursion imparts a continuous deformation
-on the $\vert{}11\rangle$ state, causing it to hybridize temporarily with $\vert{}02\rangle$ and acquire a dynamical phase.
-The total accumulated phase $\Phi_{11}$ on the $\vert{}11\rangle$ state is the time integral of its instantaneous eigenenergy
-$E_{11}(t)$:$$\Phi_{11} = -\frac{1}{\hbar} \int_{0}^{\tau} E_{11}(t) dt$$
-Simultaneously, single-qubit dynamical phases $\Phi_{01}$ and
-$\Phi_{10}$ are acquired. The conditional phase $\phi_{\text{cond}}$ accumulated over the gate duration is calculated
-by isolating the two-qubit interaction phase from the single-qubit contributions:$$\phi_{\text{cond}} = \Phi_{11} -
-  \Phi_{01} - \Phi_{10} + \Phi_{00}$$The gate is successful when the pulse amplitude and duration are calibrated such
-that $\phi_{\text{cond}} = \pi \pmod{2\pi}$.
+% According to the adiabatic theorem, if the sweep rate is sufficiently slow compared to the energy gap at the avoided crossing,
+% the system will remain in its instantaneous eigenstate. The dynamic frequency excursion imparts a continuous deformation
+% on the $\vert{}11\rangle$ state, causing it to hybridize temporarily with $\vert{}02\rangle$ and acquire a dynamical phase.
+% The total accumulated phase $\Phi_{11}$ on the $\vert{}11\rangle$ state is the time integral of its instantaneous eigenenergy
+% $E_{11}(t)$:$$\Phi_{11} = -\frac{1}{\hbar} \int_{0}^{\tau} E_{11}(t) dt$$
+% Alongside the avoided crossing, the other states than $\ket{11}$ also acquire dynamical phases.
+% To find the net phase $\ket{11}$ accumulates, we need to subtract these phases.
+% % Simultaneously, single-qubit dynamical phases $\Phi_{01}$ and $\Phi_{10}$ are acquired.
+% The conditional phase $\phi_{\text{cond}}$ accumulated over the gate duration is calculated
+% by isolating the two-qubit interaction phase from the single-qubit contributions:
+% $$\phi_{\text{cond}} = \Phi_{11} - \Phi_{01} - \Phi_{10} + \Phi_{00}$$
+% The gate is successful when the pulse amplitude and duration are calibrated such
+% that $\phi_{\text{cond}} = \pi \pmod{2\pi}$.
+During the sweep towards the avoided crossing, computational states other than $\vert{}11\rangle$ also accumulate
+dynamical phases. To determine the net phase acquired by the $\vert{}11\rangle$ state, these single-qubit contributions
+must be subtracted. Specifically, the conditional phase $\phi_{\text{cond}}$ accumulated over the gate duration is
+calculated by isolating the two-qubit interaction phase from the single-qubit contributions,
+$$\phi_{\text{cond}} = \Phi_{11} - \Phi_{01} - \Phi_{10} + \Phi_{00},$$
+where $\Phi_{ij}$ denotes phase accumulation for the state $\ket{ij}$.
+A successful gate operation requires calibrating the pulse amplitude and
+duration such that $\phi_{\text{cond}} = \pi \pmod{2\pi}$.
 
 \subsubsection{Nonlinear time transformation}
 By applying a time transformation, we can simplify the leakage formula \eref{eq:leakage}.
 Let the time variable of this new frame be $\tau$. Set
 $$
-  \Delta \dd \tau = \omega(t) \dd t.
+  \Delta \dd \tau = \omega(t) \dd t,
 $$
 then
 \begin{equation}
@@ -135,46 +172,49 @@ then
 \end{equation}
 In integral form,
 \begin{equation}
-  t(\tau) = \int_0^\tau\,\sin\tilde{\theta}(\tau^\prime)\,\dd\tau^\prime
+  t(\tau) = \int_0^\tau\,\sin\tilde{\theta}(\tau^\prime)\,\dd\tau^\prime.
   \label{eq:nonliniear_time_transform}
 \end{equation}
-The virtue of this transformation is clear if we plug \eref{eq:nonlinear_time_transform_differential} into \eref{eq:leakage}
+The virtue of this transformation is clear if we plug \eref{eq:nonlinear_time_transform_differential} into \eref{eq:leakage},
 \begin{equation}
-  P_e = \dfrac{1}{4}\, \left\lvert\, \int_0^\tau\,\dfrac{\dd\tilde{\theta}}{\dd\tau}\, e^{-i\Delta \tau}\,\dd \tau \right\rvert^2
+  P_e = \dfrac{1}{4}\, \left\lvert\, \int_0^\tau\,\dfrac{\dd\tilde{\theta}}{\dd\tau}\, e^{-i\Delta \tau}\,\dd \tau \right\rvert^2.
   \label{eq:leakage_tau}
 \end{equation}
+The leakage error is expressed as the Fourier transform of $\dfrac{\dd\tilde{\theta}}{\dd \tau}$
+at $\Delta$.
+
 
 \subsection{Slepian pulses}
 
-In the context of pulse waveform optimization, the Slepian pulses, frequently referred to as discrete prolate spheroidal
-sequences (DPSSs), represent a family of orthogonal pulses specifically formulated to solve the problem of maximal
-energy concentration in both the time and frequency domains. Because Heisenberg's uncertainty principle dictates that a
-pulse cannot be strictly bounded in both time and frequency simultaneously, Slepian, Landau, and Pollack developed these
-sequences to answer a fundamental optimization question: how to optimally concentrate energy in one domain when the
-pulse is strictly confined in the opposing domain.
+% In the context of pulse waveform optimization, the Slepian pulses, frequently referred to as discrete prolate spheroidal
+% sequences (DPSSs), represent a family of orthogonal pulses specifically formulated to solve the problem of maximal
+% energy concentration in both the time and frequency domains. Because Heisenberg's uncertainty principle dictates that a
+% pulse cannot be strictly bounded in both time and frequency simultaneously, Slepian, Landau, and Pollack developed these
+% sequences to answer a fundamental optimization question: how to optimally concentrate energy in one domain when the
+% pulse is strictly confined in the opposing domain.
 
-To define this optimization rigorously, consider a discrete-time pulse of finite length, denoted as $x[n]$ for $n = 0,
-  1, \dots, N-1$. This pulse is constrained to possess finite energy $E$, defined as:$$E = \sum_{n=0}^{N-1}
-  \vert{}x[n]\vert{}^2 < \infty$$The frequency characteristics of the pulse are analyzed using its discrete-time Fourier
-transform:$$X(e^{i\omega}) = \sum_{n=0}^{N-1} x[n]e^{-i\omega n}$$The objective is to maximize the fraction of the total
-pulse energy that is contained within a specific frequency band $[-W, W]$, where $0 < W < \pi$. This fractional energy
-concentration is represented by the ratio $\lambda \in [0, 1]$:$$\lambda = \frac{\int_{-W}^{W}
-    \vert{}X(e^{i\omega})\vert{}^2 d\omega}{\int_{-\pi}^{\pi} \vert{}X(e^{i\omega})\vert{}^2 d\omega}$$Therefore, the core
-optimization problem is to identify the specific sequence $x[n]$ of length $N$ that maximizes this eigenvalue
-$\lambda$.3. The Eigenvalue SolutionThe sequences that solve this optimization problem, denoted as $v_n^{(k)}(N, W)$
-where $k = 0, 1, \dots, N-1$ represents the pulse order, are the Slepian pulses. Here, $N$ is the pulse length and $W$
-parameterizes the mainlobe width.These pulses are derived as the real solutions to the following system of
-equations:$$\sum_{m=0}^{N-1} \frac{\sin 2\pi W(n - m)}{\pi(n - m)} v_m^{(k)}(N, W) = \lambda_k(N, W)v_n^{(k)}(N, W)$$For
-the singularity condition where $n = m$, the fraction simplifies to $2W$.This system can be elegantly expressed as the
-matrix eigenvalue problem $\mathbf{A}\mathbf{v}^{(k)} = \lambda_k \mathbf{v}^{(k)}$.The matrix elements are defined as
-$A_{n,m} = \frac{\sin 2\pi W(n - m)}{\pi(n - m)}$.The eigenvector is $\mathbf{v}^{(k)} = [v_0^{(k)}(N, W), v_1^{(k)}(N,
-  W), \dots, v_{N-1}^{(k)}(N, W)]^T$.4. Characteristics and Practical AdvantagesSolving the matrix equation yields $N$
-distinct eigenvalues, which are conventionally ranked in descending order: $1 > \lambda_0 > \lambda_1 > \dots >
-  \lambda_{N-1} > 0$.The sequence $v_n^{(0)}(N, W)$, associated with the strictly largest eigenvalue $\lambda_0$, is
-designated as the first Slepian pulse.Each subsequent higher-order pulse maximizes the energy ratio $\lambda$ while
-maintaining strict orthogonality to all preceding Slepian pulses.When evaluating their performance against simpler
-shapes like rectangular or raised cosine pulses, Slepian pulses are distinguished by possessing both a relatively small
-mainlobe width and low sidelobe amplitude.This dual efficiency makes them an exceptionally strong candidate for control
-applications where a precise compromise between mainlobe width and sidelobe suppression is required.
+A (discrete) Slepian pulse is a finite-length discrete time signal which maximazes the energy concentration in a prescribed
+frequency band $[-W,W]$.
+The exact formula for this pulse can be derive by considering the following eigenvalue problem.
 
-\subsection{Issues with the Prior Research}
+Consider a discrete-time pulse of finite length, denoted as $x[n]$ for $n = 0, 1, \dots, N-1$.
+Its energy concentration in $[-W,W]$ is
+\begin{equation}
+  \frac{\int_{-W}^{W} \vert{}X(e^{i\omega})\vert{}^2 d\omega}{\int_{-\pi}^{\pi} \vert{}X(e^{i\omega})\vert{}^2
+    d\omega},
+  \label{eq:energy_concentration}
+\end{equation}
+where $X$ denotes discrete Fourier transform,
+$$X(e^{i\omega}) = \sum_{n=0}^{N-1} x[n]e^{-i\omega n}.$$
+The \eref{eq:energy_concentration} can be rewritten as
+$$\dfrac{x^TAx}{x^Tx}$$
+where $x$ is the vector form of the signal $x[n]$ and $A$ is a matrix with $A_{n,m} = \frac{\sin 2\pi W(n - m)}{\pi(n - m)}$.
+
+$A$ has $N$ eigenvalue solutions and the eigenvector corresponding to the second largest eigenvalue satisfies
+anti-symmetric property $x[n] = -x[N-1-n]$.
+
+\subsection{Limitations of Slepian Pulses}
+While the Slepian pulse is widely utilized and exhibits an excellent spectral profile with exceptionally low sidelobes,
+it is not strictly optimal for this specific application.
+As demonstrated in \eref{eq:leakage_tau}, the leakage error depends exclusively on the Fourier transform evaluated at the precise
+frequency $\Delta$. Consequently, this leaves significant room for further targeted waveform optimization.

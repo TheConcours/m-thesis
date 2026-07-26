@@ -161,7 +161,7 @@ The derivative of the flat-top pulse in \ref{subsubsec:drag1_method} consists of
 symmetric functions $h(t)$ and $-h(t-T+t_r)$ as depicted in \fref{fig:drag2}.
 $g^\prime(t)=h(t)$. $h(t)$ is a symmetric function since it is a derivative of a anti-symmetric function.
 
-\subsection{Optimization via Riccati Engineering}
+\subsection{Optimization via Riccati Engineering}\label{subsec:method_riccati}
 As we've seen in \ref{subsec:npad}, NPAD has an obvious issue that the Hamiltonian is assumed to be
 time-independent, and in Ref.~\cite{NPAD2022}, the author only applies this method to perturbative cases, in which the
 method reduces to recursive Schrieffer-Wolff transformations.
@@ -192,9 +192,9 @@ the Riccati equation becomes
 If we define
 \begin{equation}
   \begin{aligned}
-    A & = -\frac{1}{2}(x_2^2+\lambda x_1) \\
-    B & = \frac{1}{2}x_1^2                \\
-    C & = i(\dot{x_1}x_2-x_1\dot{x_2})
+    A & = -\frac{1}{2}(x_2^2+\lambda x_1), \\
+    B & = \frac{1}{2}x_1^2,                \\
+    C & = i(\dot{x_1}x_2-x_1\dot{x_2}).
   \end{aligned}
 \end{equation}
 Then $\Omega_x$, $\Omega_y$, and $\delta$ can be expressed
@@ -215,34 +215,32 @@ Most notably, the non-linearity of the Riccati equation \eref{eq:riccati} substa
 the precise calibration of gate operations.
 To circumvent this issue, we reframe the pulse shaping problem within a continuous optimization framework utilizing a
 Riccati engineering method.
-From existing $\tilde{\Omega}$ and $\delta$, we numerically solve the corresponding $x_1$ and $x_2$.
-We now consider adding a variation to thus obtained $x_1$ and $x_2$.
-To preserve the X gate condition \eref{eq:xgate},
+From existing $\tilde{\Omega}$ and $\delta$, we numerically solve the corresponding $x_1$ and $x_2$,
+then we add variations to thus obtained $x_1$ and $x_2$ to reduce leakage errors and obtain a higher fidelity operation.
+To preserve the X gate condition \eref{eq:xgate_condition},
 \begin{equation}
   \delta \Theta = \int_0^T \sum_{k=1}^2 \left( \frac{\partial \Omega_x}{\partial x_k} \delta x_k + \frac{\partial \Omega_x}{\partial \dot{x}_k} \delta \dot{x}_k + \text{c.c.} \right) dt
 \end{equation}
 must vanish. ($\dfrac{\partial}{\partial x_i}$ denotes Wirtinger derivatives.)
 Integral by parts transforms the above equation into
-
 \begin{equation}
-  \delta \Theta = \left[ \sum_{k=1}^2 \left( P_k(T) \delta x_k(T) + P_k^*(T) \delta x_k^*(T) \right) \right] + \int_0^T \sum_{k=1}^2 \left( G_k(t) \delta x_k(t) + G_k^*(t) \delta x_k^*(t) \right) dt.
+  \delta \Theta = \left[ \sum_{k=1}^2 \left( P_k(T) \delta x_k(T) + P_k^*(T) \delta x_k^*(T) \right) \right] + \int_0^T \sum_{k=1}^2 \left( G_k(t) \delta x_k(t) + G_k^*(t) \delta x_k^*(t) \right) dt,
 \end{equation}
-Note that $\delta x_k(0) = 0$.
+where $G_k(t)$ and $P_k(t)$ ($k=1,2$) are defined as
+\begin{align*}
+  G_k(t) & = \frac{\partial \Omega_x}{\partial x_k} - \frac{d}{dt} \left( \frac{\partial \Omega_x}{\partial \dot{x}_k} \right), \\
+  P_1(t) & = \frac{\partial \Omega_x}{\partial \dot{x}_1} = i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_2,   \\
+  P_2(t) & = \frac{\partial \Omega_x}{\partial \dot{x}_2} = -i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_1.
+\end{align*}
 
-
-$$G_k(t) = \frac{\partial \Omega_x}{\partial x_k} - \frac{d}{dt} \left( \frac{\partial \Omega_x}{\partial \dot{x}_k} \right)$$
-
-$$P_1(t) = \frac{\partial \Omega_x}{\partial \dot{x}_1} = i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_2$$
-
-$$P_2(t) = \frac{\partial \Omega_x}{\partial \dot{x}_2} = -i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_1$$
+Note that we have $\delta x_k(0) = 0$ since we already have $x_k(0)=0$ as an initial value of the integration.
 
 To mitigate the coupling of computational and non-computational subspaces,
 we want $x_1(T)$ and $x_2(T)$ as small as possible.
-Hence, we add
-$$
-$$
 
-
+Ideally, we can totally cancel the leakage error by setting $\delta x_k (T) = -x_k(T)$.
+However, since this is a variational method, $\delta x_k(t)$ should be sufficiently small and
+in practice, we multiply some small number $\epsilon$ to thus obtained $x_k(t)$.
 
 \subsection{CZ gate}
 In this section, for brevity, the length of pulses are assumed to be $N$, an odd number.

@@ -21,7 +21,8 @@ bit which exists in a mutually exclusive, deterministic state of either 0 or 1. 
 computing replaces this discrete entity with the quantum bit, or qubit, an entity governed by the principles of
 quantum mechanics. Rather than being confined to a single state, a qubit can exist in a coherent superposition of
 both states simultaneously, unlocking exponentially larger state spaces and enabling computational speedups for
-specific classes of problems, such as integer factorization and molecular simulation.
+specific classes of problems, such as integer factorization \cite{cain2026shorsalgorithmpossible10000} and molecular
+simulation \cite{Kandala2017}.
 
 Mathematically, the state of a single, isolated qubit is represented as a state vector in a two-dimensional
 complex Hilbert space. Using Dirac notation, the computational basis states are denoted as $\vert{}0\rangle$ and
@@ -31,12 +32,6 @@ $$\vert{}\psi\rangle = \alpha\vert{}0\rangle + \beta\vert{}1\rangle.$$
 Here,
 $\alpha$ and $\beta$ are complex probability amplitudes satisfying
 $\vert{}\alpha\vert{}^2 + \vert{}\beta\vert{}^2 = 1$.
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.5\textwidth]{fig/fig_bloch.pdf}
-  \caption{$\alpha \beta$}
-  \label{fig:my_label}
-\end{figure}
 This constraint allows the pure state of a qubit to be mapped onto the surface of a unit sphere in three-dimensional
 space, known as the Bloch sphere. On the Bloch sphere, the poles represent the basis states $\vert{}0\rangle$ and
 $\vert{}1\rangle$, while points on the equator represent equal superpositions with varying relative phases. This
@@ -55,19 +50,35 @@ objective of quantum control is to engineer these time-dependent waveforms so th
 accurately synthesizes a desired target unitary gate on the computational subspace.
 \subsection{Gate Fidelity and Leakage}
 \label{subsec:leakageandfidelity}
+\begin{figure}[thbp]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{fig/fig_bloch.pdf}
+  \caption{
+    Geometric representation of quantum gate errors on the Bloch sphere. An ideal gate operation targets the pure state
+    $\vert{}\psi\rangle$. Coherent errors result in an unintended pure state $\vert{}\varphi\rangle$ on the surface of
+    the sphere, where the divergence between $\vert{}\varphi\rangle$ and $\vert{}\psi\rangle$ contributes directly to
+    gate infidelity. Conversely,  population leakage into non-computational
+    higher energy states results in a mixed state $\rho$ situated within the interior of the sphere.
+  }
+  \label{fig:bloch_leakage}
+\end{figure}
 Physical transmons are weakly anharmonic oscillators, meaning their $\{\vert{}0\rangle, \vert{}1\rangle\}$ computational
 subspace is not entirely isolated from higher energy levels, most notably the $\vert{}2\rangle$ state. While fast
 quantum operations require short, high-bandwidth microwave pulses, their broad frequency spectra can inadvertently drive
-transitions into these non-computational states. This population loss, termed leakage, severely degrades gate fidelity
-and evades standard quantum error correction.
+transitions into these non-computational states.
+As illustrated in \fref{fig:bloch_leakage}, leakage creates a fundamentally different error profile compared to coherent
+calibration errors. By driving population into higher energy states, leakage causes non-unitary evolution within the
+computational subspace. This manifests as a mixed state $\rho$, a severe error that degrades gate fidelity and crucially
+evades standard quantum error correction protocols.
 
 Therefore, achieving the high-fidelity gates required for fault tolerance
 demands advanced waveform optimization. The control fields defined in $H(t)$ must be precisely shaped to balance two
 competing physical constraints: executing operations as rapidly as possible to minimize decoherence, while strictly
 suppressing the spectral components that induce leakage.
 \subsection{Qudit Hamiltonian in the Rotating Frame}
-As noted in \ref{subsec:leakageandfidelity},
-A transmon qubit is a widely used superconducting qubit. Because a transmon is inherently an anharmonic oscillator, it possesses higher excited states beyond
+% As noted in \ref{subsec:leakageandfidelity},
+% A transmon qubit is a widely used superconducting qubit.
+Because a transmon is inherently an anharmonic oscillator, it possesses higher excited states beyond
 $\ket{0}$ and $\ket{1}$.
 Consequently, it acts as a qudit---a quantum system with $d$ levels---rather than an ideal qubit, which
 inevitably introduces leakage into unwanted noncomputational states.
@@ -85,7 +96,7 @@ energy, and $\varphi$ the phase operator.
 From the (non-degenerate) perturbation theory, we find that the eigenstates of this Hamiltonian are
 harmonics with non-uniform energy spacings.
 We denote the $k$-th excited state as $\ket{k}$ and its $\varphi$-representation $\psi_k(\varphi)$.
-Now we consider the expansion of $\num$ in $\ket{k}\bra{m}\, (k\geq 0,\, m\geq 0)$.
+Now we consider the expansion of $\num$ in terms of $\ket{k}\bra{m}\, (k\geq 0,\, m\geq 0)$.
 Note that $k$'s parity coincides with $\psi_k$'s.
 Since $\num$ flips the sign, the coefficient
 \begin{equation}
@@ -121,10 +132,12 @@ yields the rotating frame Hamiltonian
   ,
   \label{eq:rotatingframe}
 \end{align}
-where ${\Delta}_k = \omega_k - k\omega_d$, $\omega_d$ is the drive frequency and $\omega_k = E_k - E_0$.
-Henceforth, if we simply write $\Delta$, this means $\Delta_2$.
+where ${\Delta}_k = \omega_k - k\omega_d$, $\omega_d$ is the drive frequency and $\omega_k = E_k - E_0$ (eigenenergy
+differences between the ground state and $k$-th excited state).
+Henceforth, when we are discussing one-qubit gates, if we simply write $\Delta$ this means $\Delta_2$.
+Note that $\Delta$ is the anharmonicity of the qubit.
 
-If we apply RWA entirely, \eref{eq:rotatingframe} reduces to
+If we apply RWA to every rotating term, \eref{eq:rotatingframe} reduces to
 \begin{eqnarray}\nonumber
   \Hrwa &=& \sum_{j=1}^{\Nmax} \left(\Delta_j+j\delta(t)\right)\ket{j}\bra{j}\\
   &+&\sum_{j=1}^{\Nmax}\lambda_j\bigg[\frac{\Omega_x(t)}{2} \hat{\sigma}^x_{j-1, j}+\frac{\Omega_y(t)}{2} \hat{\sigma}^y_{j-1, j}\bigg],
@@ -161,7 +174,7 @@ Including the first order corrections of RWA, the Hamiltonian becomes
 \end{align}
 where, for brevity, the last \rm{h.c.} only refers off-diagonal components.
 
-In this study, we consider up to the second excited state in our analysis.
+% In this study, we consider up to the second excited state in our analysis.
 % where $\Delta_{k}=\omega_{k}-k\omega_{d}$ is the detuning between the $k$-th level with the $k$-th driving frequency
 % harmonic. In this frame, all coupling terms, except for $\ket{k}\leftrightarrow\ket{k+1}$, and all the counter-rotating
 % components oscillate rapidly. Therefore, we can neglect those small contributions, leading to the Hamiltonian in
@@ -170,15 +183,15 @@ In this study, we consider up to the second excited state in our analysis.
 \subsection{Approximation of $\lambda$}
 \label{subsec:lambda}
 In the quantum harmonic oscillator (QHO) approximation, $\hat{n}$ is expressed in terms of the annihilation and creation operators:
-$$\hat{n} \approx in_{\text{zpf}}(\hat{a}^\dagger - \hat{a})$$
-Recall $\hat{a} = \sum_{k=0}^\infty\,\sqrt{k+1}\,\ket{k}\bra{k+1}$.
+$$\hat{n} \approx in_{\text{zpf}}(\hat{a}^\dagger - \hat{a}).$$
+Recall $\hat{a} = \sum_{k=0}^\infty\,\sqrt{k+1}\,\ket{k}\bra{k+1}$,
 $$
   \bra{k+1}\hat{a}^\dagger\ket{k} = \sqrt{k+1}\quad\text{and}\quad
   \bra{k+1}\hat{a}\ket{k} = 0.
 $$
 Hence,
 $$
-  \lambda_{k,k+1} \approx \bra{k+1}\hat{n}\ket{k} = in_{\text{zpf}}\sqrt{k+1}
+  \lambda_{k,k+1} \approx \bra{k+1}\hat{n}\ket{k} = in_{\text{zpf}}\sqrt{k+1}.
 $$
 The prefactor $in_{\text{zpf}}$  could be regarded as absorbed by the drive amplitude $\OmegaRF$.
 Hence we simply set
@@ -186,8 +199,8 @@ $$
   \lambda_{k,k+1} \approx \sqrt{k+1}.
 $$
 For $\lambda_1$ is entirely aborbed into $\OmegaRF$, it is exactly (not approximately) $\lambda_1=1$.
-Likewise $lambda_{k,k+3}$ can be computed as \cite{koch2007charge}
-$$\lambda_{k,k+3} \approx c \sqrt{(k+1)(k+2)(k+3)}$$
+Likewise $\lambda_{k,k+3}$ can be computed as \cite{koch2007charge}
+$$\lambda_{k,k+3} \approx c \sqrt{(k+1)(k+2)(k+3)},$$
 with a proportionality constant $c$.
 
 \subsection{Schrieffer-Wolff Transformation}
@@ -206,12 +219,13 @@ we can expand the Hamiltonian in a power series of $S$ as
   H^\prime = i\dot{S} + H + [S,H] + \frac{1}{2}[S,[S,H]] + \cdots. \quad(\text{Hadamard's lemma})
   \label{eq:swt}
 \end{equation}
-It is important to emphasize that this expansion is mathematically rigorous and holds generally true for any generator
+This transformation is what is called Schrieffer-Wolff transformation (SWT).
+It is important to emphasize that the expansion is mathematically rigorous and holds generally true for any generator
 $S$ and Hamiltonian $H$, provided the system is defined within a finite-dimensional Hilbert space.
 While truncating the series early causes inaccuracies, adding more terms makes subsequent computations excessively
 complex.
-In \ref{sec:methods}, we develop a method to the approximation is
-valid.
+In \ref{sec:methods}, we develop a method to
+elongate the range of gate duration for which the approximation is valid.
 % exploring a
 % non-perturbative, strong-driving regime requires a more exacting approach.
 % In such strongly driven systems, premature truncation introduces significant inaccuracies.
@@ -221,10 +235,10 @@ valid.
 \subsection{Derivative Removal by Adiabatic Gate (DRAG)}
 \label{subsec:drag}
 The Derivative Removal by Adiabatic Gate (DRAG) technique is a highly effective method for suppressing leakage.
-It works by applying a secondary corrective pulse--proportional to the time derivative of the primary pulse
-envelope--along an orthogonal control axis, which actively cancels unwanted transitions to higher energy levels (such as
+It works by applying a secondary corrective pulse---proportional to the time derivative of the primary pulse
+envelope---along an orthogonal control axis, which actively cancels unwanted transitions to higher energy levels (such as
 the $\vert{}2\rangle$ state in transmon qubits) and corrects phase errors.
-Gambetta and Motzoi \cite{Gambetta2011} derived the DRAG Y correction formula
+Gambetta and Motzoi \cite{Gambetta2011} derived the DRAG $Y$ correction formula
 \begin{equation}
   \Omega_y = -\frac{1}{\Delta}\dot{\Omega}_x,
   \label{eq:ydrag}
@@ -245,10 +259,10 @@ $$
   \Omega_x(t) = \dot{\Omega}_x(t)=0 \quad \text{at }t=0,\,T.
 $$
 \subsubsection{The DRAG-1 Scheme}
-Hamiltonian \eref{eq:Hdrag} is remained with two photon transitions between $\ket{0}\leftrightarrow\ket{2}$ and
-$\ket{1}\leftrightarrow\ket{3}$.
-SWTs to further reduce these transitions is applicable.
-Now we introduce a recursive DRAG method called DRAG-1 \cite{Li2025} or R1D \cite{99999}:
+The Hamiltonian in \eref{eq:Hdrag} contains additional two-photon transition terms between the $\ket{0}\leftrightarrow\ket{2}$ and
+$\ket{1}\leftrightarrow\ket{3}$ states.
+SWTs can be applied to further reduce these transitions.
+We now introduce a recursive DRAG method known as DRAG-1 \cite{Li2025} or R1D \cite{99999}.
 
 Applying Schrieffer-Wolff transformations with $S_2 = -i\lambda_2\Omega_1^2/(8\Delta_2^2)\hat{\sigma}^y_{0,2}$ and
 $S_3 = i\lambda_2\dot{\Omega}_1\Omega_1/(4\Delta_2^3)\hat{\sigma}^x_{0,2}$
@@ -258,45 +272,47 @@ $$
   \hat{\mathcal{H}}_\text{new}(t) = \frac{\Omega_x}{2}\hat{\sigma}_{0,1}^x + \frac{\lambda_2 \Omega_x^2}{8\Delta_2}\hat{\sigma}_{0,2}^x - \Omega_x^2 \left[ \frac{(2\Delta_2 - \Delta_3)}{8\Delta_2^2} \right] \lambda_2 \lambda_3 \hat{\sigma}_{1,3}^x
   - \lambda_2\left[\right]\sigma^x_{0,2}.
 $$
-Therefore,
+Therefore, by putting
 \begin{equation}
-  \Omega_x(t) = \sqrt{\Omega_1^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_1^2 + \ddot{\Omega}_1 \Omega_1)}.
+  \Omega_x(t) = \sqrt{\Omega_1^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_1^2 + \ddot{\Omega}_1 \Omega_1)},
   \label{eq:drag1}
 \end{equation}
-$\Omega_1$ has to satisfy the boundary conditions $\, \Omega_1 = 0 \text{ at }t=0,\,T. $
+we can cancel out the $\ket{0}\leftrightarrow\ket{2}$ leakage term.
+Here, $\Omega_1$ must satisfy the boundary conditions $\, \Omega_1 = 0 \text{ at }t=0,\,T. $
 
-In case of $X$ gate, the $X$ gate condition
+For the $X$ gate, the target condition
 \begin{equation}
   \int_0^T\,\Omega_x(t)\,\dd t = \pi
   \label{eq:xgate_condition}
 \end{equation}
-gets a slight modification if we consider up to the third degree in the frame transformation \eref{eq:first_frame_change}
+gets a slight modification if we consider terms up to the third degree in the frame transformation of \eref{eq:first_frame_change}
 $$
   \Omega_x^\prime(t) = \Omega_x(t) - \dfrac{(4-\lambda_2^2)\Omega_x^3(t)}{8\Delta^2}.
 $$
-(Corrections of this sort in the DRAG scheme are called superlinear corrections.)
+Corrections of this sort in the DRAG scheme are called superlinear corrections.
+We apply this correction in our simulations.
 
 
 \subsubsection{The DRAG-2 Scheme}
 The DRAG-2 scheme further removes the errors from the transformed Hamiltonian obtained in the previous subsection.
-In the same spirit, applying SWTs (See \ref{appendix:DRAG2}) removes
-$\ket{0}\leftrightarrow\ket{3}$ transition and
+In the same spirit, applying the appropriate SWTs (See \ref{appendix:DRAG2}) removes
+$\ket{1}\leftrightarrow\ket{3}$ transition and
 \begin{equation}
-  \Omega_x(t) = \sqrt{\Omega_1^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_1^2 + \ddot{\Omega}_1 \Omega_1)}.
+  \Omega_1(t) = \sqrt{\Omega_2^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_2^2 + \ddot{\Omega}_2 \Omega_2)}.
   \label{eq:drag2}
 \end{equation}
 with boundary conditions $\Omega_2=0$ at $t=0,\,T$.
 
-% \subsection{Non-perturbative Methods}
-% \subsubsection{NPAD}
-% \label{subsec:npad}
-% A lot of efforts for leakage reduction and fidelity improvements have been done in the perturbative regime (i.e.
-% $\Omega/\Delta \ll 1$).
-% One of the framework advocated for the non-perturbative strong driving regime is NPAD \cite{NPAD2022}.
-% NPAD is an iterative method to diagonalize a nonperturbative
-% Hamiltonian by applying static Givens rotations until the desired accuracy is achieved.
-% While this method is only effective if the Hamiltonian has a rather simple form and only applicable to time-independent
-% Hamiltonian, theoretically this is a generalization of recursive SWT in the perturbative regime.
+\subsection{Non-perturbative Methods}
+\subsubsection{NPAD}
+\label{subsec:npad}
+A lot of efforts for leakage reduction and fidelity improvements have been done in the perturbative regime (i.e.
+$\Omega/\Delta \ll 1$).
+One of the framework advocated that are also applicable in the non-perturbative strong driving regime is NPAD
+\cite{NPAD2022}.
+NPAD is an iterative method to diagonalize a nonperturbative Hamiltonian by applying static Givens rotations until the desired accuracy is achieved.
+While this method is only effective if the Hamiltonian has a rather simple form and only applicable to time-independent
+Hamiltonian, theoretically this is a generalization of recursive SWT in the perturbative regime.
 
 \subsection{Block Diagonalization via Riccati Engineering}
 Although Riccati engineering is a well-established mathematical tool in quantum control, it has not yet been extensively
@@ -304,14 +320,15 @@ applied to the time-dependent control of single-qubit gates, with prior investig
 time-independent scenarios\cite{Riccati2010,Gardas2010}.
 Given a Hamiltonian partitioned as
 $$H(t) = \begin{pmatrix} H_{11}(t) & H_{12}(t) \\ H_{21}(t) & H_{22}(t) \end{pmatrix},$$
+with $H_{11}(t)$ $2\times2$ matrix and $H_{22}(t)$ $1\times1$,
 we seek block diagonalizing transformation $U(t)$ according to \eref{eq:framechange}
-that distinctly separates the computational subspace (principla $2\times 2$ block) from the non-computational.
+that distinctly separates the computational subspace from the non-computational.
 
 The physical motivation for this approach is straightforward: if $H(t)$ can be exactly block-diagonalized, the dynamical
 evolution of a system initialized in the computational subspace (such as $\vert{}0\rangle$) will remain perfectly
 confined within that subspace in the new frame. Consequently, leakage to higher energy levels is strictly suppressed as
 long as the off-diagonal coupling terms are dynamically maintained at zero. As demonstrated by Gardas \cite{Gardas2010},
-the specific unitary transformation $U(t)$ that achieves this decoupling is constructed as,
+the specific unitary transformation $U(t)$ that achieves this decoupling is
 $$
   U(t) = \begin{pmatrix} (I_2 + X^\dagger X)^{-1/2} & X^\dagger (I_{n-2} + X X^\dagger)^{-1/2} \\ -X (I_2 + X^\dagger X)^{-1/2} & (I_{n-2} + X X^\dagger)^{-1/2} \end{pmatrix},
 $$
@@ -326,4 +343,5 @@ takes the form
   - (I_2+X^\dagger X)^{1/2} \partial_t\left[(I_2+X^\dagger X)^{-1/2}\right].
 \end{equation}
 The complexity of the above formula is obviously one of the factors defying an application to time-dependent cases.
+In \ref{subsec:method_riccati}, we seek a method to bypass this complexity.
 % \subsection{Issues with the Prior Research}

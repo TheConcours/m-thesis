@@ -1,0 +1,35 @@
+\section{Wolfram Code for Validating $Y$ DRAG Correction without Perturbation}
+\begin{lstlisting}
+ClearAll["Global`*"];
+M = 3;
+dim = M + 1;
+
+ketbra[m_, n_] := Normal@SparseArray[{{m + 1, n + 1} -> 1}, {dim, dim}]
+
+(* Define the Pauli operators acting on adjacent levels |j-1> and |j> *)
+sigX[j_] := ketbra[j - 1, j] + ketbra[j, j - 1]
+sigY[j_] := -I * ketbra[j - 1, j] + I * ketbra[j, j - 1]
+sigZ[j_] := ketbra[j - 1, j - 1] - ketbra[j, j]
+comm[A_, B_] := A . B - B . A
+
+(* ==========================================
+   Define the Original Hamiltonian & Generator
+   ========================================== *)
+H0 = Sum[(Delta[j] + j * delta[t]) * ketbra[j, j], {j, 1, M}];
+
+Vx=Sum[lambda[j] * Omegax[t] / 2 * sigX[j], {j, 1, M}];
+Vy=Sum[lambda[j] * Omegay[t] / 2 * sigY[j], {j, 1, M}];
+Horig = H0 + Vx + Vy;
+
+
+(* ==========================================
+    Compute the Transformation
+   ========================================== *)
+
+U = Cos[-lambda[2] * Omegax[t] / (2*Delta)] * (ketbra[1,1]+ketbra[2,2]) + I * sigY[2] * Sin[-lambda[2] * Omegax[t] / (2*Delta)];
+U = U + ketbra[0,0];
+Hpr = U . Horig .  ConjugateTranspose[U] + I * D[U,t] . ConjugateTranspose[U];
+(U . Horig .  ConjugateTranspose[U])[[1,2]];
+MatrixForm[Map[Simplify, Hpr[[2,3]], {2}]];
+
+\end{lstlisting}

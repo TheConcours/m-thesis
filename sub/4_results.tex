@@ -98,14 +98,18 @@ which is an acceptable application range of room temperature RF amplifier.
 \subsubsection{The Slew Rate Limit}
 \subsection{CZ gate}
 \subsubsection{Simulation}
-As in the previous research \cite{Ding2025},
-we converted the pulse in the following manner:
+% \epsilon
+$N=1001.$
+As in the previous research \cite{Ding2025,Martinis2014}, we simulate our designed pulses in the following fashion:
+We design $\dfrac{\dd\theta}{\dd\tau}$
 $$
   \tilde{g}\rightarrow \tilde{\theta}\rightarrow x \rightarrow y
 $$
 Simulation conditions are
+We first simulate the qubit with the normalized amplitude and prescribed gate duration in non-linear time frame.
 We numerically solved the dynamics described in \ref{subsec:leakage},
 and then find $P_e$
+Slepian pulse with $NW=2.9$
 \subsubsection{Anti-symmetric Chebyshev pulse}
 \begin{figure}
   \includegraphics[scale=.3]{fig/fig_cheb_slep.pdf}
@@ -115,12 +119,14 @@ and then find $P_e$
   \label{fig:cheb_slep}
 \end{figure}
 Created with with the parameter $r=0.000238.$
+\subsection{Riccati Engineering}
 \subsubsection{Leakage}
 $\eps$
 
 \subsubsection{Minimal Gate time}
 \begin{figure}
   \includegraphics[scale=.5]{fig/fig_tan_5080100.pdf}
+  \centering
   \caption{The relation between $\tau$ and $t$ for the Slepian pulse with $N=50$, $\Delta=0.8$, and $T=100$. The three
     graphs are overlapping each other due to almost the same $A(\tau_d)$.}
 \end{figure}
@@ -137,29 +143,22 @@ where $\tilde{\theta}^n$ is the normalized $\tilde{\theta}$ that reaches $\epsil
 During this flux trajectory, the states $\vert{}00\rangle$, $\vert{}01\rangle$, and $\vert{}10\rangle$ remain largely
 isolated from any crossings. Therefore, the phases they accumulate are purely their standard, uncoupled dynamical
 phases:$\phi_{00} = \phi_{00}^{\text{uncoupled}}$$\phi_{01} = \phi_{01}^{\text{uncoupled}}$$\phi_{10} = \phi_{10}^{\text{uncoupled}}$
-    Therefore, gate duration in the lab frame is $t_d = \tau_d \int_0^1 \sin \left[A(\tau_d) \tilde{\theta}^n(\tau') \right]\, \dd\tau'$.
-  $t_d$ is decided upon the amplitude $A(\tau_d)$ and the initial pulse shape.
-    There are two types of phases: Berry phases and dynamical phases.
-    Since the trajectory that the instantaneous $\ket{11}$ traces through the operation is a 1D path,
-    thus enclosing zero area, it produces zero Berry phase.
-    In formula,
-    \begin{equation}
-      \phi = \int \Delta E \,\dd t = -\int \frac{\Delta}{2} \tan \frac{\theta(t)}{2} \, \dd t
-    \end{equation}
+Therefore, gate duration in the lab frame is $t_d = \tau_d \int_0^1 \sin \left[A(\tau_d) \tilde{\theta}^n(\tau') \right]\, \dd\tau'$.
+$t_d$ is decided upon the amplitude $A(\tau_d)$ and the initial pulse shape.
+There are two types of phases: Berry phases and dynamical phases.
+Since the trajectory that the instantaneous $\ket{11}$ traces through the operation is a 1D path,
+thus enclosing zero area, it produces zero Berry phase.
+In formula,
+\begin{equation}
+  \phi = \int \Delta E \,\dd t = -\int \frac{\Delta}{2} \tan \frac{\theta(t)}{2} \, \dd t
+\end{equation}
 
-    Since $\tan(\theta/2) = \dfrac{\tan(\theta)}{1+\sqrt{1+\tan(\theta)^2}}$
+Since $\tan(\theta/2) = \dfrac{\tan(\theta)}{1+\sqrt{1+\tan(\theta)^2}}$
 
-    As you see in the graph of $\epsilon(t)$
-    Since $0\leq\tan\dfrac{\theta(t)}{2}\leq 1$, the gate duration $T$ satisfies $T\geq \dfrac{2\pi}{\Delta}.$
+As you see in the graph of $\epsilon(t)$
+Since $0\leq\tan\dfrac{\theta(t)}{2}\leq 1$, the gate duration $T$ satisfies $T\geq \dfrac{2\pi}{\Delta}.$
 
 is connected through
-\begin{equation}
-  % \begin{align}
-  \omega_1(\Phi_{\text{ext}})   = \frac{1}{\hbar} \left( \sqrt{8E_JE_C} \sqrt[4]{d^2 + (1 - d^2)
-      \cos^2(\pi \frac{\Phi_{\text{ext}}}{\Phi_0})} - E_C \right),
-  % \end{align}
-  \label{eq:flux}
-\end{equation}
 
 Required slew rate of DAC is
 

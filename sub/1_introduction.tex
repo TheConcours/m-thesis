@@ -6,55 +6,59 @@
 
 \subsection{Background and Motivation}
 Quantum computing represents a paradigm shift in computational science, offering
-exponential speedups for specific classes of problems, including quantum chemistry simulation\cite{Kandala2017},
-cryptography\cite{cain2026shorsalgorithmpossible10000,}, and
-large-scale optimization in many industry and scientific areas\cite{Ye2025,}. At the heart of this physical realization
+exponential speedups for specific classes of problems, including quantum chemistry simulation \cite{Kandala2017},
+cryptography \cite{cain2026shorsalgorithmpossible10000}, and
+large-scale optimization \cite{Ye2025} in many industry and scientific areas. At the heart of this physical realization
 are quantum bits (qubits). Among the various physical implementations, superconducting qubits---particularly the transmon
-architecture---have established themselves as a leading foundational platform\cite{Acharya2025}.
+architecture---have established themselves as a leading foundational platform \cite{Acharya2025}.
 Their macroscopic nature allows for strong coupling to microwave control fields and flexible
-lithographic fabrication, making them highly scalable\cite{Devoret2013}. However, realizing fault-tolerant quantum computation requires
+lithographic fabrication, making them highly scalable \cite{Devoret2013}. However, realizing fault-tolerant quantum computation requires
 extremely high-fidelity quantum operations. Current Noisy Intermediate-Scale Quantum (NISQ) devices are fundamentally
 limited by decoherence and operational errors. For superconducting qubits, single- and two-qubit gate fidelities are
 highly sensitive to the precise shape of the microwave control pulses used to drive the transitions. Imperfect control
-pulses lead to phase errors, over-rotation, and leakage out of the computational subspace (e.g., transitions into the
-$\vert{}2\rangle$ state), severely degrading the overall performance of the quantum processor
+pulses lead to phase errors, over-rotation, and leakage out of the computational subspace, severely degrading the
+overall performance of the quantum processor.
 
 \subsection{Problem Statement}
 The transmon qubit is inherently a weakly anharmonic oscillator. Because the energy difference between the
 $\vert{}0\rangle \leftrightarrow \vert{}1\rangle$ transition and the $\vert{}1\rangle \leftrightarrow \vert{}2\rangle$
 transition is relatively small, applying fast, high-amplitude microwave pulses to minimize decoherence time inevitably
-results in spectral leakage into higher, non-computational energy states. While conventional approaches such as the
-Derivative Removal by Adiabatic Gate (DRAG) technique have successfully suppressed this leakage to a large extent, the
-demand for even higher fidelities necessitates more advanced waveform engineering. Standard Gaussian or square pulses
-are often spectrally broad or susceptible to noise. There is a critical need to explore mathematically optimal pulse
-shapes-such as Slepian pulses-that can strictly confine the energy spectrum while maintaining fast gate times, and to
-develop robust calibration frameworks to validate these pulses against realistic Hamiltonian dynamics.
+results in spectral leakage into higher, non-computational energy states.
+The Derivative Removal by Adiabatic Gate (DRAG) technique is a highly successful methodology for suppressing this
+leakage. However, the demand for even higher fidelities necessitates further refinement of the underlying waveforms used
+within the DRAG framework.
+Because standard Gaussian or square base pulses can be spectrally broad or susceptible to noise, there is a critical
+need to integrate mathematically optimal pulse shapes into the DRAG protocol. Specifically, by
+actively suppressing the amplitude of these optimized waveforms, this combined approach can strictly confine the energy
+spectrum while maintaining fast gate times. Implementing this requires robust calibration frameworks to validate these
+amplitude-suppressed pulses against realistic Hamiltonian dynamics.
 \subsection{Objectives and Contributions}
-The primary objective of this thesis is to investigate, optimize, and benchmark advanced gate pulse waveforms for
-superconducting transmon qubits. By uncovering the underlying spectral properties of established control techniques and
-introducing novel waveform designs, this work minimizes leakage errors while accelerating gate execution times. The
-specific original contributions of this thesis are detailed as follows:
+The primary objective of this thesis is to investigate, optimize, and evaluate advanced gate pulse waveforms for
+superconducting transmon qubits, both one qubit and two qubit operations. By uncovering the underlying spectral
+properties of established control techniques and introducing novel waveform designs, this work minimizes leakage errors
+while accelerating gate execution times. The specific original contributions of this thesis are detailed as follows:
 
-Single-Qubit Gate Innovations
-
+\noindent\textbf{Single-Qubit Gate Innovations}
 \begin{description}
-  \item[Spectral Formulation of Recursive DRAG] Successfully demonstrated that the condition equations for DRAG-1 and DRAG-2
+  \item[Spectral Formulation of Recursive DRAG ] Successfully demonstrated that the condition equations for DRAG-1 and DRAG-2
         pulses can be rigorously defined as a zero Fourier transform requirement. This connects the superconducting DRAG
-        formalism to analogous mathematical conditions frequently observed in spin qubit research, providing a deeper physical
+        formalism to analogous mathematical conditions frequently observed in spin qubit research \cite{freeman,hoult1979,vold1968,warren1984}, providing a deeper physical
         intuition for recursive DRAG schemes.
 
-  \item[Accelerated Pulse Design Methodology] Leveraged this newly established Fourier transform formulation to develop a novel
-        analytical pulse design approach. This method bypasses conventional constraints, successfully achieving shorter
+
+  \item[Novel Pulse Design Methodology ] Leveraged this newly established Fourier transform formulation to develop a
+        novel analytical pulse design approach. This method bypasses conventional constraints and provides an improved
+        control over the resulting pulse shape, successfully achieving shorter
         single-qubit gate durations without compromising operational fidelity.
 \end{description}
 
-Two-Qubit Gate Innovations
+\noindent\textbf{Two-Qubit Gate Innovations}
 
 \begin{description}
-  \item[Anti-Symmetric Chebyshev Pulses] Discovered and proposed a novel control waveform, designated as the anti-symmetric
+  \item[Anti-Symmetric Chebyshev Pulses ] Discovered and proposed a novel control waveform, designated as the anti-symmetric
         Chebyshev pulse, tailored to optimize two-qubit gate operations.
 
-  \item[Targeted Spectral Suppression] Adapted and extended the traditional Slepian pulse optimization framework by applying a
+  \item[Targeted Spectral Suppression ] Adapted and extended the traditional Slepian pulse optimization framework by applying a
         technique specifically designed to minimize the Fourier transform amplitude within a precisely targeted frequency range,
         thereby optimizing the waveform for two-qubit leakage suppression.
 \end{description}
