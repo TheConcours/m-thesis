@@ -31,20 +31,24 @@ Recognizing this as a driven harmonic oscillator equation, the general solution 
   \label{eq:drag1_sol}
 \end{equation}
 The first term represents the particular solution to the ODE in \eref{eq:drag1_ode}.
-The validity of this particular solution can be analytically verified with
-the Leibniz rule \cite{apostol}, which dictates the differentiation under the integral sign:
+To check the validity of this particular solution we use the Leibniz rule \cite{apostol}, which dictates the differentiation under the integral sign:
 \begin{equation}
   \frac{d}{dt} \int_{a(t)}^{b(t)} F(x,t) dx = F(b(t), t) \cdot b'(t) - F(a(t), t) \cdot a'(t) + \int_{a(t)}^{b(t)} \frac{\partial}{\partial t} F(x,t) dx.
   \label{eq:leibniz}
 \end{equation}
+% According to this formula, we obtain the first time derivative
+% \begin{align*}
+%   \dfrac{\dd}{\dd t}\Omega_1(t)^2 & = \int_0^t\,\left[\cos(\Delta_2(t-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau -\Delta A\sin(\Delta_2 t+\phi)
+%   % \dfrac{\dd^2}{\dd t^2}\Omega_1(t)^2 & =\int_0^t\,\left[\cos(\Delta_2(t-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau
+% \end{align*}
 Recall we have three boundary conditions on our debt:
 \begin{enumerate}
-  \item $\Omega_x = 0$ at both ends ($t=0$, $T$)%: This ensures compatibility with the SWT and enforces boundary continuity for the X-pulse, mitigating spectral leakage.
-  \item $\dot{\Omega}_x = 0$ at both ends ($t=0$, $T$)%: This guarantees a smooth envelope derivative, maintaining essential boundary continuity for the corresponding Y-pulse.
-  \item $\Omega_1 = 0$ at both ends ($t=0$, $T$)%: This further enforces strict SWT compatibility at the start and completion of the gate.
+  \item $\Omega_x = 0$ at both ends ($t=0$, $T$): This ensures compatibility with the SWT and enforces boundary continuity for the X-pulse, mitigating spectral leakage.
+  \item $\dot{\Omega}_x = 0$ at both ends ($t=0$, $T$): This condition guarantees a smooth envelope derivative, maintaining essential boundary continuity for the corresponding Y-pulse.
+  \item $\Omega_1 = 0$ at both ends ($t=0$, $T$): This further enforces strict SWT compatibility at the start and completion of the gate.
 \end{enumerate}
 
-Applying the third boundary condition at the initial time $t = 0$  immediately eliminates the homogeneous component, yielding $A = 0$ in \eref{eq:drag1_sol}.
+Applying the third boundary condition at the initial time $t = 0$ immediately eliminates the homogeneous component, yielding $A = 0$ in \eref{eq:drag1_sol}.
 We name
 $$
   \Omega_1^2(t) = \int_0^t\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau
@@ -76,13 +80,14 @@ we find that the existence of such a $\Omega_2$ in \eref{eq:drag2} is guaranteed
   \label{eq:drag2_fourier}
 \end{equation}
 which is equivocal to $\mathcal{F}[\Omega_1](\Delta_3)=0$.
-The differential DRAG-1 formula \eref{eq:drag1} implies
+By taking Fourier transform of the both sides of the differential DRAG-1 formula \eref{eq:drag1},
+we obtain
 $$
   \mathcal{F}[\Omega_x^2](z) = (1-\dfrac{z^2}{\Delta_2^2})\mathcal{F}[\Omega_1^2](z).
 $$
 Hence, \eref{eq:drag2_fourier} is equivalent to $\mathcal{F}[\Omega_x](\Delta_3)=0$.
-These results have deep physical intuition.
-\cite{freeman,hoult1979,vold1968,warren1984}
+% These results have deep physical intuition.
+% \cite{freeman,hoult1979,vold1968,warren1984}
 
 
 \subsection{Pulse Design}
@@ -100,30 +105,32 @@ These results have deep physical intuition.
 \end{figure}
 Having established that DRAG-1 and DRAG-2 formula are equivalent to
 zero Fourier transform at $\Delta$ and $\Delta_3$ respectively,
-we now utilize echo method to create pulses.
+we now utilize the echo method to create pulses with these properties.
 \subsubsection{DRAG-1 pulse}
 \label{subsubsec:drag1_method}
-We propose a method to create a flat-top DRAG-1 pulse.
-We utilize the echo method which crops up in every corner of science and technology fields, including signal processing, NMR\cite{Jenkins}, acoustics\cite{Pal2018}, and laser physics\cite{Ma2021}.
+We propose a novel method to synthesize a flat-top DRAG-1 pulse. Utilizing a flat-top envelope enables us to reduce the
+lower bound of the gate duration for which the Schrieffer-Wolff transformation (SWT) remains valid. This is because
+keeping the peak amplitude, $\max\vert{}\Omega_x\vert{}$, relatively small helps mitigate the inaccuracies introduced by
+the early truncation of the SWT series.To engineer a pulse that yields a zero Fourier transform at a specific target
+frequency, the echo method is a widely employed technique. This method is ubiquitous across numerous scientific and
+technological disciplines, including signal processing, nuclear magnetic resonance (NMR) \cite{Jenkins}, acoustics
+\cite{Pal2018}, and laser physics \cite{Ma2021}. Its direct application to quantum gate operations has been previously
+explored in Ref. \cite{Polat2026}.
+Although Jesus et al. \cite{99999} investigated optimal pulse waveforms by designing
+$\Omega_x$ indirectly via the auxiliary function $\Omega_1$, our methodology allows for the direct design of a DRAG-1
+pulse using \eref{eq:drag1_fourier}.
 
-Although Jesus et al. \cite{99999} proposed a pulse design method for $\Omega_x$ by way of $\Omega_1$, and investigated
-an optimal pulse waveform therein, we can
-directly design a DRAG-1 pulse through \eref{eq:drag1_fourier}.
-Now we consider pushing the gate time limit for maintaining the perturbative approximation of Schrieffer-Wolff transformation.
-In it,
-The problem of early truncation will be somewhat relieved by keeping $\max |\Omega_x|$ small.
-We combine delayed leakage reduction technique described in \cite{Polat2026} and function design techniques to obtain
-such pulses.
 
-Let $t_d=\pi/\Delta$. For a given function, the superposition $f(t)$, $f(t)+f(t-t_d)$'s Fourier transform evaluated at $\Delta$ is
+
+Let $t_d=\pi/\Delta$. For a given function $f(t)$, its delayed superposition $f(t)+f(t-t_d)$'s Fourier transform evaluated at $\Delta$ is
 $$
   \mathcal{F}[f(t)+f(t-t_d)](\Delta) = \mathcal{F}[f](\Delta)+e^{i\Delta t_d}\mathcal{F}[f](\Delta) = 0.
 $$
 We aim to design a pulse such that this sum results in a flat-top profile, as illustrated in \fref{fig:drag1}.
-If we impose that $f(t)$ be also a flat-top pulse, then the pulse design problem boils down to designing a function
-on $[0,t_r]$, where $t_r$ denotes the rise time.
+Here we also impose that $f(t)$ is a flat-top pulse, then the pulse design problem reduces to defining the waveform
+strictly on $[0,t_r]$, where $t_r$ denotes the rise time.
 
-By normalizing this rising function, the problem can be stated that we find a function $g(t)$ on $[-1,1]$ that satisfies
+By normalizing this rising edge, the objective can be restated as finding a function $g(t)$ on $[-1,1]$ that satisfies
 the following property:
 \begin{enumerate}
   \item \label{itm:g1} $g$ is anti-symmetric.
@@ -131,6 +138,8 @@ the following property:
   \item \label{itm:g3} $g(1)=1/2$.
   \item  \label{itm:g4} The first and second derivative of $g$vanish at $t=-1$.
 \end{enumerate}
+The first condtion comes from the additional constraint that the $f(t)$ is also a flat-top pulse.
+The second condtion is set so that it maximally reduces gate duration.
 The fourth condition ensures that $\Omega_x=\dot{\Omega}=0$ are satisfied at $t=0,\,T$.
 % $g$ represents the function on $[0,t_r]$.
 Once obtaining such a $g$, we reconstruct $\Omega_x^2$ as
@@ -144,7 +153,7 @@ Once obtaining such a $g$, we reconstruct $\Omega_x^2$ as
   \label{eq:drag1_flattop}
 \end{equation}
 where $A$ is the peak amplitude, determined by integrating $\Omega_x^2$ according to \eref{eq:xgate_condition}.
-One example for such $g$ is $\dfrac{1}{2} x+\dfrac{1}{2\pi}\sin( \pi x)$.
+% One example for such $g$ is $\dfrac{1}{2} x+\dfrac{1}{2\pi}\sin( \pi x)$.
 % \begin{enumerate}
 % \item $3\pi x+4\sin(\pi x)+\dfrac{1}{2} \sin(2\pi x)$
 % \end{enumerate}
@@ -154,12 +163,20 @@ One example for such $g$ is $\dfrac{1}{2} x+\dfrac{1}{2\pi}\sin( \pi x)$.
 % and it is easy to check that the other condtions \ref{itm:g1}-\ref{itm:g3} are also satisfied.
 \subsubsection{DRAG-2 pulse}
 We now extend the method described above and gain a pulse which also satisfies the DRAG-2 formula.
-Note that for a function $f(t)$, $iz\mathcal{F}[f](z) = \mathcal{F}[f^\prime](z)$.
+Note that for a function $f(t)$,
+$$iz\mathcal{F}[f](z) = \mathcal{F}[f^\prime](z).$$
 This implies that the requirement that $\Omega_x^2$ have a zero Fourier transform at $\Delta_3$
 is equivalent to its derivate have a zero Fourier transform at $\Delta_3$.
-The derivative of the flat-top pulse in \ref{subsubsec:drag1_method} consists of two
-symmetric functions $h(t)$ and $-h(t-T+t_r)$ as depicted in \fref{fig:drag2}.
-$g^\prime(t)=h(t)$. $h(t)$ is a symmetric function since it is a derivative of a anti-symmetric function.
+If $h(t)$ is the derivative of $g(t)$, $h(t)=g^\prime(t)$, the derivative of the flat-top pulse in \ref{subsubsec:drag1_method} consists of two
+$h(t)$ and $-h(t-T+t_r)$ as depicted in \fref{fig:drag2}.
+$h(t)$ is a symmetric function since it is a derivative of a anti-symmetric function.
+
+We can create $h(t)$ so that it has zero Fourier transform at $\Delta_3$ using the echo method as illustrated in
+\fref{fig:drag2}.
+Theoretically, $\Delta_n = \dfrac{n(n-1)}{2}\Delta$, so the delay time to cancel the Fourier transform is
+$$
+  \dfrac{\pi}{\Delta_3}=\dfrac{\pi}{3\Delta} = \dfrac{t_d}{3}.
+$$
 
 \subsection{Optimization via Riccati Engineering}\label{subsec:method_riccati}
 As we've seen in \ref{subsec:npad}, NPAD has an obvious issue that the Hamiltonian is assumed to be
@@ -197,7 +214,7 @@ If we define
     C & = i(\dot{x_1}x_2-x_1\dot{x_2}).
   \end{aligned}
 \end{equation}
-Then $\Omega_x$, $\Omega_y$, and $\delta$ can be expressed
+Then $\Omega_x$, $\Omega_y$, and $\delta$ can be expressed as
 \begin{equation}
   \tilde{\Omega} = \Omega_x+i\Omega_y = \dfrac{A^\star C - B C^\star}{|A|^2-|B|^2}, \label{eq:riccati_Omega}
 \end{equation}
@@ -207,16 +224,18 @@ Then $\Omega_x$, $\Omega_y$, and $\delta$ can be expressed
 \end{equation}
 
 \subsubsection{Variational Pulse Adjustment}
-\cite{Werschnik_2007}
-A direct appraoch to applying \eref{eq:riccati_Omega} and \eref{eq:riccati_delta} involves initially determining the variables $x_1$ and $x_2$,
-followed by a numerical solution for $\tilde{\Omega}$ and $\delta$.
+% \cite{Werschnik_2007}
+A direct appraoch to applying \eref{eq:riccati_Omega} and \eref{eq:riccati_delta} involves
+finding $x_1$ and $x_2$ that lands on $0$ at $t=0,\,T$, and the time evolution given by \eref{eq:riccati_timeevolution}
+corresponds to a $X$ gate.
+At the very end of this process, we find a numerical solution for $\tilde{\Omega}$ and $\delta$.
 However, this methodology introduces several analytical and numerical challenges.
 Most notably, the non-linearity of the Riccati equation \eref{eq:riccati} substantially complicates
 the precise calibration of gate operations.
 To circumvent this issue, we reframe the pulse shaping problem within a continuous optimization framework utilizing a
-Riccati engineering method.
+variational method.
 From existing $\tilde{\Omega}$ and $\delta$, we numerically solve the corresponding $x_1$ and $x_2$,
-then we add variations to thus obtained $x_1$ and $x_2$ to reduce leakage errors and obtain a higher fidelity operation.
+then we add variations to thus obtained $x_1$ and $x_2$ to reduce leakage errors and achieve higher fidelity operations.
 To preserve the X gate condition \eref{eq:xgate_condition},
 \begin{equation}
   \delta \Theta = \int_0^T \sum_{k=1}^2 \left( \frac{\partial \Omega_x}{\partial x_k} \delta x_k + \frac{\partial \Omega_x}{\partial \dot{x}_k} \delta \dot{x}_k + \text{c.c.} \right) dt
@@ -242,13 +261,19 @@ Ideally, we can totally cancel the leakage error by setting $\delta x_k (T) = -x
 However, since this is a variational method, $\delta x_k(t)$ should be sufficiently small and
 in practice, we multiply some small number $\epsilon$ to thus obtained $x_k(t)$.
 
-\subsection{CZ gate}
+\subsection{$CZ$ gate}
 In this section, for brevity, the length of pulses are assumed to be $N$, an odd number.
-As seen in \ref{subsec:leakage}, the leakage error is approximately expressed as $\dfrac{1}{4}|G(\Delta)|^2$.
-Although the objective seems to be the same as in the case of $X$ gate,
-we are more interested in mitigating the Fourier transform for an interval of frequencies \cite{Martinis2014}.
-In the following we propose several methods to achieve this.
-\subsubsection{anti-symmetric Chebyshev pulse}
+As seen in \ref{subsec:leakage},
+if we denote with $g$ the derivative of $\theta$ we design in non-linear time frame,
+the leakage error is approximately expressed as $\dfrac{1}{4}|\mathcal{F}[g](\Delta)|^2$.
+Although both formulations ($X$ gate and $CZ$ gate) share the similar objective of minimizing or zeroing out the Fourier transform, the specific
+methods we employ for each gate differ. This distinction arises because, in practical applications of the $CZ$ gate, it is
+more critical to maintain a small Fourier transform amplitude over an interval of frequencies \cite{Martinis2014}.
+
+In the following, we propose two methods to achieve this.
+One is a proposal of a novel pulse shape.
+The other is an optimization with sequential quadratic programming.
+\subsubsection{The Anti-symmetric Chebyshev Pulse}
 Maintaining a specified sidelobe level, Chebyshev pulse is the signal that minimizes the mainlobe width.
 
 Mathematically, a chebyshev pulse $g_{ch}$ is a discrete time pulse defined as
@@ -261,7 +286,7 @@ $$
     g_{ch}[n]  \quad     & n< (N+1)/2  \\
     0             \quad  & n = (N+1)/2 \\
     -g_{ch}[N-n]   \quad & n > (N+1)/2 \\
-  \end{cases}
+  \end{cases},
 $$
 anti-symmetric Chebyshev pulse $g_{ach}$.
 % \subsubsection{Correctional Derivative pulse}
@@ -309,24 +334,59 @@ anti-symmetric Chebyshev pulse $g_{ach}$.
 % is the problem to solve.
 \subsubsection{Spectrum Suppression via Sequential Quadratic Programming}
 
-Compare with FAST \cite{FAST}
-Given an ansatz and an evaluation point $\Delta$, the algorithm goes as follows:
 
-\begin{algorithm}
-  \caption{Variational Quantum Circuit Optimization}\label{alg:vqa_opt}
-  \begin{algorithmic}[1] % The [1] enables line numbering
-    \Require Target unitary $U$, Error tolerance $\epsilon$
-    \Ensure Optimized parameters $\boldsymbol{\theta}$
-    \State Initialize $\boldsymbol{\theta} \gets \text{random values in } [0, 2\pi]$
-    \State Set learning rate $\alpha \gets 0.01$
-    \While{cost function $\mathcal{L}(\boldsymbol{\theta}) > \epsilon$}
-    \State Compute gradient $\nabla \mathcal{L}(\boldsymbol{\theta})$ using parameter-shift rule
-    \If{$\|\nabla \mathcal{L}(\boldsymbol{\theta})\| < \text{threshold}$}
-    \State \textbf{break} \Comment{Early stopping criteria}
-    \EndIf
-    \State $\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha \nabla \mathcal{L}(\boldsymbol{\theta})$
-    \EndWhile
-    \State \Return $\boldsymbol{\theta}$
-  \end{algorithmic}
-\end{algorithm}
+There are many methods known to tailor a pulse with a target spectrum.
+Weighted Chebyshev approximation (WCA) \cite{Ding2025} is one of them.
+In WCA, you have two prescribed parameters, a weight function $W(w)$ and a spectrum profile
+$A(w)$. WCA is a method to find a pulse whose spectrum is $G(w)$ such that
+$$
+  \max\{|W(w)(G(w)-A(w))|\} \text{ is minimized.}
+$$
+WCA has the following difficulties:
+\begin{itemize}
+  \item over-constraining Due to Phase
+        In many physical systems (such as optical pulse shaping, NMR, and RF filter design), the
+        primary goal is often to control and optimize the "amplitude" (intensity) of the spectrum, while the phase can be left
+        arbitrary (Phase Freedom).However, because the WCA objective function $\max\{\vert{}W(w)(G(w) - A(w))\vert{}\}$ is
+        evaluated in the complex domain, even if the amplitude $\vert{}G(w)\vert{}$ perfectly matches the target
+        $\vert{}A(w)\vert{}$, any difference in phase is penalized as a "large error." Consequently, optimization resources are
+        wasted on unnecessary phase matching. This strips away design degrees of freedom and often forces the generation of
+        unnecessarily long pulses just to satisfy these artificial phase constraints.
+        2. Sensitivity to the Minimax Criterion (Outliers)
+        By the very nature of Chebyshev approximation, WCA seeks to minimize the "maximum error" across the entire
+        evaluation function (minimizing the $\mathcal{L}_\infty$ norm).This means that if the spectrum deviates significantly
+        from the target at even a single point (such as a sharp peak or a minor dip), the algorithm will focus excessively on
+        correcting that specific outlier. As a result, the average approximation accuracy (e.g., the mean squared error) across
+        the entire spectrum is often sacrificed, risking an overall distorted pulse waveform.
+        3. Physical Realizability and Power Efficiency
+        Pursuing a mathematically rigorous complex approximation naturally leads to highly complicated theoretical
+        pulse waveforms.Real-world hardware (like Arbitrary Waveform Generators or optical modulators) has strict physical
+        limitations regarding maximum amplitude (peak power) and slew rate (the speed of waveform change). WCA optimization
+        results frequently violate these hardware constraints. Furthermore, because energy is squandered on aligning unnecessary
+        phase components, the overall power efficiency of the resulting pulse is significantly degraded.
+\end{itemize}
 
+SQP \cite{powell1978fast},
+
+% We propose the following method to suppress
+% Compare with FAST \cite{FAST}
+% Given an ansatz and an evaluation point $\Delta$, the algorithm goes as follows:
+%
+% \begin{algorithm}
+%   \caption{Variational Quantum Circuit Optimization}\label{alg:vqa_opt}
+%   \begin{algorithmic}[1] % The [1] enables line numbering
+%     \Require Target unitary $U$, Error tolerance $\epsilon$
+%     \Ensure Optimized parameters $\boldsymbol{\theta}$
+%     \State Initialize $\boldsymbol{\theta} \gets \text{random values in } [0, 2\pi]$
+%     \State Set learning rate $\alpha \gets 0.01$
+%     \While{cost function $\mathcal{L}(\boldsymbol{\theta}) > \epsilon$}
+%     \State Compute gradient $\nabla \mathcal{L}(\boldsymbol{\theta})$ using parameter-shift rule
+%     \If{$\|\nabla \mathcal{L}(\boldsymbol{\theta})\| < \text{threshold}$}
+%     \State \textbf{break} \Comment{Early stopping criteria}
+%     \EndIf
+%     \State $\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha \nabla \mathcal{L}(\boldsymbol{\theta})$
+%     \EndWhile
+%     \State \Return $\boldsymbol{\theta}$
+%   \end{algorithmic}
+% \end{algorithm}
+%

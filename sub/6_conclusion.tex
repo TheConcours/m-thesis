@@ -1,7 +1,44 @@
 \section{Conclusion}
-Mathematically reformulated DRAG-1 and DRAG-2 pulses.
-and invented a new pulse design method and demonstrated its effectiveness in
-a short gate duration.
+In this thesis, we have explored advanced gate pulse waveform optimization techniques for superconducting qubits, aiming
+to suppress errors and improve fidelity across both single-qubit and two-qubit operations. By systematically analyzing
+and overcoming the limitations of conventional pulse shaping methods, this research introduces novel, highly efficient
+pulse generation strategies.
 
-we could simplify the Hamiltonian somehow, could be available.
-Riccati engineering is more effective
+% Summary of Contributions
+The primary findings and methodological advancements of this work are summarized below:
+
+\noindent\textbf{Optimization of Single-Qubit X Gates}
+
+\begin{description}
+  \item[Mathematical Reformulation of recursive DRAG: ] We mathematically reformulated the standard DRAG-1 and DRAG-2 frameworks to invent a novel pulse design methodology.
+
+        % \item[Low-Harmonic Superposition: ]By optimizing pulses generated through the superposition of low-harmonic waves, this new approach achieved superior performance compared to conventional pulses.
+        %
+  \item[Short Gate-Time Efficacy: ]The proposed method demonstrated significant effectiveness, particularly in minimizing errors at short gate times.
+
+  \item[Exploration of Advanced Control Techniques: ]While the integration of advanced techniques such as Riccati engineering did not yield a drastic performance improvement in this specific configuration, combining these theoretical frameworks provided valuable insights into the fundamental limits of analytical pulse design.
+\end{description}
+
+\noindent\textbf{Development of Two-Qubit CZ Gates}
+
+\begin{description}
+  \item[Introduction of the anti-symmetrized Chebyshev Pulse: ] As an alternative to the conventional Slepian pulse, we confirmed the performance of this
+        novel pulse. This pulse is more suited if the  gate duration is longer and
+        anti-symmetrized Chebyshev pulses is a better alternative if the gate duration ranges greatly.
+
+  \item[Introduction of a novel versatil optimization method: ]We investigated the performance bottleneck observed when
+        using the Weighted Chebyshev Approximation (WCA). The conventional WCA approach yielded results that did not differ
+        significantly from standard Slepian pulses. However, by applying Sequential Quadratic Programming (SQP) as an
+        alternative optimization method, we achieved distinct improvements.
+        % This comparative result strongly suggests that
+        % the lack of improvement with WCA is directly attributable to its inherent algorithmic issues, specifically its
+        % tendency to over-constrain the phase and overreact to spectral outliers.
+\end{description}
+
+\subsection{Future Work}
+Although this study utilized the echo method to synthesize the DRAG-2 pulse, alternative techniques for generating
+pulses with a zero Fourier transform at targeted frequencies warrant further investigation.
+% For instance, the anti-symmetrized Chebyshev pulse presents a promising alternative in scenarios where gate durations vary significantly.
+Furthermore, future work will focus on calculating the DRAG-2 pulse from our proposed pulse, refining the integration of Riccati engineering to better leverage its potential
+in non-linear quantum control, and extending the SQP optimization framework to address a broader range of pulse
+optimization problems within the field.
