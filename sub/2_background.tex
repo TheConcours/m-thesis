@@ -168,6 +168,7 @@ In this study, we consider up to the second excited state in our analysis.
 % \eref{eq:rwa_first_order}.
 
 \subsection{Approximation of $\lambda$}
+\label{subsec:lambda}
 In the quantum harmonic oscillator (QHO) approximation, $\hat{n}$ is expressed in terms of the annihilation and creation operators:
 $$\hat{n} \approx in_{\text{zpf}}(\hat{a}^\dagger - \hat{a})$$
 Recall $\hat{a} = \sum_{k=0}^\infty\,\sqrt{k+1}\,\ket{k}\bra{k+1}$.
@@ -185,8 +186,10 @@ $$
   \lambda_{k,k+1} \approx \sqrt{k+1}.
 $$
 For $\lambda_1$ is entirely aborbed into $\OmegaRF$, it is exactly (not approximately) $\lambda_1=1$.
+Likewise $lambda_{k,k+3}$ can be computed as \cite{koch2007charge}
+$$\lambda_{k,k+3} \approx c \sqrt{(k+1)(k+2)(k+3)}$$
+with a proportionality constant $c$.
 
-In simulations, we set the values of $\lambda$ accordiingly.
 \subsection{Schrieffer-Wolff Transformation}
 \label{subsec:swt}
 While the rotating frame tranformation in \eref{eq:rotatingframe} is computed exactly,
@@ -260,10 +263,7 @@ Therefore,
   \Omega_x(t) = \sqrt{\Omega_1^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_1^2 + \ddot{\Omega}_1 \Omega_1)}.
   \label{eq:drag1}
 \end{equation}
-$\Omega_1$ has to satisfy the following boundary conditions
-$$
-  \Omega_1 = 0 \quad \text{at }t=0,\,T
-$$
+$\Omega_1$ has to satisfy the boundary conditions $\, \Omega_1 = 0 \text{ at }t=0,\,T. $
 
 In case of $X$ gate, the $X$ gate condition
 \begin{equation}
@@ -279,51 +279,51 @@ $$
 
 \subsubsection{The DRAG-2 Scheme}
 The DRAG-2 scheme further removes the errors from the transformed Hamiltonian obtained in the previous subsection.
-In the same spirit, applying the following SWTs
+In the same spirit, applying SWTs (See \ref{appendix:DRAG2}) removes
+$\ket{0}\leftrightarrow\ket{3}$ transition and
+\begin{equation}
+  \Omega_x(t) = \sqrt{\Omega_1^2 + \frac{2}{\Delta_2^2} (\dot{\Omega}_1^2 + \ddot{\Omega}_1 \Omega_1)}.
+  \label{eq:drag2}
+\end{equation}
+with boundary conditions $\Omega_2=0$ at $t=0,\,T$.
 
-\subsection{Non-perturbative Methods}
-\subsubsection{NPAD}
-\label{subsec:npad}
-A lot of efforts for leakage reduction and fidelity improvements have been done in the perturbative regime (i.e.
-$\Omega/\Delta \ll 1$).
-One of the framework advocated for the non-perturbative strong driving regime is NPAD \cite{NPAD2022}.
-NPAD is an iterative method to diagonalize a nonperturbative
-Hamiltonian by applying static Givens rotations until the desired accuracy is achieved.
-While this method is only effective if the Hamiltonian has a rather simple form and only applicable to time-independent
-Hamiltonian, theoretically this is a generalization of recursive SWT in the perturbative regime.
+% \subsection{Non-perturbative Methods}
+% \subsubsection{NPAD}
+% \label{subsec:npad}
+% A lot of efforts for leakage reduction and fidelity improvements have been done in the perturbative regime (i.e.
+% $\Omega/\Delta \ll 1$).
+% One of the framework advocated for the non-perturbative strong driving regime is NPAD \cite{NPAD2022}.
+% NPAD is an iterative method to diagonalize a nonperturbative
+% Hamiltonian by applying static Givens rotations until the desired accuracy is achieved.
+% While this method is only effective if the Hamiltonian has a rather simple form and only applicable to time-independent
+% Hamiltonian, theoretically this is a generalization of recursive SWT in the perturbative regime.
 
-\subsubsection{Block Diagonalization via Riccati Engineering}
-Although widely known as a qunatum control method, Riccati engineering is not yet applied to
-time-dependent one qubit gate controls. (Time-independent cases are investigated in \cite{Riccati2010,Gardas2010}.)
-Given a Hamiltonian
+\subsection{Block Diagonalization via Riccati Engineering}
+Although Riccati engineering is a well-established mathematical tool in quantum control, it has not yet been extensively
+applied to the time-dependent control of single-qubit gates, with prior investigations primarily restricted to
+time-independent scenarios\cite{Riccati2010,Gardas2010}.
+Given a Hamiltonian partitioned as
 $$H(t) = \begin{pmatrix} H_{11}(t) & H_{12}(t) \\ H_{21}(t) & H_{22}(t) \end{pmatrix},$$
-we consider block diagonalization of $H(t)$ into $2\times 2$ and $1\times 1$ partitions
-according to the transformation \eref{eq:framechange}.
+we seek block diagonalizing transformation $U(t)$ according to \eref{eq:framechange}
+that distinctly separates the computational subspace (principla $2\times 2$ block) from the non-computational.
 
-The motivation is that if we could block diagonalize $H$ in this way, the dynamics starting with $\ket{0}$
-in this new frame will cause zero leakage into the non-computational subspace.
-As long as the off-diagonal terms are zero.
-% \begin{boxA}
-%   {\bf Probelm } \\
-%   Given a $3\times 3$ matrix $H$, block diagonalize $H$ into $2\times 2$ and $1\times 1$
-%   compartments. Namely, if we write
-%   apply a frame change transformation \eref{eq:framechange} with a unitary matrix $U(t)$ and
-%   make $H_{12}(t)$ and $H_{21}(t)$ $0$.
-%   % $$H'(t) = U(t)H(t)U^\dagger(t) + i\dot{U}(t)U^\dagger(t)$.
-% \end{boxA}
-The solution to this problem is given in \cite{Gardas2010},
+The physical motivation for this approach is straightforward: if $H(t)$ can be exactly block-diagonalized, the dynamical
+evolution of a system initialized in the computational subspace (such as $\vert{}0\rangle$) will remain perfectly
+confined within that subspace in the new frame. Consequently, leakage to higher energy levels is strictly suppressed as
+long as the off-diagonal coupling terms are dynamically maintained at zero. As demonstrated by Gardas \cite{Gardas2010},
+the specific unitary transformation $U(t)$ that achieves this decoupling is constructed as,
 $$
   U(t) = \begin{pmatrix} (I_2 + X^\dagger X)^{-1/2} & X^\dagger (I_{n-2} + X X^\dagger)^{-1/2} \\ -X (I_2 + X^\dagger X)^{-1/2} & (I_{n-2} + X X^\dagger)^{-1/2} \end{pmatrix},
 $$
-with $X(t)=(x_1(t)\:\:\: x_2(t))$ satisfying
+with $X(t)=(x_1(t)\:\:\: x_2(t))$ satisfying the forward matrix Riccati differential equation
 \begin{equation}
   i\dot{X} = H_{21} + H_{22}X - XH_{11} - XH_{12}X \label{eq:riccati}.
 \end{equation}
-Under this frame change, the resulting $H_{11}^\prime(t)$ is given by
+Under this frame change, the effective Hamiltonian governing the decoupled computational subspace, $H_{11}^\prime(t)$,
+takes the form
 \begin{equation}
   H^\prime_{11}(t) = \left(I_2+X^\dagger X\right)^{1/2} (H_{11}+H_{12}X)(I_2+X^\dagger X)^{-1/2}
   - (I_2+X^\dagger X)^{1/2} \partial_t\left[(I_2+X^\dagger X)^{-1/2}\right].
 \end{equation}
-The form of this Hamiltonian is not very easy to analyze.
-
+The complexity of the above formula is obviously one of the factors defying an application to time-dependent cases.
 % \subsection{Issues with the Prior Research}

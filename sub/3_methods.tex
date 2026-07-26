@@ -1,17 +1,25 @@
 \section{Proposed Waveform Design Techniques}
 \label{sec:methods}
+% This section investigates methodologies for the mitigation of leakage errors in $X$ and $CZ$ gates, beginning with
+% the $X$ gate. Our theoretical framework builds upon the Derivative Removal by Adiabatic Gate (DRAG)
+% formalism. Conventionally, the DRAG-1 scheme utilizes a predefined seed function to synthesize a control pulse that
+% minimizes leakage from the $\vert{}0\rangle$ to the $\vert{}2\rangle$ state. However, this standard approach is
+% fundamentally constrained; relying on a seed function inherently limits the precise control and specification of the
+% final pulse envelope. To resolve this limitation, we introduce an advanced pulse construction technique that
+% systematically bypasses the need for a seed function, thereby
+% facilitating the realization of substantially shorter gate durations without compromising operational fidelity.
 In this section, we propose methods to mitigate leakage errors in $X$ and $CZ$ gates, beginning with the $X$ gate. Our
 approach builds upon the recursive DRAG schemes which conventionally rely on seed functions to generate a control pulse to
 minimize leakage caused by two photon transitions. However, this conventional method suffers from limited control over
 the resulting pulse shape. To address this, we establish a novel method to construct DRAG-1 pulses without relying on
-a seed function, thereby enabling shorter gate durations.
+a seed function, thereby enabling shorter gate durations without compromising operational fidelity.
 % \subsection{X gate}
 
 \subsection{Inverse Design of the DRAG-1 Pulse}
-Although in \ref{subsec:drag}, the DRAG-1 pulse is created from the seed pulse waveform $\Omega_1$
-through \eref{eq:drag1}, now we reverse this process.
-First we solve \eref{eq:drag1} for $\Omega_1(t)$.
-We can rewrite  \eref{eq:drag1} as a second-order linear oridnary differential equation (ODE):
+% Although in \ref{subsec:drag}, the DRAG-1 pulse is created from the seed pulse waveform $\Omega_1$
+% through \eref{eq:drag1}, now we reverse this process.
+% First we solve \eref{eq:drag1} for $\Omega_1(t)$.
+We now rewrite  \eref{eq:drag1} as a second-order linear oridnary differential equation (ODE):
 \begin{equation}
   \Omega^2_x(t)=\left(1+\frac{D^2}{\Delta_2^2}\right)\Omega_1^2(t).
   \label{eq:drag1_ode}
@@ -23,7 +31,7 @@ Recognizing this as a driven harmonic oscillator equation, the general solution 
   \label{eq:drag1_sol}
 \end{equation}
 The first term represents the particular solution to the ODE in \eref{eq:drag1_ode}.
-The verification can be done with
+The validity of this particular solution can be analytically verified with
 the Leibniz rule \cite{apostol}, which dictates the differentiation under the integral sign:
 \begin{equation}
   \frac{d}{dt} \int_{a(t)}^{b(t)} F(x,t) dx = F(b(t), t) \cdot b'(t) - F(a(t), t) \cdot a'(t) + \int_{a(t)}^{b(t)} \frac{\partial}{\partial t} F(x,t) dx.
@@ -31,30 +39,30 @@ the Leibniz rule \cite{apostol}, which dictates the differentiation under the in
 \end{equation}
 Recall we have three boundary conditions on our debt:
 \begin{enumerate}
-  \item $\Omega_x = 0$ at both ends ($t=0$, $T$): This ensures compatibility with the SWT and enforces boundary continuity for the X-pulse, mitigating spectral leakage.
-  \item $\dot{\Omega}_x = 0$ at both ends ($t=0$, $T$): This guarantees a smooth envelope derivative, maintaining essential boundary continuity for the corresponding Y-pulse.
-  \item $\Omega_1 = 0$ at both ends ($t=0$, $T$): This further enforces strict SWT compatibility at the start and completion of the gate.
+  \item $\Omega_x = 0$ at both ends ($t=0$, $T$)%: This ensures compatibility with the SWT and enforces boundary continuity for the X-pulse, mitigating spectral leakage.
+  \item $\dot{\Omega}_x = 0$ at both ends ($t=0$, $T$)%: This guarantees a smooth envelope derivative, maintaining essential boundary continuity for the corresponding Y-pulse.
+  \item $\Omega_1 = 0$ at both ends ($t=0$, $T$)%: This further enforces strict SWT compatibility at the start and completion of the gate.
 \end{enumerate}
 
 Applying the third boundary condition at the initial time $t = 0$  immediately eliminates the homogeneous component, yielding $A = 0$ in \eref{eq:drag1_sol}.
-We call
+We name
 $$
   \Omega_1^2(t) = \int_0^t\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau
 $$
 the DRAG-1 formula in integral form. In the same parlance, we call \eref{eq:drag1} the differential DRAG-1 formula.
-The constraint at $t=T$ translates to
+Imposing the boundary constraint at $t=T$ yields
 $$
-  \left(\Omega_1^2(T)\right) = 0 = \int_0^T\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau,
+  \left(\Omega_1^2(T)\right) = 0 = \int_0^T\,\left[\dfrac{1}{\Delta_2}\sin(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau.
 $$
-differentiating both sides we get
+Differentiating both sides with respect to $t$, we obtain
 $$
   \left(\Omega_1(T)\dot{\Omega}_1(T)\right) = 0 = \int_0^T\,\left[\cos(\Delta_2(T-\tau))\right][\Delta_2^2\Omega_x(\tau)^2]\,\dd \tau.
 $$
 These two constraints combined implies
 $$
-  \int_{-\infty}^{\infty}[\Delta_2^2\Omega_x(\tau)^2]e^{-i\Delta\tau}\,\dd \tau.
+  \int_{-\infty}^{\infty}[\Delta_2^2\Omega_x(\tau)^2]e^{-i\Delta\tau}\,\dd \tau = 0.
 $$
-Hence, The boundary condition at $t=T$ for smoothness translates to the null fourier transform condition,
+Consequently, the boundary condition at $t=T$  translates to a null fourier transform condition
 \begin{equation}
   \int_0^T \Omega_x(\tau)^2 e^{-i\Delta_2\tau} d\tau = 0.
   \label{eq:drag1_fourier}
@@ -80,13 +88,13 @@ These results have deep physical intuition.
 \subsection{Pulse Design}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\columnwidth]{fig/fig_drag1.pdf}
+  \includegraphics[width=\columnwidth]{fig/fig_drag1.pdf}
   \caption{Creating a flat-top pulse using echo method}
   \label{fig:drag1}
 \end{figure}
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.8\columnwidth]{fig/fig_drag2.pdf}
+  \includegraphics[width=\columnwidth]{fig/fig_drag2.pdf}
   \caption{DRAG-2 method}
   \label{fig:drag2}
 \end{figure}
@@ -198,14 +206,17 @@ Then $\Omega_x$, $\Omega_y$, and $\delta$ can be expressed
   \delta(t) = \frac{1}{2} \left( \frac{i\dot{x}_1 + \frac{1}{2} x_2 \tilde{\Omega} + \frac{1}{2}\lambda x_1 x_2 \tilde{\Omega}^*}{x_1} - \Delta_2 \right) \label{eq:riccati_delta}.
 \end{equation}
 
-
-
 \subsubsection{Variational Pulse Adjustment}
-One way to utilize \eref{eq:riccati_Omega} and \eref{eq:riccati_delta} is to determine $x_1$ and $x_2$ first and
-solve numerically for $\tilde{\Omega}$ and $\delta$.
-There's multiple difficulties with this approach. Since the Riccati equation \eref{riccati} is not linear, adjust the
-pulse area of $\Omega_x$ is difficult. To overcome this issue, we first derive the and then
-In this study, Riccati engineering method is utilized as an optimization method,
+\cite{Werschnik_2007}
+A direct appraoch to applying \eref{eq:riccati_Omega} and \eref{eq:riccati_delta} involves initially determining the variables $x_1$ and $x_2$,
+followed by a numerical solution for $\tilde{\Omega}$ and $\delta$.
+However, this methodology introduces several analytical and numerical challenges.
+Most notably, the non-linearity of the Riccati equation \eref{eq:riccati} substantially complicates
+the precise calibration of gate operations.
+To circumvent this issue, we reframe the pulse shaping problem within a continuous optimization framework utilizing a
+Riccati engineering method.
+From existing $\tilde{\Omega}$ and $\delta$, we numerically solve the corresponding $x_1$ and $x_2$.
+We now consider adding a variation to thus obtained $x_1$ and $x_2$.
 To preserve the X gate condition \eref{eq:xgate},
 \begin{equation}
   \delta \Theta = \int_0^T \sum_{k=1}^2 \left( \frac{\partial \Omega_x}{\partial x_k} \delta x_k + \frac{\partial \Omega_x}{\partial \dot{x}_k} \delta \dot{x}_k + \text{c.c.} \right) dt
@@ -225,14 +236,22 @@ $$P_1(t) = \frac{\partial \Omega_x}{\partial \dot{x}_1} = i \frac{A^* - B^*}{2(\
 
 $$P_2(t) = \frac{\partial \Omega_x}{\partial \dot{x}_2} = -i \frac{A^* - B^*}{2(\vert{}A\vert{}^2 - \vert{}B\vert{}^2)} x_1$$
 
+To mitigate the coupling of computational and non-computational subspaces,
+we want $x_1(T)$ and $x_2(T)$ as small as possible.
+Hence, we add
+$$
+$$
+
 
 
 \subsection{CZ gate}
 In this section, for brevity, the length of pulses are assumed to be $N$, an odd number.
 As seen in \ref{subsec:leakage}, the leakage error is approximately expressed as $\dfrac{1}{4}|G(\Delta)|^2$.
-In the following we propose several methods to mitigate this error.
+Although the objective seems to be the same as in the case of $X$ gate,
+we are more interested in mitigating the Fourier transform for an interval of frequencies \cite{Martinis2014}.
+In the following we propose several methods to achieve this.
 \subsubsection{anti-symmetric Chebyshev pulse}
-Maintaining a specified sidelobe level, Chebyshev pulse is the signal that minimizes the mainlobe width
+Maintaining a specified sidelobe level, Chebyshev pulse is the signal that minimizes the mainlobe width.
 
 Mathematically, a chebyshev pulse $g_{ch}$ is a discrete time pulse defined as
 $$
@@ -247,50 +266,51 @@ $$
   \end{cases}
 $$
 anti-symmetric Chebyshev pulse $g_{ach}$.
-\subsubsection{Correctional Derivative pulse}
-To reduce the fourier transform at $\Delta$, recall that
-$$
-  \mathcal{F}[f^\prime](\Delta) = i\omega \mathcal{F}[f](\Delta).
-$$
-Hence, by adding the second derivative to $f$, we can reduce the fourier transform to $0$,
-$$
-  \mathcal{F}[(1+D^2/\Delta^2)f](\Delta) = 0.
-$$
-This method is only applicable to pulses whose second derivative is anyti-symmetric, such as anti-symmetric Chebyshev,
-to maintain the anti-symmetric property after adding the second derivative.
+% \subsubsection{Correctional Derivative pulse}
+% To reduce the fourier transform at $\Delta$, recall that
+% $$
+%   \mathcal{F}[f^\prime](\Delta) = i\omega \mathcal{F}[f](\Delta).
+% $$
+% Hence, by adding the second derivative to $f$, we can reduce the fourier transform to $0$,
+% $$
+%   \mathcal{F}[(1+D^2/\Delta^2)f](\Delta) = 0.
+% $$
+% This method is only applicable to pulses whose second derivative is anyti-symmetric, such as anti-symmetric Chebyshev,
+% to maintain the anti-symmetric property after adding the second derivative.
+%
+%
+% \subsubsection{Combining two pulses}
+% Combining two pulses of different origins
+% \subsubsection{Redefining the Slepian eigenvalue problem}
+% The (second) Slepian pulse is the solution of the second largest eigenvalue to the following problem
+% \begin{equation}
+%   \dfrac{\int_{-W}^{W}\,|G_{\text{DTFT}}(\omega)|^2 d\omega}
+%   {\int_{-\pi}^{\pi}\,|G_{\text{DTFT}}(\omega)|^2 d\omega} = \dfrac{g^TA_{m,n}g}{g^Tg} \label{eq:slepproblem}
+% \end{equation}
+% where $A_{m,n} = \sinc(\pi(m-n)W) = \dfrac{\sin(\pi(m-n)W)}{\pi(m-n)W}$.
+% (\ref{eq:slepproblem}) is the eigenvalue problem of the matrix $A_{m,n}$. It was Slepian who found a commuting
+% matrix for $A_{m,n}$ and solev teh problem analyitcally.
+%
+% Close investigation of the \eref{eq:leakageerror}
+%
+%
+%
+% For the targetted range of $W_1\leq \dfrac{T}{N}  \Delta \leq W_2$
+% $$\text{minimize } \frac{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega}{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega} = \frac{\tilde{g}^T (A_{\text{rect}}(W_2) - A_{\text{rect}}(W_1)) \tilde{g}}{\tilde{g}[0]^2 + \dots + \tilde{g}[N]^2}$$
+% To not elongate gate time we impose the following condition,
+% $\tilde{g}$ should be anti-symmetric and non-negative on the first half.
+% \begin{itemize}
+%   \item $\tilde{g}[s] = \tilde{g}[N-1-s]$
+%   \item $\tilde{g}[s] \geq 0 \quad \text{for }0\leq s\leq L-1$
+% \end{itemize}
+% Put
+% $$B = \begin{pmatrix} 1 & & \\ & \ddots & \\  &  & 1\\0 & \cdots & 0 \\  &  & -1 \\& \mathinner{\mkern2mu\raise1pt\hbox{.}\mkern2mu\raise4pt\hbox{.}\mkern2mu\raise7pt\hbox{.}\mkern1mu} & \\ -1 & &  \end{pmatrix}, \quad C = B^T A B$$
+% $$\begin{pmatrix} \tilde{g}[0] \\ \vdots \\ \tilde{g}[N] \end{pmatrix} = B \begin{pmatrix} h[0] \\ \vdots \\ h[L-1] \end{pmatrix}$$
+% Then
+% $$\text{maximize } -\frac{h^T C h}{h^T h}$$
+% is the problem to solve.
+\subsubsection{Spectrum Suppression via Sequential Quadratic Programming}
 
-
-\subsubsection{Combining two pulses}
-Combining two pulses of different origins
-\subsubsection{Redefining the Slepian eigenvalue problem}
-The (second) Slepian pulse is the solution of the second largest eigenvalue to the following problem
-\begin{equation}
-  \dfrac{\int_{-W}^{W}\,|G_{\text{DTFT}}(\omega)|^2 d\omega}
-  {\int_{-\pi}^{\pi}\,|G_{\text{DTFT}}(\omega)|^2 d\omega} = \dfrac{g^TA_{m,n}g}{g^Tg} \label{eq:slepproblem}
-\end{equation}
-where $A_{m,n} = \sinc(\pi(m-n)W) = \dfrac{\sin(\pi(m-n)W)}{\pi(m-n)W}$.
-(\ref{eq:slepproblem}) is the eigenvalue problem of the matrix $A_{m,n}$. It was Slepian who found a commuting
-matrix for $A_{m,n}$ and solev teh problem analyitcally.
-
-Close investigation of the \eref{eq:leakageerror}
-
-
-
-For the targetted range of $W_1\leq \dfrac{T}{N}  \Delta \leq W_2$
-$$\text{minimize } \frac{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega}{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega} = \frac{\tilde{g}^T (A_{\text{rect}}(W_2) - A_{\text{rect}}(W_1)) \tilde{g}}{\tilde{g}[0]^2 + \dots + \tilde{g}[N]^2}$$
-To not elongate gate time we impose the following condition,
-$\tilde{g}$ should be anti-symmetric and non-negative on the first half.
-\begin{itemize}
-  \item $\tilde{g}[s] = \tilde{g}[N-1-s]$
-  \item $\tilde{g}[s] \geq 0 \quad \text{for }0\leq s\leq L-1$
-\end{itemize}
-Put
-$$B = \begin{pmatrix} 1 & & \\ & \ddots & \\  &  & 1\\0 & \cdots & 0 \\  &  & -1 \\& \mathinner{\mkern2mu\raise1pt\hbox{.}\mkern2mu\raise4pt\hbox{.}\mkern2mu\raise7pt\hbox{.}\mkern1mu} & \\ -1 & &  \end{pmatrix}, \quad C = B^T A B$$
-$$\begin{pmatrix} \tilde{g}[0] \\ \vdots \\ \tilde{g}[N] \end{pmatrix} = B \begin{pmatrix} h[0] \\ \vdots \\ h[L-1] \end{pmatrix}$$
-Then
-$$\text{maximize } -\frac{h^T C h}{h^T h}$$
-is the problem to solve.
-\subsubsection{Sequential Quadratic Programming}
 Compare with FAST \cite{FAST}
 Given an ansatz and an evaluation point $\Delta$, the algorithm goes as follows:
 

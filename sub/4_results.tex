@@ -1,16 +1,67 @@
-\section{Numerical Results and Discussions}
+\section{Simulation and Numerical Results}
 \label{sec:result}
 For quantum simulation, we used QuTiP5 \cite{qutip5} software.
+We first see the results from $X$ gate simulation.
 \subsection{X gate}
+Simulation has been conducted with the Hamiltonian in \eref{eq:Hrwa} with $N_{max}=3$.
+Among several solvers that QuTiP provides, the Shroedinger solver has been chosen
+since our target fidelity level is not high enough to consider decoherence in the duration of one gate operation.
+The parameters are set as anharmonicity $\Delta/2\pi = -0.225~\text{GHz}$.$\lambda_k = \sqrt{k}$,
+% We chose the proportionality constant of $\lambda_{k,k+3}$ as $c=0.004$ , we set
+% $\lambda_k = \sqrt{k}$, $\lambda_{k,k+3}=c\sqrt{k+1}\sqrt{k+2}\sqrt{k+3}$, with .
+% The $X$ gate was implemented with different pulse shapes.
+\subsubsection{Fidelity}
+The gate infidelity was computed as $\mathcal{E}(\hat{U}_Q) = 1 -
+  \mathcal{F}[\hat{U}_Q]$ where $\mathcal{F}[\hat{U}_Q]$ is the gate fidelity defined as
+\cite{fidelity}
+\begin{equation}
+  \label{eq:fidelity}
+  \mathcal{F}[\hat{U}_Q] = \frac{\text{Tr}[\hat{U}_Q\hat{U}_Q^\dagger]}{d(d+1)} +
+  \frac{\left\vert{}\text{Tr}[\hat{U}_Q\hat{U}_I^\dagger]\right\vert{}^2}{d(d+1)},
+\end{equation}
+
 \begin{figure}[htpb]
+  \centering
   \includegraphics[width=0.8\columnwidth]{fig/fig_r1d_comparison.pdf}
   \label{fig:r1d_comparison}
-  \caption{Comparison of the gate infidelity $\mathcal{E}(\hat{U}_Q)$ for different pulse shapes.}
+  \caption{Comparison of $X$ and $Y$ controls of xsinx and sin3 DRAG-1 pulses.}
 \end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{fig/fig_gateinfidelity.pdf}
+  \label{fig:gate_infidelity}
+  \caption{Comparison of $X$ and $Y$ controls of xsinx and sin3 DRAG-1 pulses.}
+\end{figure}
+
+\begin{figure}[htpb]
+  \centering
+  \includegraphics[width=0.8\columnwidth]{fig/fig_r2dvsxsinx.pdf}
+  \label{fig:r2dvsxsinx}
+  \caption{at $T=~\text{ns}$}
+\end{figure}
+\subsubsection{Pulse shapes}
+in \cite{universalpulse}
+In \fref{}, we compare the gate infidelity between for
+$$
+  \dfrac{1}{16}\cos(6\pi )-\dfrac{9}{16}\cos(\pi\dfrac{2t}{t_f})+\dfrac{1}{2}.
+$$
+We applied DRAG corrections to all pulses.
+DRAG-1 outperformed
+and showed its effectiveness within short gate durations ($<5~\text{ns}$).
+We compared four pulses xsinx, Hann, fourier
+\subsubsection{Limitations coming from the proposed method and theoretical limits}
+Using echo method in the construction of the rising edge imposes us a limit $ t_r>t_d/3 $,
+$$
+  T = 2t_d+t_r > 7/3t_d\quad\text{Our method}
+$$
+In our simulaitno settign, $t_d = 2.2~\text{ns}$. Conventional transmons anharmonicity ranges from $-150$ to
+$-300~\text{GHz}$
+\cite{currentstateofplay}, corresponding to $t_d= 1.7~\text{ns}$ to $3.3~\text{ns}$.
+$$
+  T = 2t_d+t_r > 5/2t_d\quad\text{Theoretical limit}
+$$
 \subsubsection{Simulation settings}
-Simulation has been conducted with the anharmonicity $\Delta/2\pi = -0.225~\text{GHz}$.
-The Hamiltonian used is \eref{eq:Hrwa} with $N_{max}=3$.
-To see the limitation of perturbative method, the performance of the DRAG-1 pulse implementing the X gate is simulated.
 % \begin{figure}
 %   \includegraphics[scale=.3]{fig/fig_drag1.pdf}
 % \end{figure}
@@ -21,15 +72,6 @@ $$
   \Omega(x) =
 $$
 The maximum value of which is
-\subsubsection{fidelity}
-In the case of dynamics without dissipative effects, the gate infidelity is defined as $\mathcal{E}(\hat{U}_Q) = 1 -
-  \mathcal{F}[\hat{U}_Q]$ where $\mathcal{F}[\hat{U}_Q]$ is the gate fidelity defined as
-\cite{fidelity}
-\begin{equation}
-  \label{eq:fidelity}
-  \mathcal{F}[\hat{U}_Q] = \frac{\text{Tr}[\hat{U}_Q\hat{U}_Q^\dagger]}{d(d+1)} +
-  \frac{\left\vert{}\text{Tr}[\hat{U}_Q\hat{U}_I^\dagger]\right\vert{}^2}{d(d+1)},
-\end{equation}
 \subsection{Non-perturbative Validation of the $Y$-DRAG Correction}
 Aside from the $X$ control pulse, we utilize the DRAG pulses \ref{eq:ydrag} and \ref{eq:zdrag}.
 We demonstrate that the analytical expression for the $Y$ control pulse remains valid even in the non-perturbative
@@ -48,6 +90,12 @@ $$
 $$
 Substituting $\Omega_y$ as defined in \eref{eq:ydrag} demonstrates that this off-diagonal component is still effectively
 suppressed. Consequently, we retain the standard DRAG correction  for the $Y$ control pulse.
+\subsubsection{Hardware Constraint}
+Keysight
+The calibration factor $c=\Omega_x/V_{AWG}$ as $50~\text{MHz/V}$.
+which is an acceptable application range of room temperature RF amplifier.
+\subsubsection{The Analog Bandwidth Limit}
+\subsubsection{The Slew Rate Limit}
 \subsection{CZ gate}
 \subsubsection{Simulation}
 As in the previous research \cite{Ding2025},
@@ -56,6 +104,8 @@ $$
   \tilde{g}\rightarrow \tilde{\theta}\rightarrow x \rightarrow y
 $$
 Simulation conditions are
+We numerically solved the dynamics described in \ref{subsec:leakage},
+and then find $P_e$
 \subsubsection{Anti-symmetric Chebyshev pulse}
 \begin{figure}
   \includegraphics[scale=.3]{fig/fig_cheb_slep.pdf}
