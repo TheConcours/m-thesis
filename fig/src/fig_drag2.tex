@@ -15,17 +15,29 @@
 
   % Labels
   \node at (5.5, 2.4) {$f(t)$};
+  \node at (0.5, 1.6) {$g(t)$};
 
   % Horizontal arrow labeled T (drawn across the middle)
-  \draw[<->, thin] (0,1) -- (6.5,1) node[right] {$T$};
+  % \draw[<->, thin] (0,.7) -- (6.5,.7) node[right] {$T$};
 
   % t_r arrow below the first rise
   \draw[<->, thin] (0,-0.5) -- (1.5,-0.5) node[midway, below] {$t_r$};
+  \draw[<->, thin]  (1.5,-0.5)--(6.5,-.5) node[midway, below] {$t_d$};
 
   % Connecting vertical line drawn by hand in the original image
   \draw[dashed, thin, gray] (4.5, 2.2) -- (4.5, -4.5);
   \draw[dashed, thin, gray] (1.5, 2.2) -- (1.5, -4.5);
 
+  \begin{scope}[yshift=-2.5cm, xshift=+8cm, scale=1.5]
+    % Curve h(t) (Positive pulse) - Modified for zero derivative at endpoints
+    \draw (0,0) to[out=0,in=180] (0.75, 1.5) to[out=0,in=180] (1.5,0);
+    \draw[red] (0,0) to[out=0,in=180] (0.60, 0.8) to[out=0,in=180] (1.2,0);
+    \draw[blue] (0.3,0) to[out=0,in=180] (0.90, 0.8) to[out=0,in=180] (1.5,0);
+    \draw[<->, thin] (0,-0.1) -- (0.3,-0.1) node[midway, below] {$\frac{t_d}{3}$};
+    \draw[<->, thin] (0,-0.5) -- (1.5,-0.5) node[midway, below] {${t_r}$};
+    \draw[->, thin] (-.3,0) -- (1.8,0);
+    \node at (1.2, 1.5) {$h(t)$};
+  \end{scope}
   % ==========================================
   % Bottom Figure: h(t) and -h(t)
   % ==========================================
@@ -40,24 +52,24 @@
     \draw (4.5,0) to[out=0,in=180] (5.25, -1.5) to[out=0,in=180] (6,0);
 
     % Dots on h(t)
-    \fill (0,0) circle (1.5pt);
-    \fill (0.75,1.5) circle (1.5pt);
-    \fill (1.5,0) circle (1.5pt);
+    % \fill (0,0) circle (1.5pt);
+    % \fill (0.75,1.5) circle (1.5pt);
+    % \fill (1.5,0) circle (1.5pt);
 
     % Dots on -h(t)
-    \fill (4.5,0) circle (1.5pt);
-    \fill (5.25,-1.5) circle (1.5pt);
-    \fill (6,0) circle (1.5pt);
+    % \fill (4.5,0) circle (1.5pt);
+    % \fill (5.25,-1.5) circle (1.5pt);
+    % \fill (6,0) circle (1.5pt);
 
     % Labels
-    \node at (1.2, 1.5) {$h(t)$};
-    \node at (6.5, -1.2) {$-h(t)$};
+    \node at (1.2, 1.6) {$h(t)$};
+    \node at (6.2, -1.0) {$-h(t)$};
 
     % t_r arrow for h(t)
     \draw[<->, thin] (0,-0.5) -- (1.5,-0.5) node[midway, below] {$t_r$};
 
     % T - t_r gap arrow (from start of first pulse to start of second pulse)
-    \draw[<->, thin] (0,0.8) -- (4.5,0.8) node[midway, above] {$T - t_r$};
+    % \draw[<->, thin] (0,0.8) -- (4.5,0.8) node[midway, above] {$T - t_r$};
 
     % t_r arrow for -h(t)
     \draw[<->, thin] (4.5,0.8) -- (6,0.8) node[midway, above] {$t_r$};

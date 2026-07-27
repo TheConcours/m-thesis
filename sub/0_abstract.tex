@@ -1,8 +1,77 @@
-% \begin{jabstract}
-%   こんにちは
-% \end{jabstract}
+\begin{jabstract}
+  超伝導トランズモン量子ビットは高速かつ高忠実度な制御パルスを必要とするが、
+  それは必然的に非計算状態へのスペクトル漏れ（リーク）を誘発し、ゲート性能を低下させる。
+  本論文では、これらの漏れ誤差を抑制し、単一および2量子ビットの量子演算を高速化するための高度な波形最適化手法を提案する。
+  単一量子ビットのXゲートにおいては、再帰的なDRAG-1およびDRAG-2条件を、フーリエ変換がゼロになる要件として数学的に再定式化した。
+  この再定式化により、エコー法を用いることで、従来のシード関数を介さずに新規の解析的なフラットトップパルスを直接合成し、短いゲート時間における漏れ誤差の抑制に成功した。
+  2量子ビットのCZゲートにおいては、漏れが少なくゲート時間が比較的長い演算向けに、従来のSlepian（スレピアン）パルスの代替として反対称チェビシェフパルスを提案する。
+  さらに、元の問題を再定式化することに基づく最適化を活用し、標的とするスペクトル抑制を達成した。
+  QuTiPを用いた数値シミュレーションにより、提案するDRAG-1パルスが高い忠実度を維持しつつ、理論上の最小ゲート時間を約20\%短縮することが確認された
+\end{jabstract}
 \begin{eabstract}
-  Hello
+  Superconducting transmon qubits require fast, high-fidelity control pulses that inevitably induce spectral leakage
+  into non-computational states, degrading gate performance. This thesis introduces advanced waveform optimization
+  techniques to suppress these leakage errors and accelerate single- and two-qubit quantum operations. For the
+  single-qubit X gate, the recursive DRAG-1 and DRAG-2 conditions are mathematically reformulated as zero Fourier
+  transform requirements. Using the echo method, a novel analytical flat-top pulse is synthesized directly, bypassing
+  conventional seed functions, successfully suppressing leakage error for short gate time.
+  %alongside a non-perturbative validation of the traditional Y-correction and an exploration of Riccati engineering for Hamiltonian block-diagonalization.
+  For the two-qubit CZ gate, an anti-symmetric
+  Chebyshev pulse is proposed as an  alternative to traditional Slepian pulses for a low leakage longer gate time operations.
+  % to optimize spectral mainlobe width and sidelobe suppression.
+  Furthermore, optimization based on reformulating the original problem is utilized to achieve targeted
+  spectral suppression. Numerical simulations via QuTiP confirm that the proposed DRAG-1 pulse reduces theoretical
+  minimum gate times by approximately 20\% while maintaining high fidelity.
+  %, and the novel CZ waveforms exhibit enhanced
+  %operational robustness.
+
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Superconducting transmon qubits are a foundational platform for scalable quantum computing, yet realizing
+  % fault-tolerant computation necessitates extremely high-fidelity quantum operations. Because transmons are weakly
+  % anharmonic oscillators, the fast control pulses required to minimize decoherence often induce spectral leakage into
+  % higher, non-computational energy states, severely degrading gate performance through non-unitary evolution. While the
+  % Derivative Removal by Adiabatic Gate (DRAG) framework has successfully suppressed leakage for single-qubit gates, and
+  % Slepian pulses have been standard for two-qubit adiabatic CZ gates, the demand for shorter gate durations and higher
+  % fidelities requires mathematically optimal pulse shapes that strictly confine the energy spectrum. This thesis
+  % introduces advanced pulse waveform design techniques to mitigate these leakage errors and accelerate both single-qubit
+  % and two-qubit quantum operations.
+  %
+  % For the single-qubit X gate, the condition equations for the recursive DRAG-1 and
+  % DRAG-2 schemes are mathematically reformulated as rigorous zero Fourier transform requirements evaluated at specific
+  % transition frequencies. Leveraging this spectral formulation alongside the echo method, a novel analytical pulse
+  % design methodology is proposed. This approach synthesizes flat-top DRAG pulses directly, bypassing the structural
+  % limitations of conventional seed functions and enabling significantly reduced gate times. Furthermore, the
+  % conventional DRAG Y-correction formula is analytically validated in the non-perturbative regime using an exact unitary
+  % frame transformation. Continuous optimization utilizing Riccati engineering is also investigated to dynamically
+  % block-diagonalize the system Hamiltonian, attempting to systematically decouple the computational subspace from higher
+  % energy levels under strong driving conditions.
+  %
+  % To optimize the two-qubit adiabatic CZ gate---implemented via the
+  % dynamic frequency tuning of a SQUID loop coupled to a fixed-frequency transmon---this work proposes advanced
+  % alternatives to the traditional Slepian pulse. Recognizing that two-qubit leakage errors depend critically on the
+  % Fourier transform evaluated at specific frequencies, a novel control waveform designated as the anti-symmetric
+  % Chebyshev pulse is introduced to optimize spectral mainlobe width and sidelobe suppression. Additionally, to overcome
+  % the over-constraining limitations of the Weighted Chebyshev Approximation (WCA), targeted spectral suppression methods
+  % are formulated. These include utilizing Sequential Quadratic Programming (SQP) and a mathematical redefinition of the
+  % Slepian eigenvalue problem, tailored to minimize Fourier transform amplitudes strictly within designated frequency
+  % windows.
+  %
+  % Numerical simulations conducted using the standard QuTiP framework confirm the efficacy of the proposed waveforms.
+  % The novel DRAG-1 pulse designed via the echo method outperforms standard
+  % Hann-type DRAG-1 and R2D pulses at short gate durations (under 5 ns), successfully reducing the minimum theoretical
+  % gate time by approximately 20% while maintaining high operational fidelity. Hardware constraint analyses confirm that
+  % this fast-rising flat-top pulse can be physically synthesized by standard arbitrary waveform generators equipped with
+  % sufficient external amplification. For CZ gates, the anti-symmetric Chebyshev pulse and SQP-optimized waveforms offer
+  % distinct performance advantages, particularly by demonstrating superior targeted spectral suppression and enhanced
+  % robustness over variable gate durations. Ultimately, this thesis establishes a robust theoretical and numerical
+  % foundation for advanced waveform generation, facilitating faster and more reliable operations in superconducting
+  % quantum processors.
 \end{eabstract}
 \begin{table}[htbp]
   \centering

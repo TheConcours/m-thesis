@@ -34,7 +34,10 @@ flux $\Phi_\text{ext}$ controlled via a dedicated microwave transmission line kn
 The system we consider is illustred in \fref{fig:z-ctrl}.
 It is a system of two capacitively coupled transmon qubits, one fixed-frequency (QB2) and the other frequency tunable (QB1).
 The simplified dispersive Jaynes-Cummings Hamiltonian for this system can be modeled as:
-$$H = \sum_{i=1,2} \left( \omega_i \hat{a}_i^\dagger \hat{a}_i + \frac{\alpha_i}{2} \hat{a}_i^\dagger \hat{a}_i^\dagger \hat{a}_i \hat{a}_i \right) + g(\hat{a}_1^\dagger + \hat{a}_1)(\hat{a}_2^\dagger + \hat{a}_2) ,$$
+\begin{equation}
+  H = \sum_{i=1,2} \left( \omega_i \hat{a}_i^\dagger \hat{a}_i + \frac{\alpha_i}{2} \hat{a}_i^\dagger \hat{a}_i^\dagger \hat{a}_i \hat{a}_i \right) + g(\hat{a}_1^\dagger + \hat{a}_1)(\hat{a}_2^\dagger + \hat{a}_2) ,
+  \label{eq:hamiltonian_cz}
+\end{equation}
 where $g$ denotes the capacitive coupling strength between the two qubits, $\hat{a}_i^\dagger$ and $\hat{a}_i$ represent the
 creation and annihilation operators for qubit $i$, respectively, and $\alpha_i$ defines the anharmonicity of qubit $i$.
 Note that we use $\alpha$ for anharmonicity in discusion of the $CZ$ gates.

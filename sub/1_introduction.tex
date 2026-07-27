@@ -64,7 +64,18 @@ while accelerating gate execution times. The specific original contributions of 
 \end{description}
 
 \subsection{Thesis Organization}
-The remainder of this thesis is structured to guide the
-reader from the fundamental physics of the system through the mathematical modeling and finally to the numerical
-results of the optimized waveforms.
-
+The remainder of this thesis is systematically structured to guide the reader from the fundamental physical principles
+of superconducting quantum systems to the mathematical modeling and numerical validation of the proposed waveform
+optimization techniques.  Chapter 2 establishes the theoretical foundations for the single-qubit $X$ gate, providing an
+overview of qubit dynamics, leakage errors, and conventional mitigation frameworks, including the Schrieffer-Wolff
+transformation, recursive DRAG schemes, and Riccati engineering. Chapter 3 extends this theoretical groundwork to
+two-qubit operations, detailing the architecture, adiabatic implementation, and phase accumulation of the $CZ$ gate, while
+analyzing the characteristics and limitations of traditional Slepian pulses.  Building upon these foundations, Chapter 4
+introduces the novel waveform design techniques proposed in this work. For single-qubit control, it details a new
+analytical pulse design methodology using the echo method and variational adjustments via Riccati engineering. For
+two-qubit operations, it presents the formulation of the anti-symmetric Chebyshev pulse and introduces targeted spectral
+suppression techniques utilizing Sequential Quadratic Programming.  Chapter 5 presents comprehensive simulation data and
+numerical results, evaluating the fidelity and physical viability of the proposed pulses against hardware constraints.
+It includes a non-perturbative validation of the $Y$-DRAG correction and compares the performance of the newly designed
+waveforms against conventional standard pulses for both $X$ and $CZ$ gates. Finally, Chapter 6 summarizes the primary
+findings and contributions of the thesis, concluding with an outline of prospective avenues for future research.
