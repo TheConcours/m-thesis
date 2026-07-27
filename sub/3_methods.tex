@@ -270,9 +270,9 @@ Although both formulations ($X$ gate and $CZ$ gate) share the similar objective 
 methods we employ for each gate differ. This distinction arises because, in practical applications of the $CZ$ gate, it is
 more critical to maintain a small Fourier transform amplitude over an interval of frequencies \cite{Martinis2014}.
 
-In the following, we propose two methods to achieve this.
+In the following, we propose three methods to achieve this.
 One is a proposal of a novel pulse shape.
-The other is an optimization with sequential quadratic programming.
+The other two are  optimization techniques with sequential quadratic programming.
 \subsubsection{The Anti-symmetric Chebyshev Pulse}
 Maintaining a specified sidelobe level, Chebyshev pulse is the signal that minimizes the mainlobe width.
 
@@ -304,69 +304,34 @@ anti-symmetric Chebyshev pulse $g_{ach}$.
 %
 % \subsubsection{Combining two pulses}
 % Combining two pulses of different origins
-% \subsubsection{Redefining the Slepian eigenvalue problem}
-% The (second) Slepian pulse is the solution of the second largest eigenvalue to the following problem
-% \begin{equation}
-%   \dfrac{\int_{-W}^{W}\,|G_{\text{DTFT}}(\omega)|^2 d\omega}
-%   {\int_{-\pi}^{\pi}\,|G_{\text{DTFT}}(\omega)|^2 d\omega} = \dfrac{g^TA_{m,n}g}{g^Tg} \label{eq:slepproblem}
-% \end{equation}
-% where $A_{m,n} = \sinc(\pi(m-n)W) = \dfrac{\sin(\pi(m-n)W)}{\pi(m-n)W}$.
-% (\ref{eq:slepproblem}) is the eigenvalue problem of the matrix $A_{m,n}$. It was Slepian who found a commuting
-% matrix for $A_{m,n}$ and solev teh problem analyitcally.
-%
-% Close investigation of the \eref{eq:leakageerror}
-%
-%
-%
-% For the targetted range of $W_1\leq \dfrac{T}{N}  \Delta \leq W_2$
-% $$\text{minimize } \frac{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega}{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega} = \frac{\tilde{g}^T (A_{\text{rect}}(W_2) - A_{\text{rect}}(W_1)) \tilde{g}}{\tilde{g}[0]^2 + \dots + \tilde{g}[N]^2}$$
-% To not elongate gate time we impose the following condition,
-% $\tilde{g}$ should be anti-symmetric and non-negative on the first half.
-% \begin{itemize}
-%   \item $\tilde{g}[s] = \tilde{g}[N-1-s]$
-%   \item $\tilde{g}[s] \geq 0 \quad \text{for }0\leq s\leq L-1$
-% \end{itemize}
-% Put
-% $$B = \begin{pmatrix} 1 & & \\ & \ddots & \\  &  & 1\\0 & \cdots & 0 \\  &  & -1 \\& \mathinner{\mkern2mu\raise1pt\hbox{.}\mkern2mu\raise4pt\hbox{.}\mkern2mu\raise7pt\hbox{.}\mkern1mu} & \\ -1 & &  \end{pmatrix}, \quad C = B^T A B$$
-% $$\begin{pmatrix} \tilde{g}[0] \\ \vdots \\ \tilde{g}[N] \end{pmatrix} = B \begin{pmatrix} h[0] \\ \vdots \\ h[L-1] \end{pmatrix}$$
-% Then
-% $$\text{maximize } -\frac{h^T C h}{h^T h}$$
-% is the problem to solve.
 \subsubsection{Spectrum Suppression via Sequential Quadratic Programming}
 
 
 There are many methods known to tailor a pulse with a target spectrum.
 Weighted Chebyshev approximation (WCA) \cite{Ding2025} is one of them.
 In WCA, you have two prescribed parameters, a weight function $W(w)$ and a spectrum profile
-$A(w)$. WCA is a method to find a pulse whose spectrum is $G(w)$ such that
+$A(w)$. WCA is a method to find a pulse whose spectrum is $G(w)$ such that the maximum $L^\infty$ error
 $$
-  \max\{|W(w)(G(w)-A(w))|\} \text{ is minimized.}
+  \max\{|W(w)(G(w)-A(w))|\}
 $$
-WCA has the following difficulties:
+is minimized.
+WCA has the following disadvantages.
 \begin{itemize}
-  \item over-constraining Due to Phase
-        In many physical systems (such as optical pulse shaping, NMR, and RF filter design), the
-        primary goal is often to control and optimize the "amplitude" (intensity) of the spectrum, while the phase can be left
-        arbitrary (Phase Freedom).However, because the WCA objective function $\max\{\vert{}W(w)(G(w) - A(w))\vert{}\}$ is
-        evaluated in the complex domain, even if the amplitude $\vert{}G(w)\vert{}$ perfectly matches the target
-        $\vert{}A(w)\vert{}$, any difference in phase is penalized as a "large error." Consequently, optimization resources are
-        wasted on unnecessary phase matching. This strips away design degrees of freedom and often forces the generation of
-        unnecessarily long pulses just to satisfy these artificial phase constraints.
-        2. Sensitivity to the Minimax Criterion (Outliers)
-        By the very nature of Chebyshev approximation, WCA seeks to minimize the "maximum error" across the entire
-        evaluation function (minimizing the $\mathcal{L}_\infty$ norm).This means that if the spectrum deviates significantly
-        from the target at even a single point (such as a sharp peak or a minor dip), the algorithm will focus excessively on
-        correcting that specific outlier. As a result, the average approximation accuracy (e.g., the mean squared error) across
-        the entire spectrum is often sacrificed, risking an overall distorted pulse waveform.
-        3. Physical Realizability and Power Efficiency
-        Pursuing a mathematically rigorous complex approximation naturally leads to highly complicated theoretical
-        pulse waveforms.Real-world hardware (like Arbitrary Waveform Generators or optical modulators) has strict physical
-        limitations regarding maximum amplitude (peak power) and slew rate (the speed of waveform change). WCA optimization
-        results frequently violate these hardware constraints. Furthermore, because energy is squandered on aligning unnecessary
-        phase components, the overall power efficiency of the resulting pulse is significantly degraded.
+  \item \textbf{over-constraining}
+        Although the  goal is to optimize the ``amplitude'' (intensity) of the spectrum while the phase is left
+        arbitrary, because the WCA objective function $\max\{\vert{}W(w)(G(w) - A(w))\vert{}\}$ is
+        evaluated in the complex domain, we need to design ``good'' choice of phase beforehand, making the implementation
+        of algorithm difficult.
+
+  \item\textbf{Outliers}
+        By the very nature of Chebyshev approximation, WCA seeks to minimize the ``maximum error'' across the entire
+        evaluation function (minimizing the $\mathcal{L}_\infty$ norm). This means that if the spectrum deviates
+        significantly from the target at even a single point (such as a sharp peak or a minor dip), the algorithm will
+        focus excessively on correcting that specific outlier, risking an overall distorted pulse waveform.
 \end{itemize}
 
-SQP \cite{powell1978fast},
+In the following, we present two formulations of our optimization problem.
+We formulate them in a form solvable in the framework of Sequential Quadratic Programming \cite{powell1978fast}.
 
 % We propose the following method to suppress
 % Compare with FAST \cite{FAST}
@@ -390,3 +355,103 @@ SQP \cite{powell1978fast},
 %   \end{algorithmic}
 % \end{algorithm}
 %
+\subsubsection{Redefining the Slepian eigenvalue problem}
+Recall from \ref{subsec:slepian_pulses},
+% $\dfrac{1}{4}|\mathcal{F}[g](\Delta)|^2$.
+the (second) Slepian pulse is the solution of the second largest eigenvalue to the following problem
+\begin{equation}
+  \dfrac{\int_{-W}^{W}\,|G_{\text{DTFT}}(\omega)|^2 d\omega}
+  {\int_{-\pi}^{\pi}\,|G_{\text{DTFT}}(\omega)|^2 d\omega} = \dfrac{g^TA_{m,n}g}{g^Tg} \label{eq:slepproblem}
+\end{equation}
+where $A_{m,n} = 2\sinc((m-n)W) = \dfrac{\sin(2\pi(m-n)W)}{\pi(m-n)W}$, the Fourier transform of a rectangular function.
+(\ref{eq:slepproblem}) is the eigenvalue problem of the matrix $A_{m,n}$. It was Slepian who found a commuting
+matrix for $A_{m,n}$ and solve the problem analyitcally.
+
+% Close investigation of the \eref{eq:leakageerror}
+Suppose our target range of the gate duration satisfies For the target range of $W_1\leq \dfrac{T}{N}  \Delta \leq W_2$.
+Then the original maximization problem turns into the following minimization problem:
+$$\text{minimize } \frac{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega}{\int_{W_1}^{W_2} \vert{}G_{\text{DTFT}}(\omega)\vert{}^2 d\omega} = \frac{\tilde{g}^T (A_{\text{rect}}(W_2) - A_{\text{rect}}(W_1)) \tilde{g}}{\tilde{g}[0]^2 + \dots + \tilde{g}[N]^2}$$
+The conventional use of Slepian pulse is quite casual about the target gate time range of operation, and Slepian pulse
+is the best pulse if the above $W_2$ is set as $W_2=\pi$.
+
+The difficulty arising by reformulating the problem in this fashion is the problem is no longer anhalytically solvable.
+To clarify the search space of $g$, we impose the following conditions:
+To not elongate gate time we impose the following condition,
+% $\tilde{g}$ should be anti-symmetric and non-negative on the first half.
+\begin{itemize}
+  \item ${g}[s] = {g}[N-1-s]$: (anti-symmetricity) To mitigate $1/f$ noise.
+  \item ${g}[s] \geq 0 \quad \text{for }0\leq s\leq L-1$ : (positivity) To not elongate gate duration.
+\end{itemize}
+If we define,
+$$B = \begin{pmatrix} 1 & & \\ & \ddots & \\  &  & 1\\0 & \cdots & 0 \\  &  & -1 \\& \mathinner{\mkern2mu\raise1pt\hbox{.}\mkern2mu\raise4pt\hbox{.}\mkern2mu\raise7pt\hbox{.}\mkern1mu} & \\ -1 & &  \end{pmatrix}, \quad C = B^T A B,$$
+$$\begin{pmatrix} \tilde{g}[0] \\ \vdots \\ \tilde{g}[N] \end{pmatrix} = B \begin{pmatrix} h[0] \\ \vdots \\ h[L-1] \end{pmatrix}.$$
+Then
+$$\text{maximize } -\frac{h^T C h}{h^T h},$$
+with $h$ being a positive vector of length $\lfloor N\rfloor/2$ is the problem to solve.
+% This is still a hard problem, but we can start with the Slepian pulse to further optimize it.
+\subsubsection{Sidelobe-Aware Optimization}
+Unlike the formulation given above, the second formulation is more of a heuristic sort, more focused on the initial pulse
+shape $f$. We find its sidelobe boundaries first and impose
+different allowed gain levels for each distinct sidelobe, suppressing the targeted frequency band while relaxing
+constraints elsewhere to minimize time-domain distortion. Since we want to stick to these sidelobes, we set the
+objective function to be the square sum of the difference from the initial pulse shape.
+
+% \begin{algorithm}
+%   \caption{Optimize Odd-Symmetric Pulse for Sidelobe Suppression}
+%   \label{alg:pulse_optimization}
+%   \begin{algorithmic}[1]
+%     \Require $\mathbf{x}_{\text{base}}$ (Baseline odd-symmetric pulse of length $N$), $n_{\text{target}}$ (Target sidelobe index), $\gamma$ (Target suppression multiplier), $\gamma_1, \gamma_2$ (Relaxation multipliers), $\Delta n$ (Target range), $f_{\max}$ (Max evaluated frequency)
+%     \Ensure $\mathbf{x}_{\text{opt}}$ (Optimized full-length pulse)
+%
+%     \State $L \gets \lfloor N / 2 \rfloor$
+%     \Comment{1. Dimensionality Reduction}
+%     \If{$N \pmod 2 \neq 0$}
+%     \State $\mathbf{x}_{\text{half}} \gets \mathbf{x}_{\text{base}}[L+1 \dots N]$
+%     \State $\mathbf{n}_{\text{vec}} \gets [1, 2, \dots, L]$
+%     \Else
+%     \State $\mathbf{x}_{\text{half}} \gets \mathbf{x}_{\text{base}}[L \dots N]$
+%     \State $\mathbf{n}_{\text{vec}} \gets [0.5, 1.5, \dots, L - 0.5]$
+%     \EndIf
+%
+%     \State $\mathbf{f}_{\text{grid}} \gets \text{linspace}(0, f_{\max})$
+%     \Comment{2. Frequency Mapping (DTFT)}
+%     \State $\mathbf{S}_{i,j} \gets 2 \sin(2 \pi \mathbf{f}_{\text{grid}}[i] \mathbf{n}_{\text{vec}}[j])$ \Comment{Sine transformation matrix}
+%     \State $\mathbf{H}_{\text{mag}} \gets |\mathbf{S} \mathbf{x}_{\text{half}}|$
+%
+%     \State $i_{\text{peak}} \gets \arg\max(\mathbf{H}_{\text{mag}})$
+%     \Comment{3. Sidelobe Boundary Detection}
+%     \State $\mathbf{i}_{\text{nulls}} \gets \text{Find local minima in } \mathbf{H}_{\text{mag}} \text{ after } i_{\text{peak}}$
+%     \State $i_{\text{stop}} \gets \mathbf{i}_{\text{nulls}}[0]$
+%
+%     \State Initialize $\mathbf{t}$ as an array of length $(|\mathbf{f}_{\text{grid}}| - i_{\text{stop}})$ \Comment{4. Construct Target Envelope}
+%     \For{$k = 0 \dots |\mathbf{i}_{\text{nulls}}| - 2$}
+%     \State $i_{\text{start}} \gets \mathbf{i}_{\text{nulls}}[k]$
+%     \State $i_{\text{end}} \gets \mathbf{i}_{\text{nulls}}[k+1]$
+%     \State $H_{\max} \gets \max(\mathbf{H}_{\text{mag}}[i_{\text{start}} \dots i_{\text{end}}])$
+%     \State $n_{\text{lobe}} \gets k + 1$
+%
+%     \If{$|n_{\text{lobe}} - n_{\text{target}}| \le \Delta n$}
+%     \State $\mathbf{t}[i_{\text{start}} \dots i_{\text{end}}] \gets H_{\max} \cdot \gamma$ \Comment{Aggressive suppression}
+%     \ElsIf{$n_{\text{lobe}} < n_{\text{target}}$}
+%     \State $\mathbf{t}[i_{\text{start}} \dots i_{\text{end}}] \gets H_{\max} \cdot \gamma_1$ \Comment{Early relaxation}
+%     \Else
+%     \State $\mathbf{t}[i_{\text{start}} \dots i_{\text{end}}] \gets H_{\max} \cdot \gamma_2$ \Comment{Late relaxation}
+%     \EndIf
+%     \EndFor
+%     \State $i_{\text{last}} \gets \mathbf{i}_{\text{nulls}}[\text{end}]$
+%     \State $\mathbf{t}[i_{\text{last}} \dots \text{end}] \gets \max(\mathbf{H}_{\text{mag}}[i_{\text{last}} \dots \text{end}]) \cdot \gamma_1$
+%
+%     \Comment{5. Constrained Least-Squares Optimization}
+%     \State \textbf{Objective:} $\min_{\mathbf{x}} \|\mathbf{x} - \mathbf{x}_{\text{half}}\|_2^2$
+%     \State \textbf{Subject to:} $-\mathbf{t} \le \mathbf{S}_{\text{opt}} \mathbf{x} \le \mathbf{t}$ \Comment{$\mathbf{S}_{\text{opt}}$ is $\mathbf{S}$ truncated to stopband}
+%     \State $\mathbf{x}_{\text{opt\_half}} \gets \text{SLSQP}(\text{Objective}, \text{Constraints}, \text{initial\_guess}=\mathbf{x}_{\text{half}})$
+%
+%     \If{Optimization successful} \Comment{6. Pulse Reconstruction}
+%     \State Reconstruct $\mathbf{x}_{\text{opt}}$ by mirroring and negating $\mathbf{x}_{\text{opt\_half}}$
+%     \Else
+%     \State $\mathbf{x}_{\text{opt}} \gets \mathbf{x}_{\text{base}}$
+%     \EndIf
+%     \State \Return $\mathbf{x}_{\text{opt}}$
+%
+%   \end{algorithmic}
+% \end{algorithm}

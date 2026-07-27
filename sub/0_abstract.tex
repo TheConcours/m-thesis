@@ -11,52 +11,53 @@
   \renewcommand{\arraystretch}{1.3}
   \begin{tabular}{l p{11cm}}
     \hline
-    \textbf{Symbol}                              & \textbf{Description}                                                                       \\
+    \textbf{Symbol}            & \textbf{Description}                                                              \\
     \hline
-    $|\psi\rangle$                               & State vector of a pure quantum state                                                       \\
-    $|0\rangle, |1\rangle$                       & Computational basis states of a qubit                                                      \\
-    $|2\rangle, |3\rangle, \dots$                & Higher excited (non-computational) states of the transmon                                  \\
-    $\alpha, \beta$                              & Complex probability amplitudes of the basis states                                         \\
-    $H(t)$                                       & Total time-dependent system Hamiltonian                                                    \\
-    $\mathcal{T}$                                & Dyson time-ordering operator                                                               \\
-    $\mathcal{F}$                                & Fourier transform                                                                          \\
-    $T, \tau_d, t_d$                             & Total gate duration / pulse length                                                         \\
-    $\tau_d$                                     & gate duration in non-linear time frame.                                                    \\
-    $t_d$                                        & delay time in the echo method                                                              \\
-    $E_C$                                        & Charging energy of the transmon                                                            \\
-    $E_J$                                        & Josephson energy of the transmon                                                           \\
-    $\hat{n}$                                    & Number operator (Cooper pair charge operator)                                              \\
-    $\hat{n}_g$                                  & Offset charge                                                                              \\
-    $\hat{\varphi}$                              & Phase operator                                                                             \\
-    $\hat{a}^\dagger, \hat{a}$                   & Creation and annihilation operators                                                        \\
-    $n_{\text{zpf}}$                             & Zero-point fluctuation of the charge operator                                              \\
-    $\lambda_{k,m}$                              & Transition matrix elements, defined as $\langle k|\hat{n}|m\rangle$                        \\
-    $\lambda_{k}$                                & $\lambda_{k-1,k}$ (ONLY for $X$ gate)                                                      \\
-    $c$                                          & Proportionalityc constant of $\lambda_{k,k+3}$                                             \\
-    $N_\text{max}$                               & Discrete pulse length (number of samples)                                                  \\
-    $\omega_d$                                   & Microwave drive frequency                                                                  \\
-    $\omega_{i,j}$                               & Transition frequency from the $i$-th state to the $j$-th ($E_j - E_i$)                     \\
-    $\omega_k$                                   & $\omega_{0,k}$ Transition frequency of the $k$-th state ($E_k - E_0$)  (ONLY for $X$ gate) \\
-    $\tilde{\Delta}_k$                           & Detuning of the $k$-th level, defined as $\omega_k - k\omega_d$                            \\
-    ${\Delta}_k$                                 & $\omega_k - k\omega_1$                                                                     \\
-    $\Delta$                                     & Often used as shorthand for the anharmonicity $\Delta_2$                                   \\
-    $\Omega_{\text{RF}}(t)$                      & Drive amplitude in the rotating frame                                                      \\
-    $\Omega_x(t)$                                & In-phase (X) component of the microwave control pulse                                      \\
-    $\Omega_y(t)$                                & Quadrature (Y) component of the microwave control pulse (DRAG correction)                  \\
-    $\delta(t)$                                  & Time-dependent phase ramping (detuning) to compensate for AC Stark shifts                  \\
-    $\hat{\sigma}_{j,k}^x, \hat{\sigma}_{j,k}^y$ & Generalized Pauli operators driving transitions between states $j$ and $k$                 \\
-    $V$                                          & Unitary frame transformation operator                                                      \\
-    $S$                                          & Anti-Hermitian generator for Schrieffer-Wolff transformations                              \\
-    $\Omega_1(t)$                                & Base seed pulse envelope for the DRAG-1 scheme                                             \\
-    $\omega_i$                                   & Tunable transition frequency of Qubit $i$ (in CZ gate framework)                           \\
-    $\alpha_i$                                   & Anharmonicity of Qubit $i$ (in CZ gate framework)                                          \\
-    $g$                                          & Capacitive coupling strength between the two qubits                                        \\
-    $\phi_{\text{cond}}$                         & Conditional phase accumulated during the two-qubit CZ gate                                 \\
-    $\theta(t)$                                  & Mixing angle for instantaneous eigenstates during adiabatic evolution                      \\
-    $W$                                          & Normalized mainlobe width parameter for Slepian pulses                                     \\
-    $N$                                          & Discrete pulse length (number of samples)                                                  \\
-    $\lambda_k(N,W)$                             & Slepian eigenvalue representing the fractional energy concentration                        \\
-    $v_n^{(k)}(N,W)$                             & The $k$-th order Slepian pulse (discrete prolate spheroidal sequence)                      \\
+    % $|\psi\rangle$                               & State vector of a pure quantum state                                              \\
+    % $|0\rangle, |1\rangle$                       & Computational basis states of a qubit                                             \\
+    % $|2\rangle, |3\rangle, \dots$                & Higher excited (non-computational) states of the transmon                         \\
+    $\alpha, \beta$            & Complex probability amplitudes of the basis states                                \\
+    $H(t)$                     & Total time-dependent system Hamiltonian                                           \\
+    $\mathcal{T}$              & Dyson time-ordering operator                                                      \\
+    $\mathcal{F}$              & Fourier transform                                                                 \\
+    $T$                        & Total gate duration                                                               \\
+    $\tau_d$                   & gate duration in non-linear time frame.                                           \\
+    $t_d$                      & delay time in the echo method (X gate) gate duration in the lab frame (CZ)        \\
+    % $E_C$                                        & Charging energy of the transmon                                                   \\
+    % $E_J$                                        & Josephson energy of the transmon                                                  \\
+    $g$                        & Capacitive coupling strength between the two qubits (in X gate)                   \\
+    $g$                        & Pulse designed in non-linear time frame (CZ)                                      \\
+    % $\hat{n}$                                    & Number operator (Cooper pair charge operator)                                     \\
+    % $\hat{n}_g$                                  & Offset charge                                                                     \\
+    % $\hat{\varphi}$                              & Phase operator                                                                    \\
+    $\hat{a}^\dagger, \hat{a}$ & Creation and annihilation operators                                               \\
+    % $n_{\text{zpf}}$                             & Zero-point fluctuation of the charge operator                                     \\
+    $\lambda_{k,m}$            & Transition matrix elements, defined as $\langle k|\hat{n}|m\rangle$               \\
+    $\lambda_{k}$              & $\lambda_{k-1,k}$ ($X$ gate)                                                      \\
+    $\lambda_k(N,W)$           & Slepian eigenvalue representing the fractional energy concentration               \\
+    % $c$                                          & Proportionalityc constant of $\lambda_{k,k+3}$                                    \\
+    % $N_\text{max}$                               & Discrete pulse length (number of samples)                                         \\
+    $\omega_d$                 & Microwave drive frequency                                                         \\
+    $\omega_{i,j}$             & Transition frequency from the $i$-th state to the $j$-th ($E_j - E_i$)            \\
+    $\omega_k$                 & $\omega_{0,k}$ Transition frequency of the $k$-th state ($E_k - E_0$)  ($X$ gate) \\
+    $\omega_i$                 & Tunable transition frequency of Qubit $i$ (CZ)                                    \\
+    $\alpha_i$                 & Anharmonicity of Qubit $i$ (in CZ gate framework)                                 \\
+    $\tilde{\Delta}_k$         & Detuning of the $k$-th level, defined as $\omega_k - k\omega_d$                   \\
+    ${\Delta}_k$               & $\omega_k - k\omega_1$                                                            \\
+    $\Delta$                   & Often used as shorthand for the anharmonicity $\Delta_2$                          \\
+    % $\Omega_{\text{RF}}(t)$                      & Drive amplitude in the rotating frame                                             \\
+    % $\Omega_x(t)$                                & In-phase (X) component of the microwave control pulse                             \\
+    % $\Omega_y(t)$                                & Quadrature (Y) component of the microwave control pulse (DRAG correction)         \\
+    $\delta(t)$                & Time-dependent phase ramping (detuning) to compensate for AC Stark shifts         \\
+    % $\hat{\sigma}_{j,k}^x, \hat{\sigma}_{j,k}^y$ & Generalized Pauli operators driving transitions between states $j$ and $k$        \\
+    % $V$                                          & Unitary frame transformation operator                                             \\
+    % $S$                                          & Anti-Hermitian generator for Schrieffer-Wolff transformations                     \\
+    % $\Omega_1(t)$                                & Base seed pulse envelope for the DRAG-1 scheme                                    \\
+    % $\phi_{\text{cond}}$                         & Conditional phase accumulated during the two-qubit CZ gate                        \\
+    % $\theta(t)$                                  & Mixing angle for instantaneous eigenstates during adiabatic evolution             \\
+    % $W$                                          & Normalized mainlobe width parameter for Slepian pulses                            \\
+    % $N$                                          & Discrete pulse length (number of samples)                                         \\
+    % $v_n^{(k)}(N,W)$                             & The $k$-th order Slepian pulse (discrete prolate spheroidal sequence)             \\
     \hline
   \end{tabular}
 \end{table}
